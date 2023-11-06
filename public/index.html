@@ -1,36 +1,144 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
-<head>
-  <meta charset="utf-8">
-  <title>Mediplus - Dashboard</title>
-  <!-- BEGIN: CSS Assets -->
-  <link rel="stylesheet" href="/style.css">
-  <!-- END: CSS Assets -->
-</head>
-<body class="py-5 md:py-0 dark:bg-transparent">
-  <div id="app"></div>
+<html lang="en">
+  <head>
+    <!-- All Meta -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="DexignZone" />
+    <meta name="robots" content="index, follow" />
+    <meta name="keywords" content="Sistema de Cobrancas" />
+    <meta
+      name="description"
+      content="sistema de gestão de receitas e cobrança de taxas"
+    />
+    <meta property="og:title" content="Sistema de Cobrancas" />
+    <meta
+      property="og:description"
+      content="sistema de gestão de receitas e cobrança de taxas"
+    />
+    <meta property="og:image" content="social-image.png" />
+    <meta name="format-detection" content="telephone=no" />
 
-  <!-- BEGIN: JS Assets -->
-  <script>
-    function loadScript(src) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.body.appendChild(script);
-      });
-    }
+    <!-- Mobile Specific -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Title -->
+    <title>Mentor - Sistema de gestão de receitas e cobrança de taxas</title>
 
-    loadScript('/app.js')
-      .then(() => {
-        // Code executed after app.js is loaded
-      })
-      .catch((error) => {
-        console.error('Failed to load app.js:', error);
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png" />
+
+    <link href="./dist/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="./dist/vendor/chartist/css/chartist.min.css" />
+    <link href="./dist/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
+    <!-- Vectormap -->
+    <link href="./dist/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" />
+    <link
+      href="./dist/vendor/bootstrap-select/dist/css/bootstrap-select.min.css"
+      rel="stylesheet"
+    />
+    <link href="./dist/css/style.css" rel="stylesheet" />
+    <link href="./dist/vendor/owl-carousel/owl.carousel.css" rel="stylesheet" />
+  </head>
+  <body>
+   
+    <div id="app"></div>
+
+    <script>
+      function loadScript(src) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = src;
+          script.async = true;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+      }
+  
+      loadScript('./dist/app.js')
+        .then(() => {
+          // Code executed after app.js is loaded
+        })
+        .catch((error) => {
+          console.error('Failed to load app.js:', error);
+        });
+       
+    </script>
+      <!-- Datatable -->
+      <script src="./dist/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="./dist/vendor/global/global.min.js"></script>
+    <script src="./dist/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+
+
+    <script src="./dist/js/dashboard/cms.js"></script>
+    <!-- ck-editor -->
+    <script src="./dist/vendor/ckeditor/ckeditor.js"></script>
+    
+
+
+
+    <script src="./dist/vendor/chart-js/chart.bundle.min.js"></script>
+    <script src="./dist/vendor/owl-carousel/owl.carousel.js"></script>
+
+    <!-- Chart piety plugin files -->
+    <script src="./dist/vendor/peity/jquery.peity.min.js"></script>
+
+    <!-- Apex Chart -->
+    <script src="./dist/vendor/apexchart/apexchart.js"></script>
+
+    <!-- Dashboard 1 -->
+    <!-- <script src="./dist/js/dashboard/dashboard-1.js"></script> -->
+
+    <script src="./dist/js/custom.min.js"></script>
+    <script src="./dist/js/deznav-init.js"></script>
+    <script src="./dist/js/demo.js"></script>
+    <script src="./dist/js/styleSwitcher.js"></script>
+
+    <script>
+      function carouselReview() {
+        /*  testimonial one function by = owl.carousel.js */
+        /*  testimonial one function by = owl.carousel.js */
+        jQuery(".testimonial-one").owlCarousel({
+          loop: true,
+          margin: 10,
+          autoplay: true,
+          nav: false,
+          center: true,
+          dots: false,
+          navText: [
+            '<i class="fas fa-caret-left"></i>',
+            '<i class="fas fa-caret-right"></i>',
+          ],
+          responsive: {
+            0: {
+              items: 2,
+            },
+            400: {
+              items: 3,
+            },
+            700: {
+              items: 5,
+            },
+            991: {
+              items: 6,
+            },
+
+            1200: {
+              items: 4,
+            },
+            1600: {
+              items: 5,
+            },
+          },
+        });
+      }
+
+      jQuery(window).on("load", function () {
+        setTimeout(function () {
+          carouselReview();
+        }, 1000);
       });
-  </script>
-  <!-- END: JS Assets -->
-</body>
+    </script>
+  </body>
 </html>

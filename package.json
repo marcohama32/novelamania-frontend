@@ -34,7 +34,6 @@
     "vue-native-websocket": "^2.0.15",
     "vue-router": "^4.0.13",
     "vue-socket.io": "github:MetinSeylan/Vue-Socket.io",
-    "vue-toastification": "^1.7.14",
     "vue2-daterange-picker": "^0.6.8",
     "vuedraggable": "^2.24.3",
     "vuex": "^4.0.2",

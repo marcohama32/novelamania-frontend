@@ -22,3 +22,15 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### codes git
+git add package.json yarn.lock / git add .
+git commit -m "update login code"
+
+<!-- on frontend -->
+
+git push origin main
+
+<!-- on backend -->
+
+git push origin master

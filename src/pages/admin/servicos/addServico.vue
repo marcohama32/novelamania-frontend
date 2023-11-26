@@ -3,7 +3,7 @@
     <div class="page-titles">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="javascript:void(0)">Adicionar Despesa</a>
+          <a href="javascript:void(0)">Adicionar Servico</a>
         </li>
       </ol>
     </div>
@@ -19,37 +19,15 @@
                   <label class="form-label">Titulo *</label>
                   <input v-model="title" type="text" class="form-control" />
                 </div>
-
-                <div class="mb-3 col-md-6">
-                  <label class="form-label">Categoria *</label>
-                  <select
-                    id="inputState"
-                    class="default-select form-control wide"
-                    v-model="category"
-                  >
-                    <option value="" disabled selected>Selecionar...</option>
-                    <option value="BI">Transporte</option>
-                    <option value="Material_de_escritorio">Material de escritorio</option>
-                    <option value="Outro">Outro</option>
-                  </select>
-                </div>
-                <div class="mb-3 col-md-6">
-                  <label class="form-label">Metodo de Pagamento *</label>
-                  <select
-                    id="inputState"
-                    class="default-select form-control wide"
-                    v-model="paymentMethod"
-                  >
-                    <option value="" disabled selected>Selecionar...</option>
-                    <option value="check">Check</option>
-                    <option value="dinheiro">Dinheiro</option>
-                    <option value="mpesa">M Pesa</option>
-                    <option value="transferencia">Transferencia</option>
-                  </select>
-                </div>
                 <div class="mb-3 col-md-6">
                   <label class="form-label">Valor *</label>
-                  <input v-model="amount" type="number" class="form-control"   min="1" step="0.01" />
+                  <input
+                    v-model="amount"
+                    type="number"
+                    class="form-control"
+                    min="1"
+                    step="0.01"
+                  />
                 </div>
 
                 <div class="mb-3 col-md-12">
@@ -60,21 +38,6 @@
                     v-model="description"
                   ></textarea>
                   <div class="input-group-append"></div>
-                </div>
-
-                <div class="mb-3 col-md-12">
-                  <label class="form-label">Nota</label>
-                  <textarea
-                    class="form-control"
-                    rows="4"
-                    v-model="notes"
-                  ></textarea>
-                  <div class="input-group-append"></div>
-                </div>
-
-                <div class="mb-3 col-md-12">
-                  <label class="form-label">Data *</label>
-                  <input type="date" v-model="date" class="form-control" />
                 </div>
               </div>
 
@@ -119,14 +82,10 @@ export default {
   data() {
     return {
       title: "",
-      date: "",
       amount: "",
-      category: "",
-      paymentMethod: "",
-      notes: "",
       description: "",
       btnloading: false,
-      loading: false
+      loading: false,
     };
   },
   created() {},
@@ -186,31 +145,26 @@ export default {
         // Create FormData object
         const formData = new FormData();
         formData.append("title", this.title);
-        formData.append("date", this.date);
         formData.append("amount", this.amount);
-        formData.append("category", this.category);
-        formData.append("paymentMethod", this.paymentMethod);
         formData.append("description", this.description);
-        formData.append("notes", this.notes);
 
         this.btnloading = true;
-        const response = await axios.post("api/expense/create", formData, {
+        const response = await axios.post("/api/service/create", formData, {
           headers: {
-       token: token,
+            token: token,
             "Content-Type": "application/json",
-
           },
         });
 
         Toast.fire({
           icon: "success",
           title: "Successo!",
-          text: "Despesa criada com sucesso",
+          text: "Servico criado com sucesso",
           timer: 3000,
         });
 
         this.btnloading = false;
-        this.$router.push("/listardespesas");
+        this.$router.push("/listarservicos");
         this.isSuccess = true;
         console.log(response);
         this.$emit("Crianda com sucesso");
@@ -227,7 +181,7 @@ export default {
             text: errorMessage,
           });
           this.btnloading = false;
-          console.error("Erro ao criar Despesa:", errorMessage);
+          console.error("Erro ao criar Servico:", errorMessage);
           // setTimeout(() => {
           //   window.location.reload();
           // }, 3000);
@@ -237,7 +191,7 @@ export default {
             title: "Erro!",
             text: "Um erro ocorreu. Por favor, tente novamente ou actualize a pagina.",
           });
-          console.error("Erro ao criar Despesa:", error.message);
+          console.error("Erro ao criar Servico:", error.message);
           // setTimeout(() => {
           //   window.location.reload();
           // }, 3000);

@@ -19,21 +19,9 @@
         ***********************************-->
     <div class="nav-header">
       <a href="/" class="brand-logo">
-        <img
-          class="logo-abbr"
-          src="../../../public/dist/images/logo.png"
-          alt=""
-        />
-        <img
-          class="logo-compact"
-          src="../../../public/dist/images/mentortext.png"
-          alt=""
-        />
-        <img
-          class="brand-title"
-          src="../../../public/dist/images/mentortext.png"
-          alt=""
-        />
+        <img class="logo-abbr" src="/dist/images/logo.png" alt="" />
+        <img class="logo-compact" src="/dist/images/mentortext.png" alt="" />
+        <img class="brand-title" src="/dist/images/mentortext.png" alt="" />
       </a>
 
       <div class="nav-control">
@@ -54,15 +42,13 @@
         <nav class="navbar navbar-expand">
           <div class="collapse navbar-collapse justify-content-between">
             <div class="header-left">
-              <div class="dashboard_bar">
-                
-              </div>
+              <div class="dashboard_bar"></div>
             </div>
             <ul class="navbar-nav header-right">
               <li class="nav-item">
                 <div class="d-flex weather-detail">
-                  <span><i class="las la-cloud"></i>21</span>
-                  29 - 09 - 2023
+                  <!-- <span><i class="las la-cloud"></i>21</span> -->
+                  {{ getDateNow() }}
                 </div>
               </li>
               <li class="nav-item dropdown notification_dropdown">
@@ -204,14 +190,14 @@
                 >
                   <div class="header-info">
                     <span class="text-black"
-                      >Ola,<strong> Marco</strong></span
+                      >Ola, <strong> {{ firstName }}</strong></span
                     >
-                    <p class="fs-12 mb-0">Administrador</p>
+                    <p class="fs-12 mb-0">{{ getRoleName(role) }}</p>
                   </div>
-                  <img src="../../../public/dist/images/m.jpg" width="20" alt="" />
+                  <!-- <img src="../../dist/images/m.jpg" width="20" alt="" /> -->
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a href="app-profile.html" class="dropdown-item ai-icon">
+                  <router-link to="/perfil" class="dropdown-item ai-icon">
                     <svg
                       id="icon-user1"
                       xmlns="http://www.w3.org/2000/svg"
@@ -230,30 +216,10 @@
                       ></path>
                       <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                    <span class="ms-2">Profile </span>
-                  </a>
-                  <a href="email-inbox.html" class="dropdown-item ai-icon">
-                    <svg
-                      id="icon-inbox"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="text-success"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path
-                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
-                      ></path>
-                      <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                    <span class="ms-2">Inbox </span>
-                  </a>
-                  <a href="page-login.html" class="dropdown-item ai-icon">
+                    <span class="ms-2">Perfil </span>
+                  </router-link>
+
+                  <a href="#" @click="logout" class="dropdown-item ai-icon">
                     <svg
                       id="icon-logout"
                       xmlns="http://www.w3.org/2000/svg"
@@ -271,7 +237,7 @@
                       <polyline points="16 17 21 12 16 7"></polyline>
                       <line x1="21" y1="12" x2="9" y2="12"></line>
                     </svg>
-                    <span class="ms-2">Logout </span>
+                    <span class="ms-2">Sair </span>
                   </a>
                 </div>
               </li>
@@ -285,3 +251,179 @@
         ***********************************-->
   </div>
 </template>
+<script>
+import axios from "axios";
+import Cookies from "js-cookie";
+export default {
+  data() {
+    return {
+      avatar: null,
+      routeName: null,
+      firstName: "",
+      lastName: "",
+      role: "",
+      ogv: null,
+      userID: "",
+      notifications: [], // Array to hold notifications
+      showNotificationsDropdown: false, // Control the visibility of the dropdown
+    };
+  },
+  computed: {
+    reversedNotifications() {
+      // Reverse the order of notifications
+      return this.notifications.slice().reverse();
+    },
+    currentRouteName() {
+      return this.$route.name;
+    },
+    filteredRoutes() {
+      try {
+        const isAuthenticated = Cookies.get("token");
+        const userRole = Cookies.get("role");
+
+        // Filter routes based on authentication and user role
+        const routes = this.$router.options.routes;
+        const filteredRoutes = routes.filter((route) => {
+          if (route.meta && route.meta.requiresAuth && !isAuthenticated) {
+            return false;
+          }
+          if (
+            route.meta &&
+            route.meta.roles &&
+            !route.meta.roles.includes(userRole)
+          ) {
+            return false;
+          }
+          return true;
+        });
+        return filteredRoutes;
+      } catch (error) {
+        console.error("Error in filteredRoutes:", error);
+        return [];
+      }
+    },
+  },
+  methods: {
+    getDateNow() {
+      // Get the current date
+      const currentDate = new Date();
+
+      // Get the current year, month, and day
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth() + 1; // Month is zero-based (0-11)
+      const day = currentDate.getDate();
+
+      // Display the current date
+      return `${year}-${month < 10 ? "0" + month : month}-${
+        day < 10 ? "0" + day : day
+      }`;
+    },
+    getRoleName(role) {
+      switch (role) {
+        case 1:
+          return "Admin";
+        case 2:
+          return "Gestor";
+        case 3:
+          return "Usuario";
+        default:
+          return "Unknown";
+      }
+    },
+    async profile() {
+      try {
+        this.loading = true;
+
+        const token = Cookies.get("token");
+        const response = await axios.get("/api/me", {
+          headers: {
+            token: token,
+          },
+        });
+
+        if (response) {
+          //  const totalTransactions = response.data.totalTransactions;
+          const profile = response.data.user;
+          this.firstName = profile.firstName;
+          this.role = profile.role;
+        } else {
+          console.error("erro");
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    formatDate(dateString) {
+      const date = new Date(dateString); // Create a Date object from the ISO 8601 date string
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so add 1 and pad with '0' if needed
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`; // Return the formatted date as a string
+    },
+    getStatusClass(status) {
+      if (status === "Active") {
+        return "text-success";
+      } else if (status === "Inactive") {
+        return "text-danger";
+      } else {
+        return ""; // Default class if no match
+      }
+    },
+    async logout() {
+      try {
+        // Remove cookies and session storage data
+        Cookies.remove("token");
+        Cookies.remove("role");
+        sessionStorage.removeItem("visitedBefore");
+
+        this.$router.go("/login");
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
+    },
+    getAvatarUrl() {
+      if (this.avatar) {
+        // Use the configured base URL and ensure forward slashes in the avatar path
+        return `${axios.defaults.baseURL}/${this.avatar.replace(/\\/g, "/")}`;
+      }
+      // Use an absolute path or root-relative path for the default image URL
+      return `${axios.defaults.baseURL}/path/to/default/image/logow.png`; // Replace with your default image path
+    },
+    hasRoute(routeName) {
+      const hasRoute = this.filteredRoutes.some(
+        (route) => route.name === routeName
+      );
+      return hasRoute;
+    },
+    getRole(role) {
+      if (role === 1) {
+        return "Admin";
+      } else if (role === 2) {
+        return "Line Manager";
+      } else if (role === 3) {
+        return "Agent";
+      } else if (role === 4) {
+        return "Customer";
+      } else if (role === 5) {
+        return "Customer";
+      } else if (role === 6) {
+        return "Partner";
+      } else if (role === 7) {
+        return "Dependent";
+      } else if (role === 8) {
+        return "Dependent";
+      }
+      {
+        return ""; // Default class if no match
+      }
+    },
+  },
+  created() {
+    this.profile();
+  },
+  mounted() {},
+};
+</script>

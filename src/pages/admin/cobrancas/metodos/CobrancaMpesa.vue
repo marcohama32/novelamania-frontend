@@ -5,7 +5,7 @@
       <div class="col-xl-12">
         <div class="filter cm-content-box box-primary">
           <div class="content-title">
-            <div class="cpa"><i class="fa-solid fa-filter me-2"></i>Filtro</div>
+            <div class="cpa">Pagamento Mpesa</div>
             <div class="tools">
               <a href="javascript:void(0);" class="expand SlideToolHeader"
                 ><i class="fal fa-angle-down"></i
@@ -25,37 +25,8 @@
                     @input="applyFilter"
                   />
                 </div>
-                <div class="col-xl-2 col-sm-4">
-                  <input
-                    type="date"
-                    name="datepicker"
-                    class="form-control mb-3 mb-xl-0"
-                    id="startDate"
-                    v-model="startDate"
-                    :config="datePickerConfig"
-                  />
-                </div>
-                <div class="col-xl-2 col-sm-4">
-                  <input
-                    type="date"
-                    name="datepicker"
-                    class="form-control mb-3 mb-xl-0"
-                    id="endDate"
-                    v-model="endDate"
-                    :config="datePickerConfig"
-                  />
-                </div>
 
                 <div class="col-xl-4 col-sm-4">
-                  <button
-                    class="btn btn-primary"
-                    title="Click here to Search"
-                    type="button"
-                    @click="applyFilterDate"
-                  >
-                    <i class="fa fa-search me-1"></i>Buscar
-                  </button>
-
                   <button
                     class="btn btn-danger light"
                     title="Click here to remove filter"
@@ -69,18 +40,11 @@
             </div>
           </div>
         </div>
-        <div class="mb-3">
-          <ul class="d-flex align-items-center flex-wrap">
-            <li>
-              <a @click="exportToExcel" class="btn btn-primary">Export</a>
-            </li>
-            <div v-if="loading" class="spinner" style="font-size: 18px"></div>
-          </ul>
-        </div>
+        <div v-if="loading" class="spinner mb-3" style="font-size: 18px"></div>
         <div class="filter cm-content-box box-primary">
           <div class="content-title">
             <div class="cpa">
-              <i class="fa-solid fa-file-lines me-1"></i>Lista de Clientes
+              <i class="fa-solid fa-file-lines me-1"></i>Clientes
             </div>
             <div class="tools">
               <a href="javascript:void(0);" class="expand SlideToolHeader"
@@ -94,22 +58,25 @@
                 <table class="table table-responsive-sm mb-0">
                   <thead>
                     <tr>
+                      <th style="width: 85px"><strong>Acoes</strong></th>
                       <th><strong>Nome</strong></th>
-                      <th><strong>Data</strong></th>
                       <th><strong>Sexo</strong></th>
                       <th><strong>Doc</strong></th>
                       <th><strong>Doc. No</strong></th>
-                      <th><strong>Endereco</strong></th>
                       <th><strong>Contacto</strong></th>
                       <th><strong>Actividade</strong></th>
-                      <th><strong>Estado</strong></th>
-                      <th style="width: 85px"><strong>Acoes</strong></th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="customer in customers" :key="customer._id">
+                      <td>
+                        <router-link
+                          :to="`/cobrancampesaprocessar/${customer._id}`"
+                          class="btn btn-primary shadow btn-xs sharp rounded-circle me-1"
+                          ><i class="fa fa-pencil"></i
+                        ></router-link>
+                      </td>
                       <td>{{ customer.firstName }} {{ customer.lastName }}</td>
-                      <td>{{ formatDateWithTime(customer.dob) }}</td>
                       <td>{{ customer.gender }}</td>
                       <td class="recent-stats">
                         {{ customer.idType }}
@@ -118,28 +85,10 @@
                         {{ customer.idNumber }}
                       </td>
                       <td class="recent-stats">
-                        {{ customer.address }}
-                      </td>
-                      <td class="recent-stats">
                         {{ customer.contact1 }}
                       </td>
                       <td class="recent-stats">
                         {{ customer.activities }}
-                      </td>
-                      <td class="recent-stats">
-                        {{ customer.status }}
-                      </td>
-                      <td>
-                        <router-link
-                          :to="`/clienteedit/${customer._id}`"
-                          class="btn btn-primary shadow btn-xs sharp rounded-circle me-1"
-                          ><i class="fa fa-pencil"></i
-                        ></router-link>
-                        <a
-                          @click="deleteItem(customer._id, customer.firstName)"
-                          class="btn btn-danger shadow btn-xs sharp rounded-circle"
-                          ><i class="fa fa-trash"></i
-                        ></a>
                       </td>
                     </tr>
                   </tbody>
@@ -278,7 +227,7 @@ export default {
     searchTerm: "fetchData",
   },
   methods: {
-    async deleteItem(id,name) {
+    async deleteItem(id, name) {
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -294,7 +243,7 @@ export default {
       // Show confirmation dialog
       const confirmResult = await Swal.fire({
         title: "Tem certeza?",
-        text: `Deseja excluir o cliente: ${name} ?`,
+        text: `Deseja excluir a cliente: ${name} ?`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",

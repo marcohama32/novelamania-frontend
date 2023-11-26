@@ -80,7 +80,7 @@
         <div class="filter cm-content-box box-primary">
           <div class="content-title">
             <div class="cpa">
-              <i class="fa-solid fa-file-lines me-1"></i>Lista de Clientes
+              <i class="fa-solid fa-file-lines me-1"></i>Lista de Despesas
             </div>
             <div class="tools">
               <a href="javascript:void(0);" class="expand SlideToolHeader"
@@ -94,49 +94,47 @@
                 <table class="table table-responsive-sm mb-0">
                   <thead>
                     <tr>
-                      <th><strong>Nome</strong></th>
+                      <th><strong>Titulo</strong></th>
+                      <th><strong>Categoria</strong></th>
+                      <th><strong>Descricao</strong></th>
+                      <th><strong>Pagamento</strong></th>
+                      <th><strong>Valor</strong></th>
+                      <th><strong>Nota</strong></th>
                       <th><strong>Data</strong></th>
-                      <th><strong>Sexo</strong></th>
-                      <th><strong>Doc</strong></th>
-                      <th><strong>Doc. No</strong></th>
-                      <th><strong>Endereco</strong></th>
-                      <th><strong>Contacto</strong></th>
-                      <th><strong>Actividade</strong></th>
-                      <th><strong>Estado</strong></th>
+                      <th><strong>Criacao</strong></th>
                       <th style="width: 85px"><strong>Acoes</strong></th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="customer in customers" :key="customer._id">
-                      <td>{{ customer.firstName }} {{ customer.lastName }}</td>
-                      <td>{{ formatDateWithTime(customer.dob) }}</td>
-                      <td>{{ customer.gender }}</td>
+                    <tr v-for="expense in expenses" :key="expense._id">
+                      <td>{{ expense.title }}</td>
+                      <td>{{ expense.category }}</td>
+                      <td>{{ expense.description }}</td>
+
                       <td class="recent-stats">
-                        {{ customer.idType }}
+                        {{ expense.paymentMethod }}
                       </td>
                       <td class="recent-stats">
-                        {{ customer.idNumber }}
+                        {{ formatCurrency(expense.amount) }}
                       </td>
                       <td class="recent-stats">
-                        {{ customer.address }}
+                        {{ expense.notes }}
                       </td>
                       <td class="recent-stats">
-                        {{ customer.contact1 }}
+                        {{ formatDateWithTime(expense.date) }}
                       </td>
+
                       <td class="recent-stats">
-                        {{ customer.activities }}
-                      </td>
-                      <td class="recent-stats">
-                        {{ customer.status }}
+                        {{ formatDateWithTime(expense.createdAt) }}
                       </td>
                       <td>
                         <router-link
-                          :to="`/clienteedit/${customer._id}`"
+                          :to="`/despesaedit/${expense._id}`"
                           class="btn btn-primary shadow btn-xs sharp rounded-circle me-1"
                           ><i class="fa fa-pencil"></i
                         ></router-link>
                         <a
-                          @click="deleteItem(customer._id, customer.firstName)"
+                          @click="deleteItem(expense._id, expense.title)"
                           class="btn btn-danger shadow btn-xs sharp rounded-circle"
                           ><i class="fa fa-trash"></i
                         ></a>
@@ -201,7 +199,7 @@ import "sweetalert2/dist/sweetalert2.css";
 export default {
   data() {
     return {
-      customers: [],
+      expenses: [],
       transactionFiles: [], // Initialize as an empty array
       currentPage: 1,
       totalPages: 1,
@@ -278,7 +276,7 @@ export default {
     searchTerm: "fetchData",
   },
   methods: {
-    async deleteItem(id,name) {
+    async deleteItem(id, name) {
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -294,7 +292,7 @@ export default {
       // Show confirmation dialog
       const confirmResult = await Swal.fire({
         title: "Tem certeza?",
-        text: `Deseja excluir o cliente: ${name} ?`,
+        text: `Deseja excluir despesa: ${name} ?`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
@@ -308,7 +306,7 @@ export default {
         try {
           const token = Cookies.get("token"); // Assuming you are using cookies to store the token
           const response = await axios.delete(
-            `api/user/delete/customer/${id}`,
+            `api/expense/delete/${id}`,
             {
               headers: {
                 token: token,
@@ -321,16 +319,16 @@ export default {
 
           Toast.fire({
             icon: "success",
-            title: "Cliente excluído com sucesso!",
+            title: "Despesa excluída com sucesso!",
           });
           this.loading = false;
           this.fetchData();
         } catch (error) {
-          console.error("Erro ao excluir Cliente:", error);
+          console.error("Erro ao excluir Despesa:", error);
 
           Toast.fire({
             icon: "error",
-            title: "Erro ao excluir Cliente ",
+            title: "Erro ao excluir Despesa ",
           });
         }
       } else {
@@ -448,14 +446,14 @@ export default {
           queryParams.startDate = this.startDate;
           queryParams.endDate = this.endDate;
         }
-        const response = await axios.get("/api/user/getall/customers", {
+        const response = await axios.get("/api/expense/getall/", {
           headers: {
             token: token,
           },
           params: queryParams,
         });
 
-        this.customers = response.data.customer;
+        this.expenses = response.data.expense;
         // console.log(response.data.transactions);
         this.count = response.data.total;
         this.totalPages = Math.ceil(this.count / this.pageSize);
@@ -594,7 +592,7 @@ export default {
     exportToExcel() {
       const table = document.querySelector("table");
       const workbook = utils.table_to_book(table);
-      writeFile(workbook, "clientes_lista.xlsx");
+      writeFile(workbook, "despesas_lista.xlsx");
     },
     exportToPDF() {
       const table = document.querySelector("table");

@@ -6,13 +6,13 @@
     <div class="deznav">
       <div class="deznav-scroll">
         <ul class="metismenu" id="menu">
-          <li>
+          <li v-if="hasRoute('Dashboard')">
             <a class="ai-icon" href="/" aria-expanded="false">
               <i class="flaticon-381-networking"></i>
               <span class="nav-text">Home</span>
             </a>
           </li>
-          <li>
+          <li v-if="hasRoute('View Clientes')">
             <a
               href="page-error-404.html"
               class="ai-icon has-arrow"
@@ -22,11 +22,11 @@
               <span class="nav-text">Clientes</span>
             </a>
             <ul aria-expanded="false">
-              <li><router-link to="/addclientes">Registrar</router-link></li>
-              <li><router-link to="/viewclientes">Listar</router-link></li>
+              <li v-if="hasRoute('View Clientes')"><router-link to="/addclientes">Registrar</router-link></li>
+              <li v-if="hasRoute('View Clientes')"><router-link to="/listarclientes">Listar</router-link></li>
             </ul>
           </li>
-          <li>
+          <li v-if="hasRoute('View Cobrancas')">
             <a
               class="has-arrow ai-icon"
               href="javascript:;"
@@ -36,11 +36,11 @@
               <span class="nav-text">Cobrancas</span>
             </a>
             <ul aria-expanded="false">
-              <li><a href="chart-flot.html">Processar</a></li>
-              <li><a href="chart-morris.html">Listar</a></li>
+              <li v-if="hasRoute('Add Cobrancas')"><router-link to="/addcobranca">Processar</router-link></li>
+              <li v-if="hasRoute('View Cobrancas')"><router-link to="/listarcobrancas">Listar</router-link></li>
             </ul>
           </li>
-          <li>
+          <li v-if="hasRoute('Listar Despesas')">
             <a
               class="has-arrow ai-icon"
               href="javascript:void()"
@@ -50,11 +50,11 @@
               <span class="nav-text">Despesas</span>
           </a>
             <ul aria-expanded="false">
-              <li><router-link to="/adddespesa">Registrar</router-link></li>
-              <li><a href="page-login.html">Listar</a></li>
+              <li v-if="hasRoute('Listar Despesas')"><router-link to="/adddespesa">Registrar</router-link></li>
+              <li v-if="hasRoute('Listar Despesas')"><router-link to="/listardespesas">Listar</router-link></li>
             </ul>
           </li>
-          <li>
+          <li v-if="hasRoute('Listar Servicos')">
             <a
               class="has-arrow ai-icon"
               href="javascript:void()"
@@ -64,11 +64,11 @@
               <span class="nav-text">Servicos</span>
             </a>
             <ul aria-expanded="false">
-              <li><a href="javascript:;">Registrar</a></li>
-              <li><a href="javascript:;">Listar</a></li>
+              <li v-if="hasRoute('Listar Servicos')"><router-link to="/addservico">Registrar</router-link></li>
+              <li v-if="hasRoute('Listar Servicos')"><router-link to="/listarservicos">Listar</router-link></li>
             </ul>
           </li>
-          <li>
+          <li v-if="hasRoute('Listar Analises')">
             <a
               class="has-arrow ai-icon"
               href="javascript:void()"
@@ -78,12 +78,12 @@
               <span class="nav-text">Relatorios</span>
             </a>
             <ul aria-expanded="false">
-              <li><a href="javascript:;">Mensal</a></li>
-              <li><a href="javascript:;">Anual</a></li>
-              <li><a href="javascript:;">Analises</a></li>
+              <!-- <li><a href="javascript:;">Mensal</a></li>
+              <li><a href="javascript:;">Anual</a></li> -->
+              <li><router-link to="/relatorios" href="javascript:;">Analises</router-link></li>
             </ul>
           </li>
-          <li>
+          <!-- <li>
             <a
               class="has-arrow ai-icon"
               href="javascript:void()"
@@ -96,7 +96,7 @@
               <li><a href="javascript:;">Registrar</a></li>
               <li><a href="javascript:;">Gerir</a></li>
             </ul>
-          </li>
+          </li> -->
         </ul>
 
         <div class="copyright">
@@ -109,3 +109,46 @@
         ***********************************-->
   </div>
 </template>
+
+<script>
+import Cookies from "js-cookie";
+export default {
+  computed: {
+    filteredRoutes() {
+      try {
+        // const isAuthenticated = localStorage.getItem("token");
+        // const userRole = localStorage.getItem("role");
+        const isAuthenticated = Cookies.get("token"); // Retrieve token from cookie
+        const userRole = Cookies.get("role"); // Retrieve role from cookie
+        // Filter routes based on authentication and user role
+        const routes = this.$router.options.routes;
+        const filteredRoutes = routes.filter((route) => {
+          if (route.meta && route.meta.requiresAuth && !isAuthenticated) {
+            return false;
+          }
+          if (
+            route.meta &&
+            route.meta.roles &&
+            !route.meta.roles.includes(userRole)
+          ) {
+            return false;
+          }
+          return true;
+        });
+        return filteredRoutes;
+      } catch (error) {
+        console.error("Error in filteredRoutes:", error);
+        return [];
+      }
+    },
+  },
+  methods: {
+    hasRoute(routeName) {
+      const hasRoute = this.filteredRoutes.some(
+        (route) => route.name === routeName
+      );
+      return hasRoute;
+    },
+  },
+};
+</script>

@@ -3,7 +3,7 @@
     <div class="page-titles">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="javascript:void(0)">Adicionar Despesa</a>
+          <a href="javascript:void(0)">Edit Servico</a>
         </li>
       </ol>
     </div>
@@ -13,43 +13,21 @@
       <div class="card">
         <div class="card-body">
           <div class="basic-form">
-            <form @submit.prevent="onCreateDespesa">
+            <form @submit.prevent="onEditServico">
               <div class="row">
                 <div class="mb-3 col-md-6">
                   <label class="form-label">Titulo *</label>
                   <input v-model="title" type="text" class="form-control" />
                 </div>
-
-                <div class="mb-3 col-md-6">
-                  <label class="form-label">Categoria *</label>
-                  <select
-                    id="inputState"
-                    class="default-select form-control wide"
-                    v-model="category"
-                  >
-                    <option value="" disabled selected>Selecionar...</option>
-                    <option value="BI">Transporte</option>
-                    <option value="Material_de_escritorio">Material de escritorio</option>
-                    <option value="Outro">Outro</option>
-                  </select>
-                </div>
-                <div class="mb-3 col-md-6">
-                  <label class="form-label">Metodo de Pagamento *</label>
-                  <select
-                    id="inputState"
-                    class="default-select form-control wide"
-                    v-model="paymentMethod"
-                  >
-                    <option value="" disabled selected>Selecionar...</option>
-                    <option value="check">Check</option>
-                    <option value="dinheiro">Dinheiro</option>
-                    <option value="mpesa">M Pesa</option>
-                    <option value="transferencia">Transferencia</option>
-                  </select>
-                </div>
                 <div class="mb-3 col-md-6">
                   <label class="form-label">Valor *</label>
-                  <input v-model="amount" type="number" class="form-control"   min="1" step="0.01" />
+                  <input
+                    v-model="amount"
+                    type="number"
+                    class="form-control"
+                    min="1"
+                    step="0.01"
+                  />
                 </div>
 
                 <div class="mb-3 col-md-12">
@@ -60,21 +38,6 @@
                     v-model="description"
                   ></textarea>
                   <div class="input-group-append"></div>
-                </div>
-
-                <div class="mb-3 col-md-12">
-                  <label class="form-label">Nota</label>
-                  <textarea
-                    class="form-control"
-                    rows="4"
-                    v-model="notes"
-                  ></textarea>
-                  <div class="input-group-append"></div>
-                </div>
-
-                <div class="mb-3 col-md-12">
-                  <label class="form-label">Data *</label>
-                  <input type="date" v-model="date" class="form-control" />
                 </div>
               </div>
 
@@ -88,8 +51,8 @@
                   v-if="btnloading"
                   class="spinner-border spinner-border-sm"
                 ></div>
-                <span v-if="btnloading">Processando</span>
-                <span v-else>Gravar</span>
+                <span v-if="btnloading">Actualizando</span>
+                <span v-else>Actualizar</span>
               </button>
               <!-- <button
                 type="submit"
@@ -119,17 +82,15 @@ export default {
   data() {
     return {
       title: "",
-      date: "",
       amount: "",
-      category: "",
-      paymentMethod: "",
-      notes: "",
       description: "",
       btnloading: false,
-      loading: false
+      loading: false,
     };
   },
-  created() {},
+  created() {
+    this.fetchData();
+  },
   methods: {
     goBack() {
       this.$router.go(-1);
@@ -145,7 +106,7 @@ export default {
       }
       return true;
     },
-    async onCreateDespesa() {
+    async onEditServico() {
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -186,31 +147,27 @@ export default {
         // Create FormData object
         const formData = new FormData();
         formData.append("title", this.title);
-        formData.append("date", this.date);
         formData.append("amount", this.amount);
-        formData.append("category", this.category);
-        formData.append("paymentMethod", this.paymentMethod);
         formData.append("description", this.description);
-        formData.append("notes", this.notes);
+        const id = this.$route.params.id;
 
         this.btnloading = true;
-        const response = await axios.post("api/expense/create", formData, {
+        const response = await axios.put(`/api/service/edit/${id}`, formData, {
           headers: {
-       token: token,
+            token: token,
             "Content-Type": "application/json",
-
           },
         });
 
         Toast.fire({
           icon: "success",
           title: "Successo!",
-          text: "Despesa criada com sucesso",
+          text: "Servico actualizado com sucesso",
           timer: 3000,
         });
 
         this.btnloading = false;
-        this.$router.push("/listardespesas");
+        this.$router.push("/listarservicos");
         this.isSuccess = true;
         console.log(response);
         this.$emit("Crianda com sucesso");
@@ -227,7 +184,7 @@ export default {
             text: errorMessage,
           });
           this.btnloading = false;
-          console.error("Erro ao criar Despesa:", errorMessage);
+          console.error("Erro ao actualizar Servico:", errorMessage);
           // setTimeout(() => {
           //   window.location.reload();
           // }, 3000);
@@ -237,11 +194,33 @@ export default {
             title: "Erro!",
             text: "Um erro ocorreu. Por favor, tente novamente ou actualize a pagina.",
           });
-          console.error("Erro ao criar Despesa:", error.message);
+          console.error("Erro ao actualizar Servico:", error.message);
           // setTimeout(() => {
           //   window.location.reload();
           // }, 3000);
         }
+        this.btnloading = false;
+      }
+    },
+    async fetchData() {
+      try {
+        this.loading = true;
+        this.btnloading = true;
+        const id = this.$route.params.id;
+        const token = Cookies.get("token");
+        const response = await axios.get(`/api/service/getbyid/${id}`, {
+          headers: {
+            token: token,
+          },
+        });
+        const service = response.data.service;
+        this.title = service.title;
+        this.amount = service.amount;
+        this.description = service.description;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.loading = false;
         this.btnloading = false;
       }
     },

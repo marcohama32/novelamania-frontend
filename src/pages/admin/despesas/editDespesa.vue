@@ -3,7 +3,7 @@
     <div class="page-titles">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="javascript:void(0)">Adicionar Cliente</a>
+          <a href="javascript:void(0)">Edit Despesa</a>
         </li>
       </ol>
     </div>
@@ -13,83 +13,70 @@
       <div class="card">
         <div class="card-body">
           <div class="basic-form">
-            <form @submit.prevent="onCreateCustomer">
+            <form @submit.prevent="onEditDespesa">
               <div class="row">
                 <div class="mb-3 col-md-6">
-                  <label class="form-label">Nome *</label>
-                  <input v-model="firstName" type="text" class="form-control" />
+                  <label class="form-label">Titulo *</label>
+                  <input v-model="title" type="text" class="form-control" />
                 </div>
+
                 <div class="mb-3 col-md-6">
-                  <label class="form-label">Apelido *</label>
-                  <input v-model="lastName" type="text" class="form-control" />
-                </div>
-                <div class="mb-3 col-md-6">
-                  <label class="form-label">Tipo documento *</label>
+                  <label class="form-label">Categoria *</label>
                   <select
                     id="inputState"
                     class="default-select form-control wide"
-                    v-model="idType"
+                    v-model="category"
                   >
                     <option value="" disabled selected>Selecionar...</option>
-                    <option value="BI">BI</option>
-                    <option value="Passaport">Passaport</option>
-                    <option value="Cartao_de_Eleitor">Cartao de Eleitor</option>
+                    <option value="Transporte">Transporte</option>
+                    <option value="Material_de_escritorio">
+                      Material de escritorio
+                    </option>
+                    <option value="Cartao_de_Eleitor">Outro</option>
                   </select>
                 </div>
                 <div class="mb-3 col-md-6">
-                  <label class="form-label">Doc. Numero *</label>
-                  <input v-model="idNumber" type="text" class="form-control" />
-                </div>
-              </div>
-              <div class="row">
-                <div class="mb-3 col-md-6">
-                  <label class="form-label">Genero *</label>
+                  <label class="form-label">Metodo de Pagamento *</label>
                   <select
-                    v-model="gender"
                     id="inputState"
                     class="default-select form-control wide"
+                    v-model="paymentMethod"
                   >
                     <option value="" disabled selected>Selecionar...</option>
-                    <option value="masculino">Masculino</option>
-                    <option value="feminino">Feminino</option>
+                    <option value="check">Check</option>
+                    <option value="dinheiro">Dinheiro</option>
+                    <option value="mpesa">M Pesa</option>
+                    <option value="transferencia">Transferencia</option>
                   </select>
                 </div>
                 <div class="mb-3 col-md-6">
-                  <label class="form-label">Data de nascimento</label>
-                  <input type="date" v-model="dob" class="form-control" />
+                  <label class="form-label">Valor *</label>
+                  <input v-model="amount" type="number" class="form-control"   min="1" step="0.01" />
                 </div>
-              </div>
-              <div class="row">
-                <div class="mb-3 col-md-6">
-                  <label class="form-label">Endereco *</label>
-                  <input v-model="address" type="text" class="form-control" />
-                </div>
-                <div class="mb-3 col-md-6">
-                  <label class="form-label">Contacto *</label>
-                  <input
-                    v-model="contact1"
-                    type="number"
+
+                <div class="mb-3 col-md-12">
+                  <label class="form-label">Desricao *</label>
+                  <textarea
                     class="form-control"
-                  />
+                    rows="4"
+                    v-model="description"
+                  ></textarea>
+                  <div class="input-group-append"></div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="mb-3 col-md-6">
-                  <label class="form-label">Actividade *</label>
-                  <select
-                    v-model="activities"
-                    id="inputState"
-                    class="default-select form-control wide"
-                  >
-                    <option value="" disabled selected>Selecionar...</option>
-                    <option value="Comerciante">Comerciante</option>
-                    <option value="Pescador">Pescador</option>
-                    <option value="Empresario">Empresario</option>
-                  </select>
+
+                <div class="mb-3 col-md-12">
+                  <label class="form-label">Nota</label>
+                  <textarea
+                    class="form-control"
+                    rows="4"
+                    v-model="notes"
+                  ></textarea>
+                  <div class="input-group-append"></div>
                 </div>
-                <div class="mb-3 col-md-6">
-                  <label class="form-label">Email</label>
-                  <input v-model="email" type="text" class="form-control" />
+
+                <div class="mb-3 col-md-12">
+                  <label class="form-label">Data *</label>
+                  <input type="date" v-model="date" class="form-control" />
                 </div>
               </div>
 
@@ -103,8 +90,8 @@
                   v-if="btnloading"
                   class="spinner-border spinner-border-sm"
                 ></div>
-                <span v-if="btnloading">Processando</span>
-                <span v-else>Gravar</span>
+                <span v-if="btnloading">Actualizando</span>
+                <span v-else>Actualizar</span>
               </button>
               <!-- <button
                 type="submit"
@@ -133,26 +120,29 @@ import Cookies from "js-cookie";
 export default {
   data() {
     return {
-      firstName: "",
-      lastName: "",
-      email: "",
-      gender: "",
-      dob: "",
-      idType: "",
-      idNumber: "",
-      address: "",
-      contact1: "",
-      contact2: "",
-      user: "",
-      activities: "",
+      title: "",
+      date: "",
+      amount: "",
+      category: "",
+      paymentMethod: "",
+      notes: "",
       description: "",
-      role: 4,
-      avatar: null,
       btnloading: false,
+      loading: false,
     };
   },
-  created() {},
+  created() {
+    this.fetchData();
+  },
   methods: {
+    formatCurrency(value) {
+      const formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      });
+
+      return formatter.format(value);
+    },
     goBack() {
       this.$router.go(-1);
     },
@@ -167,7 +157,14 @@ export default {
       }
       return true;
     },
-    async onCreateCustomer() {
+    formatDate(dateString) {
+      const date = new Date(dateString); // Create a Date object from the ISO 8601 date string
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so add 1 and pad with '0' if needed
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`; // Return the formatted date as a string
+    },
+    async onEditDespesa() {
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -181,16 +178,12 @@ export default {
       });
 
       const requiredFields = [
-        "firstName",
-        "lastName",
-        "email",
-        "gender",
-        "dob",
-        "idType",
-        "idNumber",
-        "address",
-        "contact1",
-        "activities",
+        "title",
+        "date",
+        "amount",
+        "category",
+        "paymentMethod",
+        "description",
       ];
       const token = Cookies.get("token");
       for (const field of requiredFields) {
@@ -208,58 +201,37 @@ export default {
         }
       }
 
-      // Validate contacts
-      if (!this.validateContacts()) {
-        Swal.fire({
-          icon: "warning",
-          title: "Aviso!",
-          toast: true,
-          text: "Contacto deve ser numero",
-          timer: 3000,
-          showConfirmButton: false,
-          position: "top-end",
-        });
-        return;
-      }
-
       try {
         // Create FormData object
         const formData = new FormData();
-        formData.append("firstName", this.firstName);
-        formData.append("lastName", this.lastName);
-        formData.append("email", this.email);
-        formData.append("gender", this.gender);
-        formData.append("dob", this.dob);
-        formData.append("idType", this.idType);
-        formData.append("idNumber", this.idNumber);
-        formData.append("address", this.address);
-        formData.append("contact1", this.contact1);
-        formData.append("activities", this.activities);
-
+        formData.append("title", this.title);
+        formData.append("date", this.date);
+        formData.append("amount", this.amount);
+        formData.append("category", this.category);
+        formData.append("paymentMethod", this.paymentMethod);
+        formData.append("description", this.description);
+        formData.append("notes", this.notes);
+        const id = this.$route.params.id;
         this.btnloading = true;
-        const response = await axios.post(
-          "api/user/create/customer",
-          formData,
-          {
-            headers: {
-              token: token,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios.put(`/api/expense/edit/${id}`, formData, {
+          headers: {
+            token: token,
+            "Content-Type": "application/json",
+          },
+        });
 
         Toast.fire({
           icon: "success",
           title: "Successo!",
-          text: "Cliente criado com sucesso",
+          text: "Despesa actualizada com sucesso",
           timer: 3000,
         });
 
         this.btnloading = false;
-        this.$router.push("/listarclientes");
+        this.$router.push("/listardespesas");
         this.isSuccess = true;
         console.log(response);
-        this.$emit("Criando com sucesso");
+        this.$emit("Actualizada com sucesso");
       } catch (error) {
         if (
           error.response &&
@@ -273,7 +245,7 @@ export default {
             text: errorMessage,
           });
           this.btnloading = false;
-          console.error("Erro ao criar Cliente:", errorMessage);
+          console.error("Erro ao criar Despesa:", errorMessage);
           // setTimeout(() => {
           //   window.location.reload();
           // }, 3000);
@@ -283,11 +255,39 @@ export default {
             title: "Erro!",
             text: "Um erro ocorreu. Por favor, tente novamente ou actualize a pagina.",
           });
-          console.error("Erro ao criar Cliente:", error.message);
+          console.error("Erro ao actualizar Despesa:", error.message);
           // setTimeout(() => {
           //   window.location.reload();
           // }, 3000);
         }
+        this.btnloading = false;
+      }
+    },
+
+    async fetchData() {
+      try {
+        this.loading = true;
+        this.btnloading = true;
+        const id = this.$route.params.id;
+        const token = Cookies.get("token");
+        const response = await axios.get(`api/expense/getbyid/${id}`, {
+          headers: {
+            token: token,
+          },
+        });
+        const expense = response.data.expense;
+
+        this.title = expense.title;
+        this.amount = expense.amount;
+        this.category = expense.category;
+        this.paymentMethod = expense.paymentMethod;
+        this.notes = expense.notes;
+        this.description = expense.description;
+        this.date = this.formatDate(expense.date);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.loading = false;
         this.btnloading = false;
       }
     },

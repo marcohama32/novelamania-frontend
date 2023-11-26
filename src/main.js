@@ -8,12 +8,13 @@ import store from "./store/store";
 // import NotificationComponent from "./components/NotificationComponent.vue";
 // import io from "socket.io-client";
 import VueFlatpickr from 'vue-flatpickr-component';
+import "vue-search-select/dist/VueSearchSelect.css";
 
 // Import the Flatpickr CSS
 import 'flatpickr/dist/flatpickr.css';
 // Set default base URL for Axios requests
 
-axios.defaults.baseURL = "http://localhost:8000/api";
+axios.defaults.baseURL = "http://localhost:8000";
 
 // Add an Axios interceptor for handling 401 status code
 axios.interceptors.response.use(
@@ -24,7 +25,7 @@ axios.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       let msg = error.response.data.returnMessage;
       Cookies.set("logoutReason", msg);
-      const response = axios.get("/logout");
+      const response = axios.get("/api/logout");
       if (response.data.success) {
         Cookies.remove("token");
         router.push("/login");

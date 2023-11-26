@@ -80,7 +80,7 @@
         <div class="filter cm-content-box box-primary">
           <div class="content-title">
             <div class="cpa">
-              <i class="fa-solid fa-file-lines me-1"></i>Lista de Clientes
+              <i class="fa-solid fa-file-lines me-1"></i>Cobranças
             </div>
             <div class="tools">
               <a href="javascript:void(0);" class="expand SlideToolHeader"
@@ -94,49 +94,82 @@
                 <table class="table table-responsive-sm mb-0">
                   <thead>
                     <tr>
-                      <th><strong>Nome</strong></th>
-                      <th><strong>Data</strong></th>
-                      <th><strong>Sexo</strong></th>
-                      <th><strong>Doc</strong></th>
-                      <th><strong>Doc. No</strong></th>
-                      <th><strong>Endereco</strong></th>
+                      <th><strong>Factura</strong></th>
+                      <th><strong>Cliente</strong></th>
+                      <th><strong>Servico</strong></th>
+                      <th><strong>Valor</strong></th>
+                      <th><strong>Pagamento</strong></th>
+                      <th><strong>ID</strong></th>
                       <th><strong>Contacto</strong></th>
-                      <th><strong>Actividade</strong></th>
+                      <th><strong>Agent</strong></th>
                       <th><strong>Estado</strong></th>
+                       <th><strong>Data</strong></th>
                       <th style="width: 85px"><strong>Acoes</strong></th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="customer in customers" :key="customer._id">
-                      <td>{{ customer.firstName }} {{ customer.lastName }}</td>
-                      <td>{{ formatDateWithTime(customer.dob) }}</td>
-                      <td>{{ customer.gender }}</td>
+                    <tr v-for="charge in charges" :key="charge._id">
+                      <td>{{ charge.invoice }}</td>
+                      <td>
+                        {{ charge.customer.firstName }}
+                        {{ charge.customer.lastName }}
+                      </td>
+
                       <td class="recent-stats">
-                        {{ customer.idType }}
+                        {{ charge.servico.title }}
                       </td>
                       <td class="recent-stats">
-                        {{ customer.idNumber }}
+                        <!-- {{ charge.amount }}  -->
+                        {{ formatCurrency(charge.amount) }}
                       </td>
                       <td class="recent-stats">
-                        {{ customer.address }}
+                        {{ charge.paymentMethod }}
                       </td>
                       <td class="recent-stats">
-                        {{ customer.contact1 }}
+                        {{ charge.data?.output_TransactionID }}
                       </td>
                       <td class="recent-stats">
-                        {{ customer.activities }}
+                        {{ charge.msisdn }}
+                      </td>
+
+                      <td class="recent-stats">
+                        {{ charge.user?.firstName }}
+                      </td>
+
+                      <td class="recent-stats">
+                        {{ charge.status }}
                       </td>
                       <td class="recent-stats">
-                        {{ customer.status }}
+                        {{ formatDateWithTime(charge.createdAt) }}
                       </td>
                       <td>
-                        <router-link
-                          :to="`/clienteedit/${customer._id}`"
+                        
+                          <router-link
+                          v-if="role === '1'"
+                          :to="`/anularcobranca/${charge._id}`"
                           class="btn btn-primary shadow btn-xs sharp rounded-circle me-1"
                           ><i class="fa fa-pencil"></i
                         ></router-link>
+                       
+                      
+                          <!-- <router-link
+                          :to="`/anularcobranca/${charge._id}`"
+                          class="btn btn-primary shadow btn-xs sharp rounded-circle me-1"
+                          ><i class="fa fa-pencil"></i
+                        ></router-link> -->
+                      
+                        <!-- <router-link
+                          :to="`/apiprint/${charge._id}`"
+                          class="btn btn-secondary shadow btn-xs sharp rounded-circle me-1"
+                          ><i class="las la-print scale5"></i
+                        ></router-link> -->
+                         <router-link
+                          :to="`/factura/${charge._id}`"
+                          class="btn btn-rounded btn-success shadow btn-xs sharp rounded-circle me-1"
+                          ><i class="las la-print scale5"></i
+                        ></router-link>
                         <a
-                          @click="deleteItem(customer._id, customer.firstName)"
+                          @click="deleteItem(charge._id, charge.invoice)"
                           class="btn btn-danger shadow btn-xs sharp rounded-circle"
                           ><i class="fa fa-trash"></i
                         ></a>
@@ -201,7 +234,7 @@ import "sweetalert2/dist/sweetalert2.css";
 export default {
   data() {
     return {
-      customers: [],
+      charges: [],
       transactionFiles: [], // Initialize as an empty array
       currentPage: 1,
       totalPages: 1,
@@ -215,18 +248,7 @@ export default {
       firstEntryIndex: 0,
       lastEntryIndex: 0,
       searchTerm: "",
-      inprogress: "",
-      revoked: "",
-      aproved: "",
-      pending: "",
-      completed: "",
-      inprogressCount: "",
-      revokedCount: "",
-      aprovedCount: "",
-      pendingCount: "",
-      completedCount: "",
-      canceled: "",
-      canceledCount: "",
+      role:"",
       averageApprovalTime: "",
       startDate: "",
       endDate: "",
@@ -278,7 +300,12 @@ export default {
     searchTerm: "fetchData",
   },
   methods: {
-    async deleteItem(id,name) {
+    getRole(){
+      const role =Cookies.get("role");
+      this.role = role
+      return this.role
+    },
+    async deleteItem(id, invoiceNumber) {
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -294,7 +321,7 @@ export default {
       // Show confirmation dialog
       const confirmResult = await Swal.fire({
         title: "Tem certeza?",
-        text: `Deseja excluir o cliente: ${name} ?`,
+        text: `Deseja excluir a Cobrança com número de fatura ${invoiceNumber} ?`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
@@ -306,31 +333,28 @@ export default {
       if (confirmResult.isConfirmed) {
         this.loading = true;
         try {
-          const token = Cookies.get("token"); // Assuming you are using cookies to store the token
-          const response = await axios.delete(
-            `api/user/delete/customer/${id}`,
-            {
-              headers: {
-                token: token,
-              },
-            }
-          );
+          const token = Cookies.get("token");
+          const response = await axios.delete(`api/charge/delete/${id}`, {
+            headers: {
+              token: token,
+            },
+          });
 
           // Assuming the response contains some data, you can check it here
           console.log(response.data); // Use the response here
 
           Toast.fire({
             icon: "success",
-            title: "Cliente excluído com sucesso!",
+            title: "Cobrança excluída com sucesso!",
           });
           this.loading = false;
           this.fetchData();
         } catch (error) {
-          console.error("Erro ao excluir Cliente:", error);
+          console.error("Erro ao excluir Cobrança:", error);
 
           Toast.fire({
             icon: "error",
-            title: "Erro ao excluir Cliente ",
+            title: "Erro ao excluir Cobrança ",
           });
         }
       } else {
@@ -340,6 +364,7 @@ export default {
         });
       }
     },
+
     refresh() {
       (this.startDate = null),
         (this.endDate = null),
@@ -376,25 +401,7 @@ export default {
         });
       }
     },
-    shortenFileName(fileName, maxLength = 20) {
-      if (fileName.length > maxLength) {
-        return fileName.slice(0, maxLength) + "...";
-      } else {
-        return fileName;
-      }
-    },
-    openTransactionFilesModal(transaction) {
-      // Replace this logic with fetching the files for the selected transaction
-      // For example, you can populate this.transactionFiles with your file data.
-      this.transactionFiles = transaction.multipleFiles.split(",");
 
-      // Open the modal
-      const modal = document.getElementById("files-modal");
-      modal.style.display = "block";
-    },
-    getFilePath(file) {
-      return `${axios.defaults.baseURL}/${file}`;
-    },
     formatNumber(number) {
       // Check if the input is a valid number
       if (isNaN(number)) {
@@ -421,6 +428,12 @@ export default {
       return `${year}-${month}-${day}`;
     },
     formatCurrency(value) {
+      // Check if the value is an object with "$numberDecimal" property
+      if (value && typeof value === "object" && "$numberDecimal" in value) {
+        // Extract the numeric value
+        value = parseFloat(value.$numberDecimal);
+      }
+
       const formatter = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
@@ -448,15 +461,15 @@ export default {
           queryParams.startDate = this.startDate;
           queryParams.endDate = this.endDate;
         }
-        const response = await axios.get("/api/user/getall/customers", {
+        const response = await axios.get("api/charges/getall", {
           headers: {
             token: token,
           },
           params: queryParams,
         });
 
-        this.customers = response.data.customer;
-        // console.log(response.data.transactions);
+        this.charges = response.data.charges;
+        // console.log(response.data.charges);
         this.count = response.data.total;
         this.totalPages = Math.ceil(this.count / this.pageSize);
 
@@ -466,75 +479,6 @@ export default {
           this.currentPage * this.pageSize,
           this.count
         );
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.loading = false;
-      }
-    },
-    async fetchDashboardTotals() {
-      try {
-        this.loading = true;
-
-        const token = Cookies.get("token");
-        const response = await axios.get("/api/total/transactionsbystatus", {
-          headers: {
-            token: token,
-          },
-        });
-
-        if (response) {
-          //  const totalTransactions = response.data.totalTransactions;
-          const statusCounts = response.data.statusCounts;
-          this.inprogress = statusCounts["In progress"].totalAmount;
-          this.revoked = statusCounts.Revoked.totalAmount;
-          this.aproved = statusCounts.Aproved.totalAmount;
-          this.pending = statusCounts.Pending.totalAmount;
-          this.completed = statusCounts.Completed.totalAmount;
-          this.canceled = statusCounts.Canceled.totalAmount;
-
-          // count
-          this.inprogressCount = statusCounts["In progress"].count;
-          this.revokedCount = statusCounts.Revoked.count;
-          this.aprovedCount = statusCounts.Aproved.count;
-          this.pendingCount = statusCounts.Pending.count;
-          this.completedCount = statusCounts.Completed.count;
-          this.canceledCount = statusCounts.Canceled.count;
-        } else {
-          this.inprogress = 0;
-          this.revoked = 0;
-          this.aproved = 0;
-          this.pending = 0;
-          this.completed = 0;
-          this.canceled = 0;
-
-          // count
-          this.inprogressCount = 0;
-          this.revokedCount = 0;
-          this.aprovedCount = 0;
-          this.pendingCount = 0;
-          this.completedCount = 0;
-          this.canceledCount = 0;
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.loading = false;
-      }
-    },
-    async fetchDashboardAVT() {
-      try {
-        this.loading = true;
-
-        const token = Cookies.get("token");
-        const response = await axios.get("/api/get/averageapprovaltime", {
-          headers: {
-            token: token,
-          },
-        });
-
-        const avgt = response.data;
-        this.averageApprovalTime = avgt.averageApprovalTime;
       } catch (error) {
         console.error(error);
       } finally {
@@ -594,7 +538,7 @@ export default {
     exportToExcel() {
       const table = document.querySelector("table");
       const workbook = utils.table_to_book(table);
-      writeFile(workbook, "clientes_lista.xlsx");
+      writeFile(workbook, "cobrancas_lista.xlsx");
     },
     exportToPDF() {
       const table = document.querySelector("table");
@@ -609,6 +553,7 @@ export default {
     },
   },
   created() {
+ this.getRole();
     this.fetchData();
   },
 };

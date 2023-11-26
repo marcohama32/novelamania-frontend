@@ -27343,7 +27343,7 @@ table.dataTable thead .sorting {
       content: "";
       height: 100%;
       width: 100%;
-      background-color: var(--primary);
+      /* background-color: var(--primary); */
       position: absolute;
       left: 0;
       top: 0;

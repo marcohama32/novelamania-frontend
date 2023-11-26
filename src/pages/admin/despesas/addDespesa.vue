@@ -29,7 +29,9 @@
                   >
                     <option value="" disabled selected>Selecionar...</option>
                     <option value="BI">Transporte</option>
-                    <option value="Material_de_escritorio">Material de escritorio</option>
+                    <option value="Material_de_escritorio">
+                      Material de escritorio
+                    </option>
                     <option value="Outro">Outro</option>
                   </select>
                 </div>
@@ -49,7 +51,13 @@
                 </div>
                 <div class="mb-3 col-md-6">
                   <label class="form-label">Valor *</label>
-                  <input v-model="amount" type="number" class="form-control"   min="1" step="0.01" />
+                  <input
+                    v-model="amount"
+                    type="number"
+                    class="form-control"
+                    min="1"
+                    step="0.01"
+                  />
                 </div>
 
                 <div class="mb-3 col-md-12">
@@ -126,7 +134,7 @@ export default {
       notes: "",
       description: "",
       btnloading: false,
-      loading: false
+      loading: false,
     };
   },
   created() {},
@@ -196,9 +204,8 @@ export default {
         this.btnloading = true;
         const response = await axios.post("api/expense/create", formData, {
           headers: {
-       token: token,
+            token: token,
             "Content-Type": "application/json",
-
           },
         });
 

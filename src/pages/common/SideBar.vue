@@ -83,6 +83,20 @@
               <li><router-link to="/relatorios" href="javascript:;">Analises</router-link></li>
             </ul>
           </li>
+          <li v-if="hasRoute('Listar Analises')">
+            <a
+              class="has-arrow ai-icon"
+              href="javascript:void()"
+              aria-expanded="false"
+            >
+             <i class="flaticon-381-layer-1"></i>
+              <span class="nav-text">Usuarios</span>
+            </a>
+            <ul aria-expanded="false">
+              <li><router-link to="/addusuario" href="javascript:;">Registrar</router-link></li>
+              <li><router-link to="/listarusuarios" href="javascript:;">Listar</router-link></li>
+            </ul>
+          </li>
           <!-- <li>
             <a
               class="has-arrow ai-icon"

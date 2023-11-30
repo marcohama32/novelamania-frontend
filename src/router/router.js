@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Cookies from "js-cookie";
 import axios from "axios";
-import Login from "../pages/common/LogIn.vue";
-import Home from "../pages/common/HomePage.vue";
-import ViewClientes from "../pages/admin/clientes/ViewClientes.vue";
-import AddClientes from "../pages/admin/clientes/AddClientes.vue";
+import Login from "@/pages/common/LogIn.vue";
+import Home from "@/pages/common/HomePage.vue";
+import ViewClientes from "@/pages/admin/clientes/ViewClientes.vue";
+import AddClientes from "@/pages/admin/clientes/AddClientes.vue";
 import EditCliente from "@/pages/admin/clientes/EditCliente.vue";
 
 import ViewCobrancas from "@/pages/admin/cobrancas/ViewCobrancas.vue";
@@ -16,7 +16,7 @@ import CobrancaMpesaProcessar from "@/pages/admin/cobrancas/metodos/CobrancaMpes
 
 import EditCobrancaDinheiroProcessar from "@/pages/admin/cobrancas/metodos/EditCobrancaDinheiroProcessar.vue";
 import facturaPage from "@/pages/admin/facturas/facturaPage.vue";
-import NotFound from "../pages/common/NotFound.vue";
+import NotFound from "@/pages/common/NotFound.vue";
 
 // depesa
 import AddDespesa from "@/pages/admin/despesas/addDespesa.vue";
@@ -24,9 +24,14 @@ import ViewDesesa from "@/pages/admin/despesas/viewDespesa.vue";
 import EditDesesa from "@/pages/admin/despesas/editDespesa.vue";
 
 // servico
-import ViewServico from "../pages/admin/servicos/viewServico.vue";
-import AddServico from "../pages/admin/servicos/addServico.vue";
-import EditServico from "../pages/admin/servicos/editServico.vue";
+import ViewServico from "@/pages/admin/servicos/viewServico.vue";
+import AddServico from "@/pages/admin/servicos/addServico.vue";
+import EditServico from "@/pages/admin/servicos/editServico.vue";
+
+// usuarios
+import ViewUsuarios from "@/pages/admin/usuarios/viewUsuarios.vue";
+import AddUsuario from "@/pages/admin/usuarios/addUsuario.vue";
+import EditUsuario from "@/pages/admin/usuarios/editUsuario.vue";
 
 //relatorio
 import ViewAnalises from "../pages/admin/relatorios/ViewAnalises.vue";
@@ -146,6 +151,26 @@ const routes = [
     path: "/editservico/:id",
     component: EditServico,
     name: "Editar Servico",
+    meta: { requiresAuth: true, roles: ["1"] },
+  },
+
+  // usuarios
+  {
+    path: "/listarusuarios",
+    component: ViewUsuarios,
+    name: "Listar Usuarios",
+    meta: { requiresAuth: true, roles: ["1"] },
+  },
+  {
+    path: "/addusuario",
+    component: AddUsuario,
+    name: "Add Usuario",
+    meta: { requiresAuth: true, roles: ["1"] },
+  },
+  {
+    path: "/editusuario/:id",
+    component: EditUsuario,
+    name: "Editar Usuario",
     meta: { requiresAuth: true, roles: ["1"] },
   },
 

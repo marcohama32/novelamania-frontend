@@ -194,7 +194,8 @@
                     >
                     <p class="fs-12 mb-0">{{ getRoleName(role) }}</p>
                   </div>
-                  <!-- <img src="../../dist/images/m.jpg" width="20" alt="" /> -->
+                 <img src="/dist/images/logo.png" class="logo" />
+
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
                   <router-link to="/perfil" class="dropdown-item ai-icon">
@@ -402,19 +403,13 @@ export default {
       if (role === 1) {
         return "Admin";
       } else if (role === 2) {
-        return "Line Manager";
+        return "Gestor";
       } else if (role === 3) {
-        return "Agent";
+        return "Agente";
       } else if (role === 4) {
-        return "Customer";
+        return "Cliente";
       } else if (role === 5) {
         return "Customer";
-      } else if (role === 6) {
-        return "Partner";
-      } else if (role === 7) {
-        return "Dependent";
-      } else if (role === 8) {
-        return "Dependent";
       }
       {
         return ""; // Default class if no match
@@ -427,3 +422,9 @@ export default {
   mounted() {},
 };
 </script>
+<style>
+.logo {
+  width: 30px !important;
+  height: 30px !important;
+}
+</style>

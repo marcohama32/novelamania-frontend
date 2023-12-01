@@ -241,7 +241,7 @@ router.beforeEach((to, from, next) => {
   // Redirect users to their respective dashboard based on their role
   if (to.path === "/" && isAuthenticated) {
     if (userRole === "2") {
-      return next({ path: "/" });
+      return next({ path: "/listarcobrancas" });
     } else if (userRole === "3") {
       return next({ path: "/addcobranca" });
     } else if (userRole === "4") {

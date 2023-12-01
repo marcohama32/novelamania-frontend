@@ -71,7 +71,7 @@
         </div>
         <div class="mb-3">
           <ul class="d-flex align-items-center flex-wrap">
-            <li>
+            <li v-if="role === '1' || role === '2'">
               <a @click="exportToExcel" class="btn btn-primary">Export</a>
             </li>
             <div v-if="loading" class="spinner" style="font-size: 18px"></div>

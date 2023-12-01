@@ -62,7 +62,7 @@
             <div class="card">
               <div class="card-header d-block d-sm-flex border-0">
                 <div class="me-3">
-                  <h4 class="fs-20 text-black">Transações recentes</h4>
+                  <h4 class="fs-20 text-black">Cobranças recentes</h4>
                   <!-- <p class="mb-0 fs-13">
                     Lorem ipsum dolor sit amet, consectetur
                   </p> -->

@@ -71,7 +71,7 @@
         </div>
         <div class="mb-3">
           <ul class="d-flex align-items-center flex-wrap">
-            <li>
+            <li v-if="role === '1' || role === '2'">
               <a @click="exportToExcel" class="btn btn-primary">Export</a>
             </li>
             <div v-if="loading" class="spinner" style="font-size: 18px"></div>
@@ -103,7 +103,7 @@
                       <th><strong>Contacto</strong></th>
                       <th><strong>Agent</strong></th>
                       <th><strong>Estado</strong></th>
-                       <th><strong>Data</strong></th>
+                      <th><strong>Data</strong></th>
                       <th style="width: 85px"><strong>Acoes</strong></th>
                     </tr>
                   </thead>
@@ -143,32 +143,31 @@
                         {{ formatDateWithTime(charge.createdAt) }}
                       </td>
                       <td>
-                        
-                          <router-link
+                        <router-link
                           v-if="role === '1'"
                           :to="`/anularcobranca/${charge._id}`"
                           class="btn btn-primary shadow btn-xs sharp rounded-circle me-1"
                           ><i class="fa fa-pencil"></i
                         ></router-link>
-                       
-                      
-                          <!-- <router-link
+
+                        <!-- <router-link
                           :to="`/anularcobranca/${charge._id}`"
                           class="btn btn-primary shadow btn-xs sharp rounded-circle me-1"
                           ><i class="fa fa-pencil"></i
                         ></router-link> -->
-                      
+
                         <!-- <router-link
                           :to="`/apiprint/${charge._id}`"
                           class="btn btn-secondary shadow btn-xs sharp rounded-circle me-1"
                           ><i class="las la-print scale5"></i
                         ></router-link> -->
-                         <router-link
+                        <router-link
                           :to="`/factura/${charge._id}`"
                           class="btn btn-rounded btn-success shadow btn-xs sharp rounded-circle me-1"
                           ><i class="las la-print scale5"></i
                         ></router-link>
                         <a
+                          v-if="role === '1'"
                           @click="deleteItem(charge._id, charge.invoice)"
                           class="btn btn-danger shadow btn-xs sharp rounded-circle"
                           ><i class="fa fa-trash"></i
@@ -248,7 +247,7 @@ export default {
       firstEntryIndex: 0,
       lastEntryIndex: 0,
       searchTerm: "",
-      role:"",
+      role: "",
       averageApprovalTime: "",
       startDate: "",
       endDate: "",
@@ -300,10 +299,10 @@ export default {
     searchTerm: "fetchData",
   },
   methods: {
-    getRole(){
-      const role =Cookies.get("role");
-      this.role = role
-      return this.role
+    getRole() {
+      const role = Cookies.get("role");
+      this.role = role;
+      return this.role;
     },
     async deleteItem(id, invoiceNumber) {
       const Toast = Swal.mixin({
@@ -553,7 +552,7 @@ export default {
     },
   },
   created() {
- this.getRole();
+    this.getRole();
     this.fetchData();
   },
 };

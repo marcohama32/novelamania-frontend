@@ -60,7 +60,7 @@
                   <i id="icon-dark" class="fas fa-moon"></i>
                 </a>
               </li>
-              <li class="nav-item dropdown notification_dropdown">
+              <!-- <li class="nav-item dropdown notification_dropdown">
                 <a
                   class="nav-link ai-icon"
                   href="javascript:void(0)"
@@ -179,7 +179,7 @@
                     >See all notifications <i class="ti-arrow-right"></i
                   ></a>
                 </div>
-              </li>
+              </li> -->
 
               <li class="nav-item dropdown header-profile">
                 <a

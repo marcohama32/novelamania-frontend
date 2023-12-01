@@ -46,7 +46,9 @@
             </div>
             <div class="row mb-2">
               <div class="col-sm-3 col-5">
-                <h5 class="f-w-500">Contacto <span class="pull-end">:</span></h5>
+                <h5 class="f-w-500">
+                  Contacto <span class="pull-end">:</span>
+                </h5>
               </div>
               <div class="col-sm-9 col-7">
                 <span>{{ msisdn }}</span>
@@ -200,6 +202,7 @@ export default {
       serviceId: "",
       status: "",
       msisdn: "",
+      amount:"",
       activities: "",
       currentPage: 1,
       totalPages: 1,
@@ -446,6 +449,7 @@ export default {
         });
 
         this.customers = response.data.customer;
+
         // Store fetched customers and selected customer ID in local storage
         localStorage.setItem("customers", JSON.stringify(this.customers));
         const storedCustomerId = localStorage.getItem("selectedCustomerId");
@@ -480,10 +484,10 @@ export default {
         this.createdAt = this.formatDate(charge.createdAt);
         this.status = charge.status;
         this.paymentMethod = charge.paymentMethod;
+        this.msisdn = charge.msisdn;
         this.output_ResponseDesc = charge.data.output_ResponseDesc;
         this.output_TransactionID = charge.data.output_TransactionID;
         this.output_ConversationID = charge.data.output_ConversationID;
-        this.msisdn = charge.msisdn
 
         this.customerId = charge.customer._id;
         this.serviceId = charge.service._id;
@@ -547,26 +551,25 @@ export default {
   },
   created() {
     // Try fetching services from local storage
-    const storedServices = localStorage.getItem("services");
-    if (storedServices) {
-      this.services = JSON.parse(storedServices);
-    } else {
-      // If not in local storage, fetch services from the API
-      this.fetchServices();
-    }
+    // const storedServices = localStorage.getItem("services");
+    // if (storedServices) {
+    //   this.services = JSON.parse(storedServices);
+    // } else {
+    //   // If not in local storage, fetch services from the API
+    //   this.fetchServices();
+    // }
 
-    // Try fetching customers from local storage
-    const storedCustomers = localStorage.getItem("customers");
-    if (storedCustomers) {
-      this.customers = JSON.parse(storedCustomers);
-    } else {
-      // If not in local storage, fetch customers from the API
-      this.fetchData();
-      this.fetchData();
-    }
+    // // Try fetching customers from local storage
+    // const storedCustomers = localStorage.getItem("customers");
+    // if (storedCustomers) {
+    //   this.customers = JSON.parse(storedCustomers);
+    // } else {
+    //   // If not in local storage, fetch customers from the API
+    //   this.fetchData();
+    // }
 
-    this.fetchData();
-    this.fetchServices();
+    // this.fetchData();
+    // this.fetchServices();
     this.fetchCharge();
   },
 };

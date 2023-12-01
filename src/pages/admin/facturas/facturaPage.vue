@@ -41,14 +41,14 @@
                       />
                       <img
                         class="logo-compact"
-                        src="images/logo-text.png"
+                        src="/images/logo-text.png"
                         alt=""
                       />
                     </div>
                   </div>
                   <div class="col-sm-3 mt-3">
                     <img
-                      src="images/qr.png"
+                      src="/images/qr.png"
                       alt=""
                       class="img-fluid width110"
                     />
@@ -103,6 +103,8 @@ export default {
       createdAt: "",
       service: "",
       msisdn: "",
+      invoice:"",
+      amount:"",
       contact1: "",
       contact2: "",
       user: "",

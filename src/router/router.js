@@ -14,7 +14,7 @@ import CobrancaDinheiro from "@/pages/admin/cobrancas/metodos/CobrancaDinheiro.v
 import CobrancaDinheiroProcessar from "@/pages/admin/cobrancas/metodos/CobrancaDinheiroProcessar.vue";
 import CobrancaMpesaProcessar from "@/pages/admin/cobrancas/metodos/CobrancaMpesaProcessar.vue";
 
-import EditCobrancaDinheiroProcessar from "@/pages/admin/cobrancas/metodos/EditCobrancaDinheiroProcessar.vue";
+import AnularCobranca from "@/pages/admin/cobrancas/metodos/AnularCobranca.vue";
 import facturaPage from "@/pages/admin/facturas/facturaPage.vue";
 import NotFound from "@/pages/common/NotFound.vue";
 
@@ -108,7 +108,7 @@ const routes = [
 
   {
     path: "/anularcobranca/:id",
-    component: EditCobrancaDinheiroProcessar,
+    component: AnularCobranca,
     name: "Edit Cobranca Dinheiro",
     meta: { requiresAuth: true, roles: ["1"] },
   },

@@ -71,7 +71,7 @@
         </div>
         <div class="mb-3">
           <ul class="d-flex align-items-center flex-wrap">
-            <li v-if="roles === '1' || roles === '2'">
+            <li v-if="role === '1' || role === '2'">
               <a @click="exportToExcel" class="btn btn-primary">Export</a>
             </li>
             <div v-if="loading" class="spinner" style="font-size: 18px"></div>
@@ -187,7 +187,7 @@ import html2pdf from "html2pdf.js";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/dist/sweetalert2.css";
-import moment from "moment";
+import moment from 'moment';
 
 export default {
   data() {
@@ -197,8 +197,6 @@ export default {
       currentPage: 1,
       totalPages: 1,
       itemsPerPage: 10,
-
-      roles: Cookies.get("role"),
 
       loading: false,
       pageSize: 10,
@@ -573,48 +571,44 @@ export default {
       writeFile(workbook, "despesas_lista.xlsx");
     },
 
-    async exportToExcelDB() {
-      try {
-        this.loading = true;
-        const token = Cookies.get("token");
-        const queryParams = {
-          pageNumber: this.currentPage,
-          pageSize: this.pageSize,
-          searchTerm: this.searchTerm,
-          startDate: this.startDate,
-          endDate: this.endDate,
-        };
+   async exportToExcelDB() {
+  try {
+    this.loading = true;
+    const token = Cookies.get('token');
+    const queryParams = {
+      pageNumber: this.currentPage,
+      pageSize: this.pageSize,
+      searchTerm: this.searchTerm,
+      startDate: this.startDate,
+      endDate: this.endDate,
+    };
 
-        // API request to generate and get the Excel file
-        const response = await axios.get("api/charge/report/", {
-          headers: { token },
-          params: queryParams,
-          responseType: "blob", // Specify response type as blob
-        });
+    // API request to generate and get the Excel file
+    const response = await axios.get('api/charge/report/', {
+      headers: { token },
+      params: queryParams,
+      responseType: 'blob', // Specify response type as blob
+    });
 
-        // Check if the response contains data
-        if (response.data) {
-          const blob = new Blob([response.data], {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          });
-          const link = document.createElement("a");
-          link.href = window.URL.createObjectURL(blob);
-          link.setAttribute(
-            "download",
-            `exportedData_${moment().format("YYYY-MM-DD_HH-mm-ss")}.xlsx`
-          );
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        } else {
-          console.log("No data to export");
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.loading = false;
-      }
-    },
+    // Check if the response contains data
+    if (response.data) {
+      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', `exportedData_${moment().format('YYYY-MM-DD_HH-mm-ss')}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      console.log('No data to export');
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    this.loading = false;
+  }
+}
+,
     exportToPDF() {
       const table = document.querySelector("table");
       setTimeout(() => {

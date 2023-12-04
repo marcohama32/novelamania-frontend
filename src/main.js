@@ -13,8 +13,8 @@ import "vue-search-select/dist/VueSearchSelect.css";
 // Import the Flatpickr CSS
 import "flatpickr/dist/flatpickr.css";
 // Set default base URL for Axios requests
-// axios.defaults.baseURL = "https://cobrancasbackend.onrender.com/";
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "https://cobrancasbackend.onrender.com/";
+// axios.defaults.baseURL = "http://localhost:8000";
 
 // Add an Axios interceptor for handling 401 status code
 axios.interceptors.response.use(

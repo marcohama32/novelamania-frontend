@@ -1,300 +1,218 @@
+// import { createRouter, createWebHistory } from "vue-router";
+// import Cookies from "js-cookie";
+// import axios from "axios";
+
+// import Home from "@/pages/common/HomePage.vue";
+// import AssistaNovelas from "@/pages/AssistaNovelas.vue";
+// import AssistaDoramas from "@/pages/AssistaDoramas.vue";
+// import NossosPacotes from "@/pages/NossosPacotes.vue";
+// import NossosContactos from "@/pages/NossosContactos.vue";
+// import NovelaDetalhe from "@/pages/NovelaDetalhe.vue";
+// // import EditDesesa from "@/pages/admin/despesas/editDespesa.vue";
+// // import ViewPerfil from "../pages/admin/perfil/viewPerfil.vue";
+
+// const routes = [
+//   { path: "/", component: Home, name: "Home" },
+//   // { path: "/despesaedit/:id", component: EditDesesa, name: "Editar Despesa" },
+//   // { path: "/perfil", component: ViewPerfil, name: "Meu Perfil" },
+//   { path: "/novelas", component: AssistaNovelas, name: "Assista Novelas" },
+//   { path: "/doramas", component: AssistaDoramas, name: "Assista Doramas" },
+//   { path: "/pacotes", component: NossosPacotes, name: "Nossos Pacotes" },
+//   { path: "/contactos", component: NossosContactos, name: "Nossos Contactos" },
+//   {
+//     path: "/detalhe-novela/:id",
+//     component: NovelaDetalhe,
+//     name: "Detalhes da Novela",
+//     meta: { requiresAuth: true, roles: ["2"] },
+//     props: true,
+//   },
+//   { path: "/:pathMatch(.*)*", name: "Home", component: Home },
+// ];
+
+// const router = createRouter({
+//   history: createWebHistory(),
+//   routes,
+// });
+
+// const VERIFY_TOKEN_ENDPOINT = "/api/check/verify-token";
+// const LOGOUT_ENDPOINT = "/api/logout";
+// const TOKEN_COOKIE = "token";
+// const ROLE_COOKIE = "role";
+
+// let logoutInProgress = false; // Flag para controlar múltiplas execuções de logout
+
+// const handleLogout = async () => {
+//   try {
+//     const token = Cookies.get(TOKEN_COOKIE);
+//     // console.log("Token antes de logout:", token); // Log adicional
+//     if (token) {
+//       await axios.get(LOGOUT_ENDPOINT, {
+//         headers: { token: token },
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Erro ao fazer logout:", error);
+//   } finally {
+//     // console.log("Removendo cookies e redirecionando");
+//     Cookies.remove(TOKEN_COOKIE);
+//     Cookies.remove(ROLE_COOKIE);
+//     window.location.replace("/");
+//   }
+// };
+
+// axios.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     if (error.response && error.response.status === 401) {
+//       // console.log("Erro 401 detectado, executando logout");
+//       if (!logoutInProgress) {
+//         logoutInProgress = true;
+//         await handleLogout();
+//         logoutInProgress = false; // Resetar flag após o logout
+//       }
+//     }
+//     return Promise.reject(error);
+//   }
+// );
+
+// router.beforeEach(async (to, from, next) => {
+//   // console.log("Rota solicitada:", to.path); // Log adicional
+//   const token = Cookies.get(TOKEN_COOKIE);
+//   // console.log("Token encontrado:", token); // Log adicional
+
+//   // const response = await axios.get(VERIFY_TOKEN_ENDPOINT, {
+//   //   headers: { token: token },
+//   // });
+
+//   // if(response.data.message === "Token is valid"){
+//   //   Cookies.remove(TOKEN_COOKIE);
+//   //   Cookies.remove(ROLE_COOKIE);
+//   //   // window.go("/");
+//   // }
+//   // console.log("Resposta da verificação do token:", response.data.message); // Log adicional
+
+//   try {
+//     if (to.meta.requiresAuth && token) {
+//       await axios.get(VERIFY_TOKEN_ENDPOINT, {
+//         headers: { token: token },
+//       });
+
+//       // console.log("Resposta da verificação do token:", response); // Log adicional
+
+//       const userRole = Cookies.get(ROLE_COOKIE);
+//       // console.log("Role encontrada:", userRole); // Log adicional
+
+//       if (!userRole || !to.meta.roles.includes(userRole)) {
+//         console.log("Usuário não tem permissão para acessar esta rota");
+//         next("/");
+//         return;
+//       }
+//     }
+//   } catch (error) {
+//     console.error("Erro:", error);
+//     // console.error("Erro ao verificar token:", error);
+//     await handleLogout();
+//     return;
+//   }
+
+//   next();
+// });
+
+// export default router; // Exporta o router configurado
+
 import { createRouter, createWebHistory } from "vue-router";
 import Cookies from "js-cookie";
 import axios from "axios";
-import Login from "@/pages/common/LogIn.vue";
+
 import Home from "@/pages/common/HomePage.vue";
-import ViewClientes from "@/pages/admin/clientes/ViewClientes.vue";
-import AddClientes from "@/pages/admin/clientes/AddClientes.vue";
-import EditCliente from "@/pages/admin/clientes/EditCliente.vue";
-
-import ViewCobrancas from "@/pages/admin/cobrancas/ViewCobrancas.vue";
-import AddCobranca from "@/pages/admin/cobrancas/AddCobranca.vue";
-import CobrancaMpesa from "@/pages/admin/cobrancas/metodos/CobrancaMpesa.vue";
-import CobrancaDinheiro from "@/pages/admin/cobrancas/metodos/CobrancaDinheiro.vue";
-import CobrancaDinheiroProcessar from "@/pages/admin/cobrancas/metodos/CobrancaDinheiroProcessar.vue";
-import CobrancaMpesaProcessar from "@/pages/admin/cobrancas/metodos/CobrancaMpesaProcessar.vue";
-
-import AnularCobranca from "@/pages/admin/cobrancas/metodos/AnularCobranca.vue";
-import facturaPage from "@/pages/admin/facturas/facturaPage.vue";
-import NotFound from "@/pages/common/NotFound.vue";
-
-// depesa
-import AddDespesa from "@/pages/admin/despesas/addDespesa.vue";
-import ViewDesesa from "@/pages/admin/despesas/viewDespesa.vue";
-import EditDesesa from "@/pages/admin/despesas/editDespesa.vue";
-
-// servico
-import ViewServico from "@/pages/admin/servicos/viewServico.vue";
-import AddServico from "@/pages/admin/servicos/addServico.vue";
-import EditServico from "@/pages/admin/servicos/editServico.vue";
-
-// usuarios
-import ViewUsuarios from "@/pages/admin/usuarios/viewUsuarios.vue";
-import AddUsuario from "@/pages/admin/usuarios/addUsuario.vue";
-import EditUsuario from "@/pages/admin/usuarios/editUsuario.vue";
-
-//relatorio
-import ViewAnalises from "../pages/admin/relatorios/ViewAnalises.vue";
-
-//perfil
-import ViewPerfil from "../pages/admin/perfil/viewPerfil.vue";
-
+import AssistaNovelas from "@/pages/AssistaNovelas.vue";
+import AssistaDoramas from "@/pages/AssistaDoramas.vue";
+import NossosPacotes from "@/pages/NossosPacotes.vue";
+import NossosContactos from "@/pages/NossosContactos.vue";
+import NovelaDetalhe from "@/pages/NovelaDetalhe.vue";
 
 const routes = [
+  { path: "/", component: Home, name: "Home" },
+  { path: "/novelas", component: AssistaNovelas, name: "Assista Novelas" },
+  { path: "/doramas", component: AssistaDoramas, name: "Assista Doramas" },
+  { path: "/pacotes", component: NossosPacotes, name: "Nossos Pacotes" },
+  { path: "/contactos", component: NossosContactos, name: "Nossos Contactos" },
   {
-    path: "/",
-    component: Home,
-    name: "Dashboard",
-    meta: { requiresAuth: true, roles: ["1"] },
+    path: "/detalhe-novela/:id",
+    component: NovelaDetalhe,
+    name: "Detalhes da Novela",
+    meta: { requiresAuth: true, roles: ["2"] },
+    props: true,
   },
-  /////////////////// admin ////////////
-  {
-    path: "/listarclientes",
-    component: ViewClientes,
-    name: "View Clientes",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-  {
-    path: "/addclientes",
-    component: AddClientes,
-    name: "Add Clientes",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-  {
-    path: "/clienteedit/:id",
-    component: EditCliente,
-    name: "Edit Customer",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-
-  // cobrancas
-
-  {
-    path: "/listarcobrancas",
-    component: ViewCobrancas,
-    name: "View Cobrancas",
-    meta: { requiresAuth: true, roles: ["1", "2", "3"] },
-  },
-  {
-    path: "/addcobranca",
-    component: AddCobranca,
-    name: "Add Cobrancas",
-    meta: { requiresAuth: true, roles: ["3"] },
-  },
-  {
-    path: "/cobrancampesa",
-    component: CobrancaMpesa,
-    name: "Cobranca Mpesa",
-    meta: { requiresAuth: true, roles: ["3"] },
-  },
-  {
-    path: "/cobrancadinheiro",
-    component: CobrancaDinheiro,
-    name: "Cobranca Dinheiro",
-    meta: { requiresAuth: true, roles: ["3"] },
-  },
-  {
-    path: "/cobrancadinheiroprocessar/:id",
-    component: CobrancaDinheiroProcessar,
-    name: "Cobranca Dinheiro Processar",
-    meta: { requiresAuth: true, roles: ["3"] },
-  },
-  {
-    path: "/cobrancampesaprocessar/:id",
-    component: CobrancaMpesaProcessar,
-    name: "Cobranca Mpesa Processar",
-    meta: { requiresAuth: true, roles: ["3"] },
-  },
-
-  {
-    path: "/anularcobranca/:id",
-    component: AnularCobranca,
-    name: "Edit Cobranca Dinheiro",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-
-  // depesa
-  {
-    path: "/adddespesa",
-    component: AddDespesa,
-    name: "Add Despesa",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-
-  {
-    path: "/listardespesas",
-    component: ViewDesesa,
-    name: "Listar Despesas",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-  {
-    path: "/despesaedit/:id",
-    component: EditDesesa,
-    name: "Editar Despesa",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-
-  // servico
-  {
-    path: "/listarservicos",
-    component: ViewServico,
-    name: "Listar Servicos",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-  {
-    path: "/addservico",
-    component: AddServico,
-    name: "Add servico",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-  {
-    path: "/editservico/:id",
-    component: EditServico,
-    name: "Editar Servico",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-
-  // usuarios
-  {
-    path: "/listarusuarios",
-    component: ViewUsuarios,
-    name: "Listar Usuarios",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-  {
-    path: "/addusuario",
-    component: AddUsuario,
-    name: "Add Usuario",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-  {
-    path: "/editusuario/:id",
-    component: EditUsuario,
-    name: "Editar Usuario",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-
-  // factura
-  {
-    path: "/factura/:id",
-    component: facturaPage,
-    name: "Factura",
-    meta: { requiresAuth: true, roles: ["1", "2", "3"] },
-  },
-
-  // relatorios
-
-  {
-    path: "/relatorios",
-    component: ViewAnalises,
-    name: "Listar Analises",
-    meta: { requiresAuth: true, roles: ["1"] },
-  },
-
-  // relatorios
-
-  {
-    path: "/perfil",
-    component: ViewPerfil,
-    name: "Meu Perfil",
-    meta: { requiresAuth: true, roles: ["1", "2", "3"] },
-  },
-
-  // Login & Logout
-  {
-    path: "/login",
-    name: "Login",
-    components: {
-      default: Login,
-      login: Login,
-    },
-    meta: { requiresAuth: false },
-  },
-
-  {
-    path: "/:pathMatch(.*)*",
-    name: "NotFound",
-    component: NotFound,
-  },
+  { path: "/:pathMatch(.*)*", name: "Home", component: Home },
 ];
+
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = Cookies.get("token");
-  const userRole = Cookies.get("role");
-  // const visitedBefore = sessionStorage.getItem("visitedBefore");
+const VERIFY_TOKEN_ENDPOINT = "/api/check/verify-token";
+const LOGOUT_ENDPOINT = "/api/logout";
+const TOKEN_COOKIE = "token";
+const ROLE_COOKIE = "role";
 
-  // Check if authentication is required and the user is not authenticated
-  if (
-    (to.meta.requiresAuth && !isAuthenticated) ||
-    (isTokenValid(isAuthenticated) === "false" && to.name !== "Login")
-  ) {
-    // Clear token and session data on token expiration
-    clearUserData();
-    window.location.replace("/login");
-    return next({ path: "/login" });
-  }
+let logoutInProgress = false;
 
-  // Redirect users to their respective dashboard based on their role
-  if (to.path === "/" && isAuthenticated) {
-    if (userRole === "2") {
-      return next({ path: "/listarcobrancas" });
-    } else if (userRole === "3") {
-      return next({ path: "/addcobranca" });
-    } else if (userRole === "4") {
-      return next({ path: "/" });
+const handleLogout = async () => {
+  try {
+    const token = Cookies.get(TOKEN_COOKIE);
+    if (token) {
+      await axios.get(LOGOUT_ENDPOINT, {
+        headers: { token },
+      });
     }
+  } catch (error) {
+    console.error("Erro ao fazer logout:", error);
+  } finally {
+    Cookies.remove(TOKEN_COOKIE);
+    Cookies.remove(ROLE_COOKIE);
+    window.location.replace("/");
+  }
+};
+
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response && error.response.status === 401) {
+      if (!logoutInProgress) {
+        logoutInProgress = true;
+        await handleLogout();
+        logoutInProgress = false;
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+router.beforeEach(async (to, from, next) => {
+  const token = Cookies.get(TOKEN_COOKIE);
+
+  try {
+    if (to.meta.requiresAuth && token) {
+      await axios.get(VERIFY_TOKEN_ENDPOINT, {
+        headers: { token },
+      });
+
+      const userRole = Cookies.get(ROLE_COOKIE);
+      if (!userRole || !to.meta.roles.includes(userRole)) {
+        console.log("Usuário não tem permissão para acessar esta rota");
+        next("/");
+        return;
+      }
+    }
+  } catch (error) {
+    console.error("Erro ao verificar token:", error);
+    await handleLogout();
+    return;
   }
 
-  // Check if roles are defined and the user role is not included
-  if (to.meta.roles && !to.meta.roles.includes(userRole)) {
-    return next({ name: "NotFound" });
-  }
-
-  // Reset the auto-logout timer on user activity
-  if (isAuthenticated) {
-    resetAutoLogoutTimer();
-  }
-
-  // Allow navigation to the next route
   next();
 });
-
-// Define the auto-logout timer functions
-let autoLogoutTimer;
-
-function resetAutoLogoutTimer() {
-  clearTimeout(autoLogoutTimer);
-  autoLogoutTimer = setTimeout(() => {
-    clearUserData(); // Perform logout actions
-    window.location.replace("/login");
-  }, 900000); // 15 minutes (900,000 milliseconds)
-}
-
-function clearUserData() {
-  Cookies.remove("token");
-  Cookies.remove("role");
-  sessionStorage.removeItem("visitedBefore");
-}
-
-async function isTokenValid(token) {
-  try {
-    const response = await axios.get("/api/check/verify-token/", {
-      headers: {
-        token: token,
-      },
-    });
-
-    return response.status === 200; // Return true if token is valid
-  } catch (error) {
-    Cookies.remove("token");
-    Cookies.remove("role");
-    sessionStorage.removeItem("visitedBefore");
-    return false; // Return false if token is invalid or request fails
-  }
-}
 
 export default router;

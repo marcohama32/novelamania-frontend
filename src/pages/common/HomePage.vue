@@ -1,499 +1,1066 @@
 <template>
   <div>
-    <div class="form-head mb-4">
-      <h2 class="text-black font-w600 mb-0">Painel de Controle</h2>
+    <!-- preloader -->
+    <div v-if="loading" id="preloader">
+      <div id="loading-center">
+        <div id="loading-center-absolute">
+          <img src="img/preloader.svg" alt="" />
+        </div>
+      </div>
     </div>
-    <div class="row">
-      <div class="col-xl-6">
+    <!-- preloader-end -->
+
+    <section
+      class="banner-area banner-bg"
+      data-background="img/banner/banner_bg01.jpg"
+    >
+      <div class="container custom-container">
         <div class="row">
-          <div class="col-xl-8 col-lg-6 col-md-7 col-sm-8">
-            <div class="card-bx stacked">
-              <img src="/dist/images/card/card.png" alt="" class="mw-100" />
-              <div class="card-info text-white">
-                <p class="mb-1">Valor Total</p>
-                <h2 class="fs-36 text-white mb-sm-4 mb-3">
-                  {{ formatCurrency(totalAmountCharges) }}
-                </h2>
-                <div
-                  class="d-flex align-items-center justify-content-between mb-sm-5 mb-3"
-                >
-                  <img src="images/dual-dot.png" alt="" class="dot-img" />
-                  <!-- <h4 class="fs-20 text-white mb-0">**** **** **** 1234</h4> -->
-                </div>
-                <!-- <div class="d-flex">
-                  <div class="me-5">
-                    <p class="fs-14 mb-1 op6">VALID THRU</p>
-                    <span>08/21</span>
-                  </div>
-                  <div>
-                    <p class="fs-14 mb-1 op6">CARD HOLDER</p>
-                    <span>Franklin Jr.</span>
-                  </div>
-                </div> -->
+          <div class="col-xl-6 col-lg-8">
+            <div class="banner-content">
+              <h6
+                class="sub-title wow fadeInUp"
+                data-wow-delay=".2s"
+                data-wow-duration="1.8s"
+              >
+                NovelaMania
+              </h6>
+
+              <h2
+                class="title wow fadeInUp"
+                data-wow-delay=".4s"
+                data-wow-duration="1.8s"
+              >
+                Novelas, <span>Series</span>, Doramas, & muito mais.
+              </h2>
+
+              <div
+                class="banner-meta wow fadeInUp"
+                data-wow-delay=".6s"
+                data-wow-duration="1.8s"
+              >
+                <ul>
+                  <li class="quality">
+                    <span>Pg 18</span>
+                    <span>hd</span>
+                  </li>
+                  <li class="category">
+                    <a href="#">Romance,</a>
+                    <a href="#">Drama</a>
+                  </li>
+                  <li class="release-time">
+                    <!-- <span><i class="far fa-calendar-alt"></i> 2021</span>
+                    <span><i class="far fa-clock"></i> 128 min</span> -->
+                  </li>
+                </ul>
               </div>
-              <!-- <a href="javascript:;"
-                ><i class="fa fa-caret-down" aria-hidden="true"></i
-              ></a> -->
-            </div>
-          </div>
-          <div class="col-xl-4 col-lg-6 col-md-5 col-sm-4">
-            <div
-              class="card bgl-primary card-body overflow-hidden p-0 d-flex rounded"
-            >
-              <div class="p-0 text-center mt-3">
-                <span class="text-black">Despesas</span>
-                <h3 class="text-black fs-20 mb-0 font-w600">
-                  {{ formatCurrency(totalAmountExpenses) }}
-                </h3>
-                <div class="mt-3"><small>mes corrente</small></div>
-                <h3 class="text-black fs-20 mb-0 font-w600">
-                  {{ formatCurrency(totalCurrentMonthAmountExpenses) }}
-                </h3>
-              </div>
-              <canvas
-                id="lineChart"
-                height="300"
-                class="mt-auto line-chart-demo"
-              ></canvas>
-            </div>
-          </div>
-
-          <div class="col-xl-12">
-            <div class="card">
-              <div class="card-header d-block d-sm-flex border-0">
-                <div class="me-3">
-                  <h4 class="fs-20 text-black">Cobranças recentes</h4>
-                  <!-- <p class="mb-0 fs-13">
-                    Lorem ipsum dolor sit amet, consectetur
-                  </p> -->
-                </div>
-                <div class="card-action card-tabs d-inline-block mt-3 mt-sm-0">
-                  <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                      <router-link to="/listarcobrancas"
-                        class="nav-link active"
-                      
-                        role="tab"
-                        >Ver todas</router-link
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="card-body tab-content p-0">
-                <div
-                  class="tab-pane active show fade"
-                  id="monthly"
-                  role="tabpanel"
-                >
-                  <div class="table-responsive">
-                    <table
-                      class="table table-responsive-md card-table previous-transactions"
-                    >
-                      <tbody>
-
-<tr v-for="recentCharge in recentCharges" :key="recentCharge._id">
-  <td>
-    <h6 class="fs-16 font-w600 mb-0">
-      <a :href="`transactions-details.html?id=${recentCharge._id}`" class="text-black">
-        {{ recentCharge.service.title }}
-      </a>
-    </h6>
-    <span class="fs-14">
-      {{ recentCharge.paymentMethod }} -
-      {{ recentCharge.customer ? (recentCharge.customer.firstName || 'N/A') + ' ' + (recentCharge.customer.lastName || 'N/A') : 'N/A' }}
-    </span>
-  </td>
-  <td>
-    <span class="fs-16 text-black text-end font-w500 d-block">
-      {{ formatCurrency(recentCharge.amount) }}
-    </span>
-  </td>
-  <td>
-    <h6 class="fs-16 text-black text-end d-block font-w400 mb-0">
-      {{ formatDateWithTime(recentCharge.createdAt) }}
-    </h6>
-  </td>
-</tr>
-
-
-
-                      </tbody>
-
-                      <tbody></tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+              <router-link
+                class="banner-btn btn popup-video wow fadeInUp"
+                data-wow-delay=".8s"
+                data-wow-duration="1.8s"
+                to="/novelas"
+                ><i class="fas fa-play"></i> Assistir</router-link
+              >
             </div>
           </div>
         </div>
       </div>
-      <div class="col-xl-6">
-        <div class="row">
-          <div class="col-xl-6 col-sm-6">
-            <div class="card">
-              <div class="card-header flex-wrap border-0 pb-0">
-                <div class="me-3 mb-2">
-                  <p class="fs-14 mb-1">Cobranças mes corrente</p>
-                  <span class="fs-24 text-black font-w600">{{
-                    formatCurrency(totalAmountChargesCurrentMonth)
-                  }}</span>
-                </div>
-                <!-- <span class="fs-12 mb-2">
-                  <svg
-                    width="21"
-                    height="15"
-                    viewBox="0 0 21 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0.999939 13.5C1.91791 12.4157 4.89722 9.22772 6.49994 7.5L12.4999 10.5L19.4999 1.5"
-                      stroke="#2BC155"
-                      stroke-width="2"
-                    />
-                    <path
-                      d="M6.49994 7.5C4.89722 9.22772 1.91791 12.4157 0.999939 13.5H19.4999V1.5L12.4999 10.5L6.49994 7.5Z"
-                      fill="url(#paint0_linear)"
-                    />
-                    <defs>
-                      <linearGradient
-                        id="paint0_linear"
-                        x1="10.2499"
-                        y1="3"
-                        x2="10.9999"
-                        y2="13.5"
-                        gradientUnits="userSpaceOnUse"
-                      >
-                        <stop
-                          offset="0"
-                          stop-color="#2BC155"
-                          stop-opacity="0.73"
-                        />
-                        <stop
-                          offset="1"
-                          stop-color="#2BC155"
-                          stop-opacity="0"
-                        />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                  4% (30 dias)</span 
-                >-->
-              </div>
-              <div class="card-body p-0">
-                <canvas id="widgetChart1" height="80"></canvas>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-6 col-sm-6">
-            <div class="card">
-              <div class="card-header flex-wrap border-0 pb-0">
-                <div class="me-3 mb-2">
-                  <p class="fs-14 mb-1">Previsao mes corrente</p>
-                  <span class="fs-24 text-black font-w600">{{
-                    formatCurrency(forecastAmountCurrentMonth)
-                  }}</span>
-                </div>
-                <!-- <span class="fs-12 mb-2">
-                  <svg
-                    width="21"
-                    height="15"
-                    viewBox="0 0 21 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M14.3514 7.5C15.9974 9.37169 19.0572 12.8253 20 14H1V1L8.18919 10.75L14.3514 7.5Z"
-                      fill="url(#paint0_linear1)"
-                    />
-                    <path
-                      d="M19.5 13.5C18.582 12.4157 15.6027 9.22772 14 7.5L8 10.5L1 1.5"
-                      stroke="#FF2E2E"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                    />
-                    <defs>
-                      <linearGradient
-                        id="paint0_linear1"
-                        x1="10.5"
-                        y1="2.625"
-                        x2="9.64345"
-                        y2="13.9935"
-                        gradientUnits="userSpaceOnUse"
-                      >
-                        <stop offset="0" stop-color="#FF2E2E" />
-                        <stop
-                          offset="1"
-                          stop-color="#FF2E2E"
-                          stop-opacity="0.03"
-                        />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                  4% (30 dias)</span
-                > -->
-              </div>
-              <div class="card-body p-0">
-                <canvas id="widgetChart2" height="80"></canvas>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-12">
-            <div class="card overflow-hidden">
-              <div class="card-header d-sm-flex d-block border-0 pb-0">
-                <div class="mb-sm-0 mb-2">
-                  <p class="fs-14 mb-3">Analise semanal</p>
-                  <div class="row">
-                    <div
-                      v-for="weeklyAnalysisCharge in weeklyAnalysisCharges"
-                      :key="weeklyAnalysisCharge"
-                      class="mb-1 col-12"
-                    >
-                      <strong class="fs-20 text-black ms-2 me-3">{{
-                        formatCurrency(weeklyAnalysisCharge.totalAmount)
-                      }}</strong>
-                      {{ weeklyAnalysisCharge.weekStartDate }} a
-                      {{ weeklyAnalysisCharge.weekEndDate }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body p-0">
-                <canvas id="widgetChart3" height="20"></canvas>
-              </div>
-            </div>
-          </div>
+    </section>
+    <!-- banner-area-end -->
 
-          <div class="col-xl-12">
-            <div class="card">
-              <div class="card-body pb-1">
-                <div class="row align-items-center">
-                  <div class="col-xl-12 col-xxl-12 col-md-12">
-                    <div
-                      class="mycard-header card-header d-block d-sm-flex border-0"
-                    >
-                      <div class="me-3">
-                        <h4 class="fs-20 text-black">Ultimas despesas</h4>
+    <!-- up-coming-movie-area -->
+    <section class="ucm-area ucm-bg" data-background="img/bg/ucm_bg.jpg">
+      <div class="ucm-bg-shape" data-background="img/bg/ucm_bg_shape.png"></div>
+      <div class="container">
+        <div class="row align-items-end mb-55">
+          <div class="col-lg-6">
+            <div class="section-title text-center text-lg-left">
+              <span class="sub-title">TRANSMISSÃO ON-LINE</span>
+              <h2 class="title">Novidades</h2>
+            </div>
+          </div>
+          <!-- <div class="col-lg-6">
+            <div class="ucm-nav-wrap">
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a
+                    class="nav-link active"
+                    id="tvShow-tab"
+                    data-toggle="tab"
+                    href="#tvShow"
+                    role="tab"
+                    aria-controls="tvShow"
+                    aria-selected="true"
+                    >Novelas</a
+                  >
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a
+                    class="nav-link"
+                    id="movies-tab"
+                    data-toggle="tab"
+                    href="#movies"
+                    role="tab"
+                    aria-controls="movies"
+                    aria-selected="false"
+                    >Series</a
+                  >
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a
+                    class="nav-link"
+                    id="anime-tab"
+                    data-toggle="tab"
+                    href="#anime"
+                    role="tab"
+                    aria-controls="anime"
+                    aria-selected="false"
+                    >Doramas</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div> -->
+        </div>
+        <div class="tab-content" id="myTabContent">
+          <div
+            class="tab-pane fade show active"
+            id="tvShow"
+            role="tabpanel"
+            aria-labelledby="tvShow-tab"
+          >
+            <div class="ucm-active owl-carousel">
+              <div class="row">
+                <div
+                  v-for="recentContent in recentContents"
+                  :key="recentContent._id"
+                  class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
+                >
+                  <div class="movie-item movie-item-three mb-50">
+                    <div class="movie-poster">
+                      <img
+                        :src="getAvatarUrl(recentContent.image_url)"
+                        :alt="recentContent.title"
+                      />
+                      <ul class="overlay-btn">
+                        <li class="rating">
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                        </li>
+
+                        <li>
+                          <router-link
+                            :to="`/detalhe-novela/${recentContent._id}`"
+                          >
+                            <a
+                              href=""
+                              class="btn"
+                              @click.prevent="
+                                handleWatchClick(recentContent._id)
+                              "
+                            >
+                              Assistir
+                            </a>
+                          </router-link>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="movie-content">
+                      <div class="top">
+                        <h5 class="title">
+                          <a href="movie-details.html">{{
+                            recentContent.title
+                          }}</a>
+                        </h5>
+                        <span class="date">{{
+                          formatDate(recentContent.release_year)
+                        }}</span>
                       </div>
-                      <div
-                        class="card-action card-tabs d-inline-block mt-3 mt-sm-0"
-                      >
-                        <ul class="nav nav-tabs" role="tablist">
-                          <li class="nav-item">
-                            <router-link
-                              to="/listardespesas"
-                              class="nav-link active"
-                              >Ver todas</router-link
+                      <div class="bottom">
+                        <ul>
+                          <li><span class="quality">hd</span></li>
+                          <li>
+                            <!-- <span class="duration"
+                        ><i class="far fa-clock"></i> 128 min</span
+                      > -->
+                            <span class="rating"
+                              ><i class="fa fa-eye"></i>
+                              {{ recentContent.views }}K</span
                             >
                           </li>
                         </ul>
                       </div>
                     </div>
-                    <div class="row">
-                      <div
-                        class="d-flex col-xl-12 col-xxl-6 col-md-12 col-sm-6 mb-4"
-                        v-for="recentExpense in recentExpenses"
-                        :key="recentExpense"
-                      >
-                        <svg
-                          class="me-3"
-                          width="14"
-                          height="54"
-                          viewBox="0 0 14 54"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="-6.10352e-05"
-                            width="14"
-                            height="54"
-                            rx="7"
-                            fill="#40D4A8"
-                          />
-                        </svg>
-                        <div>
-                          <p class="fs-14 mb-2">{{ recentExpense.title }}</p>
-                          <span class="fs-18 font-w500"
-                            ><span class="text-black me-2">{{
-                              formatCurrency(recentExpense.amount)
-                            }}</span
-                            >/ {{ recentExpense.paymentMethod }}
+                  </div>
+                </div>
+                <!--  -->
 
-                            <span class="me-1"
-                              >/
-                              {{
-                                formatTimestamp(recentExpense.createdAt)
-                              }}</span
+                <!-- Adicione mais colunas de filmes aqui conforme necessário -->
+              </div>
+            </div>
+          </div>
+          <div
+            class="tab-pane fade"
+            id="movies"
+            role="tabpanel"
+            aria-labelledby="movies-tab"
+          >
+            <div class="ucm-active owl-carousel">
+              <div class="row">
+                <!-- <div class="col-md-3">
+                  <div class="movie-item mb-50">
+                    <div class="movie-poster">
+                      <a href="movie-details.html"
+                        ><img
+                          src="img/poster/ucm_poster01.jpg"
+                          alt="Women's Day"
+                      /></a>
+                    </div>
+                    <div class="movie-content">
+                      <div class="top">
+                        <h5 class="title">
+                          <a href="movie-details.html">Women's Day</a>
+                        </h5>
+                        <span class="date">2021</span>
+                      </div>
+                      <div class="bottom">
+                        <ul>
+                          <li><span class="quality">HD</span></li>
+                          <li>
+                            <span class="duration"
+                              ><i class="far fa-clock"></i> 128 min</span
                             >
-                          </span>
-                        </div>
+                            <span class="rating"
+                              ><i class="fas fa-thumbs-up"></i> 3.5</span
+                            >
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
+                </div> -->
+
+                <!-- <div class="col-md-3">
+                  <div class="movie-item mb-50">
+                    <div class="movie-poster">
+                      <a href="movie-details.html"
+                        ><img
+                          src="img/poster/ucm_poster01.jpg"
+                          alt="Women's Day"
+                      /></a>
+                    </div>
+                    <div class="movie-content">
+                      <div class="top">
+                        <h5 class="title">
+                          <a href="movie-details.html">Women's Day</a>
+                        </h5>
+                        <span class="date">2021</span>
+                      </div>
+                      <div class="bottom">
+                        <ul>
+                          <li><span class="quality">HD</span></li>
+                          <li>
+                            <span class="duration"
+                              ><i class="far fa-clock"></i> 128 min</span
+                            >
+                            <span class="rating"
+                              ><i class="fas fa-thumbs-up"></i> 3.5</span
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+                <!--  -->
+                <!-- <div class="col-md-3">
+                  <div class="movie-item mb-50">
+                    <div class="movie-poster">
+                      <a href="movie-details.html"
+                        ><img
+                          src="img/poster/ucm_poster01.jpg"
+                          alt="Women's Day"
+                      /></a>
+                    </div>
+                    <div class="movie-content">
+                      <div class="top">
+                        <h5 class="title">
+                          <a href="movie-details.html">Women's Day</a>
+                        </h5>
+                        <span class="date">2021</span>
+                      </div>
+                      <div class="bottom">
+                        <ul>
+                          <li><span class="quality">HD</span></li>
+                          <li>
+                            <span class="duration"
+                              ><i class="far fa-clock"></i> 128 min</span
+                            >
+                            <span class="rating"
+                              ><i class="fas fa-thumbs-up"></i> 3.5</span
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+                <!--  -->
+                <!-- <div class="col-md-3">
+                  <div class="movie-item mb-50">
+                    <div class="movie-poster">
+                      <a href="movie-details.html"
+                        ><img
+                          src="img/poster/ucm_poster01.jpg"
+                          alt="Women's Day"
+                      /></a>
+                    </div>
+                    <div class="movie-content">
+                      <div class="top">
+                        <h5 class="title">
+                          <a href="movie-details.html">Women's Day</a>
+                        </h5>
+                        <span class="date">2021</span>
+                      </div>
+                      <div class="bottom">
+                        <ul>
+                          <li><span class="quality">HD</span></li>
+                          <li>
+                            <span class="duration"
+                              ><i class="far fa-clock"></i> 128 min</span
+                            >
+                            <span class="rating"
+                              ><i class="fas fa-thumbs-up"></i> 3.5</span
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+                <!-- Adicione mais colunas de filmes aqui conforme necessário -->
+              </div>
+            </div>
+          </div>
+          <div
+            class="tab-pane fade"
+            id="anime"
+            role="tabpanel"
+            aria-labelledby="anime-tab"
+          >
+            <!-- <div class="ucm-active owl-carousel">
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="movie-item mb-50">
+                    <div class="movie-poster">
+                      <a href="movie-details.html"
+                        ><img
+                          src="img/poster/ucm_poster01.jpg"
+                          alt="Women's Day"
+                      /></a>
+                    </div>
+                    <div class="movie-content">
+                      <div class="top">
+                        <h5 class="title">
+                          <a href="movie-details.html">Women's Day</a>
+                        </h5>
+                        <span class="date">2021</span>
+                      </div>
+                      <div class="bottom">
+                        <ul>
+                          <li><span class="quality">HD</span></li>
+                          <li>
+                            <span class="duration"
+                              ><i class="far fa-clock"></i> 128 min</span
+                            >
+                            <span class="rating"
+                              ><i class="fas fa-thumbs-up"></i> 3.5</span
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="movie-item mb-50">
+                    <div class="movie-poster">
+                      <a href="movie-details.html"
+                        ><img
+                          src="img/poster/ucm_poster01.jpg"
+                          alt="Women's Day"
+                      /></a>
+                    </div>
+                    <div class="movie-content">
+                      <div class="top">
+                        <h5 class="title">
+                          <a href="movie-details.html">Women's Day</a>
+                        </h5>
+                        <span class="date">2021</span>
+                      </div>
+                      <div class="bottom">
+                        <ul>
+                          <li><span class="quality">HD</span></li>
+                          <li>
+                            <span class="duration"
+                              ><i class="far fa-clock"></i> 128 min</span
+                            >
+                            <span class="rating"
+                              ><i class="fas fa-thumbs-up"></i> 3.5</span
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            
+                <div class="col-md-3">
+                  <div class="movie-item mb-50">
+                    <div class="movie-poster">
+                      <a href="movie-details.html"
+                        ><img
+                          src="img/poster/ucm_poster01.jpg"
+                          alt="Women's Day"
+                      /></a>
+                    </div>
+                    <div class="movie-content">
+                      <div class="top">
+                        <h5 class="title">
+                          <a href="movie-details.html">Women's Day</a>
+                        </h5>
+                        <span class="date">2021</span>
+                      </div>
+                      <div class="bottom">
+                        <ul>
+                          <li><span class="quality">HD</span></li>
+                          <li>
+                            <span class="duration"
+                              ><i class="far fa-clock"></i> 128 min</span
+                            >
+                            <span class="rating"
+                              ><i class="fas fa-thumbs-up"></i> 3.5</span
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- up-coming-movie-area-end -->
+
+    <!-- services-area -->
+    <section
+      class="services-area services-bg"
+      data-background="img/bg/services_bg.jpg"
+    >
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="services-img-wrap">
+              <img src="img/images/services_img.jpg" alt="" />
+              <!-- <a
+                href="img/images/services_img.jpg"
+                class="download-btn"
+                download
+                >Download <img src="fonts/download.svg" alt=""
+              /></a> -->
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="services-content-wrap">
+              <div class="section-title title-style-two mb-20">
+                <span class="sub-title">Nossos servicos</span>
+                <h2 class="title">
+                  Descubra o Melhor do Entretenimento Online!
+                </h2>
+              </div>
+              <p class="text-justify">
+                Bem-vindo à NovelaMania, sua plataforma de streaming definitiva
+                para novelas, séries, e doramas. Desfrute de um vasto
+                catálogo com histórias emocionantes e dramas cativantes. Tudo isso com muita qualidade.
+                Assine agora e mergulhe em um mundo de entretenimento sem fim!
+              </p>
+              <div class="services-list">
+                <ul>
+                  <li>
+                    <div class="icon">
+                      <i class="flaticon-television"></i>
+                    </div>
+                    <div class="content">
+                      <h5>Aproveite na sua TV.</h5>
+                      <p>
+                        Assista a novelas, séries, doramas e livros direto na
+                        sua TV com qualidade e conforto.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="icon">
+                      <i class="flaticon-video-camera"></i>
+                    </div>
+                    <div class="content">
+                      <h5>Assista a Em todos os lugares.</h5>
+                      <p>
+                        Curta seu conteúdo favorito onde e quando quiser, sem
+                        limitações.
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- services-area-end -->
+
+    <!-- top-rated-movie -->
+    <section class="top-rated-movie tr-movie-bg">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="section-title text-center mb-50">
+              <span class="sub-title">TRANSMISSÃO ON-LINE</span>
+              <h2 class="title">Favoritas do Público</h2>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="tr-movie-menu-active text-center">
+              <button class="active" data-filter="*">Novelas</button>
+              <button class="" data-filter=".cat-one">Series</button>
+              <button class="" data-filter=".cat-two">Doramas</button>
+              <button class="" data-filter=".cat-three">Livros</button>
+            </div>
+          </div>
+        </div> -->
+        <div class="row tr-movie-active">
+          <!-- <div
+            v-for="topViewedContent in topViewedContents"
+            :key="topViewedContent._id"
+            class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
+          > -->
+          <div
+                  v-for="topViewedContent in topViewedContents"
+                  :key="topViewedContent._id"
+                  class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
+                >
+                  <div class="movie-item movie-item-three mb-50">
+                    <div class="movie-poster">
+                      <img
+                        :src="getAvatarUrl(topViewedContent.image_url)"
+                        :alt="topViewedContent.title"
+                      />
+                      <ul class="overlay-btn">
+                        <li class="rating">
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                        </li>
+
+                        <li>
+                          <router-link
+                            :to="`/detalhe-novela/${topViewedContent._id}`"
+                          >
+                            <a
+                              href=""
+                              class="btn"
+                              @click.prevent="
+                                handleWatchClick(topViewedContent._id)
+                              "
+                            >
+                              Assistir
+                            </a>
+                          </router-link>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="movie-content">
+                      <div class="top">
+                        <h5 class="title">
+                          <a href="movie-details.html">{{
+                            topViewedContent.title
+                          }}</a>
+                        </h5>
+                        <span class="date">{{
+                          formatDate(topViewedContent.release_year)
+                        }}</span>
+                      </div>
+                      <div class="bottom">
+                        <ul>
+                          <li><span class="quality">hd</span></li>
+                          <li>
+                            <!-- <span class="duration"
+                        ><i class="far fa-clock"></i> 128 min</span
+                      > -->
+                            <span class="rating"
+                              ><i class="fa fa-eye"></i>
+                              {{ topViewedContent.views }}K</span
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+        </div>
+      </div>
+    </section>
+    <!-- top-rated-movie-end -->
+
+    <!-- live-area -->
+    <section class="live-area live-bg fix" data-background="img/bg/live_bg.jpg">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-xl-5 col-lg-6">
+            <div class="section-title title-style-two mb-25">
+              <span class="sub-title">TRANSMISSÃO ON-LINE</span>
+              <h2 class="title">
+                Filmes e Programas de TV ao Vivo para Curtir com Amigos e
+                Família
+              </h2>
+            </div>
+            <div class="live-movie-content">
+              <p>
+                Transforme seus momentos em memórias preciosas com nossos
+                programas ao vivo, criando uma atmosfera de diversão e união
+                entre amigos e familiares.
+              </p>
+              <div class="live-fact-wrap">
+                <div class="resolution">
+                  <h2>HD 4K</h2>
+                </div>
+                <div class="active-customer">
+                  <h4>1<span class="odometer" data-count="20"></span>K+</h4>
+                  <p>Usuarios activos</p>
+                </div>
+              </div>
+              <a
+                href="https://www.youtube.com/watch?v=R2gbPxeNk2E"
+                class="btn popup-video"
+                ><i class="fas fa-play"></i> Assistir</a
+              >
+            </div>
+          </div>
+          <div class="col-xl-7 col-lg-6">
+            <div
+              class="live-movie-img wow fadeInRight"
+              data-wow-delay=".2s"
+              data-wow-duration="1.8s"
+            >
+              <img src="img/images/live_img.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- live-area-end -->
+
+    <!-- tv-series-area -->
+    <!-- <section
+      class="tv-series-area tv-series-bg"
+      data-background="img/bg/tv_series_bg.jpg"
+    >
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="section-title text-center mb-50">
+              <span class="sub-title">Best TV Series</span>
+              <h2 class="title">World Best TV Series</h2>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-xl-3 col-lg-4 col-sm-6">
+            <div class="movie-item mb-50">
+              <div class="movie-poster">
+                <a href="movie-details.html"
+                  ><img src="img/poster/ucm_poster09.jpg" alt=""
+                /></a>
+              </div>
+              <div class="movie-content">
+                <div class="top">
+                  <h5 class="title">
+                    <a href="movie-details.html">Women's Day</a>
+                  </h5>
+                  <span class="date">2021</span>
+                </div>
+                <div class="bottom">
+                  <ul>
+                    <li><span class="quality">hd</span></li>
+                    <li>
+                      <span class="duration"
+                        ><i class="far fa-clock"></i> 128 min</span
+                      >
+                      <span class="rating"
+                        ><i class="fas fa-thumbs-up"></i> 3.5</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-4 col-sm-6">
+            <div class="movie-item mb-50">
+              <div class="movie-poster">
+                <a href="movie-details.html"
+                  ><img src="img/poster/ucm_poster10.jpg" alt=""
+                /></a>
+              </div>
+              <div class="movie-content">
+                <div class="top">
+                  <h5 class="title">
+                    <a href="movie-details.html">The Perfect Match</a>
+                  </h5>
+                  <span class="date">2021</span>
+                </div>
+                <div class="bottom">
+                  <ul>
+                    <li><span class="quality">4k</span></li>
+                    <li>
+                      <span class="duration"
+                        ><i class="far fa-clock"></i> 128 min</span
+                      >
+                      <span class="rating"
+                        ><i class="fas fa-thumbs-up"></i> 3.5</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-4 col-sm-6">
+            <div class="movie-item mb-50">
+              <div class="movie-poster">
+                <a href="movie-details.html"
+                  ><img src="img/poster/ucm_poster03.jpg" alt=""
+                /></a>
+              </div>
+              <div class="movie-content">
+                <div class="top">
+                  <h5 class="title">
+                    <a href="movie-details.html">The Dog Woof</a>
+                  </h5>
+                  <span class="date">2021</span>
+                </div>
+                <div class="bottom">
+                  <ul>
+                    <li><span class="quality">hd</span></li>
+                    <li>
+                      <span class="duration"
+                        ><i class="far fa-clock"></i> 128 min</span
+                      >
+                      <span class="rating"
+                        ><i class="fas fa-thumbs-up"></i> 3.5</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-4 col-sm-6">
+            <div class="movie-item mb-50">
+              <div class="movie-poster">
+                <a href="movie-details.html"
+                  ><img src="img/poster/ucm_poster04.jpg" alt=""
+                /></a>
+              </div>
+              <div class="movie-content">
+                <div class="top">
+                  <h5 class="title">
+                    <a href="movie-details.html">The Easy Reach</a>
+                  </h5>
+                  <span class="date">2021</span>
+                </div>
+                <div class="bottom">
+                  <ul>
+                    <li><span class="quality">hd</span></li>
+                    <li>
+                      <span class="duration"
+                        ><i class="far fa-clock"></i> 128 min</span
+                      >
+                      <span class="rating"
+                        ><i class="fas fa-thumbs-up"></i> 3.5</span
+                      >
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section> -->
+    <!-- tv-series-area-end -->
   </div>
 </template>
 <script>
+import $ from "jquery";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.css";
 
 export default {
   data() {
     return {
-      response: null,
-      userID: "",
-      firstName: "",
-      totalAmountCharges: "",
-      totalAmountChargesCurrentMonth: "",
-      totalAmountChargesPreviousMonth: "",
-      forecastAmountCurrentMonth: "",
-      totalAmountExpenses: "",
-      recentCharges: [],
-      totalCurrentMonthAmountExpenses: "",
-      recentExpenses: [],
-      weeklyAnalysisCharges: [],
-
-      chartInstance: null, // Add a chart instance property
-      chartInstance2: null, // Add a chart instance property
-      canvasExists: false,
+      recentContents: [],
+      topViewedContents: [],
+      shapeBg: "img/bg/ucm_bg_shape.png",
+      loading: false,
+      currentPage: 1,
+      pageSize: 10,
+      searchTerm: "",
+      startDate: null,
+      endDate: null,
+      count: 0,
+      totalPages: 0,
+      firstEntryIndex: 0,
+      lastEntryIndex: 0,
     };
   },
-  created() {
-    this.getDashboardData();
-
-    setInterval(() => {
-      this.getDashboardData();
-    }, 2 * 60 * 1000); // 5 minutes in milliseconds
-  },
   methods: {
-    formatDateWithTime(dateString) {
-      const date = new Date(dateString);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const hours = String(date.getHours()).padStart(2, "0");
-      const minutes = String(date.getMinutes()).padStart(2, "0");
-      return `${year}-${month}-${day} ${hours}:${minutes}`;
-    },
-    formatCurrency(value) {
-      const formatter = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      });
+    async fetchData() {
+      this.loading = true;
+      try {
+        const token = Cookies.get("token");
+        const queryParams = {
+          pageNumber: this.currentPage,
+          pageSize: this.pageSize,
+          searchTerm: this.searchTerm,
+        };
 
-      return formatter.format(value);
-    },
-    getStatusClass(status) {
-      if (status === "Done") {
-        return "text-success";
-      } else if (status === "Pending") {
-        return "text-pending";
-      } else if (status === "canceled") {
-        return "text-danger";
-      } else if (status === "Under_approval") {
-        return "text-warning";
-      } else if (status === "Under_assessment") {
-        return "text-muted";
-      } else if (status === "Received") {
-        return "text-primary";
-      }
-      {
-        return ""; // Default class if no match
-      }
-    },
-    formatTimestamp(timestamp) {
-      const currentTime = new Date();
-      const messageTime = new Date(timestamp);
+        if (this.startDate && this.endDate) {
+          queryParams.startDate = this.startDate;
+          queryParams.endDate = this.endDate;
+        }
 
-      const timeDifference = currentTime - messageTime;
-      const seconds = Math.floor(timeDifference / 1000);
-
-      if (seconds < 60) {
-        return `${seconds} segundos atrás`;
-      }
-
-      const minutes = Math.floor(seconds / 60);
-
-      if (minutes < 60) {
-        return `${minutes} minutos atrás`;
-      }
-
-      const hours = Math.floor(minutes / 60);
-
-      if (hours < 24) {
-        return `${hours} horas atrás`;
-      }
-
-      const days = Math.floor(hours / 24);
-
-      return `${days} dias atrás`;
-    },
-    async getDashboardData() {
-      const token = Cookies.get("token");
-      await axios
-        .get("/api/admindashboard", {
-          headers: {
-            token: token,
-          },
-        })
-        .then((response) => {
-          const dashboardData = response.data;
-
-          this.totalAmountCharges = dashboardData.totalAmountCharges;
-          this.totalAmountChargesCurrentMonth =
-            dashboardData.totalAmountChargesCurrentMonth;
-          this.totalAmountChargesPreviousMonth =
-            dashboardData.totalAmountChargesPreviousMonth;
-          this.forecastAmountCurrentMonth =
-            dashboardData.forecastAmountCurrentMonth;
-          this.totalAmountExpenses = dashboardData.totalAmountExpenses;
-          this.recentCharges = dashboardData.recentCharges;
-          this.totalCurrentMonthAmountExpenses =
-            dashboardData.totalCurrentMonthAmountExpenses;
-          this.recentExpenses = dashboardData.recentExpenses;
-          this.weeklyAnalysisCharges = dashboardData.weeklyAnalysisCharges;
-        })
-        .catch((error) => {
-          this.errorMessage =
-            "Erro ao carregar a pagina inicial. Por favor, tente novamente.";
-          console.error("Error retrieving profile:", error);
+        const response = await axios.get("/api/content/getrecentandtopview", {
+          headers: { token },
+          params: queryParams,
         });
+
+        this.recentContents = response.data.recentContents;
+        this.topViewedContents = response.data.topViewedContents;
+        this.count = response.data.total;
+        this.totalPages = Math.ceil(this.count / this.pageSize);
+        this.firstEntryIndex = (this.currentPage - 1) * this.pageSize + 1;
+        this.lastEntryIndex = Math.min(
+          this.currentPage * this.pageSize,
+          this.count
+        );
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+   
+    async handleWatchClick(novelId) {
+      const token = Cookies.get("token");
+
+      if (!token) {
+        Swal.fire({
+          icon: "info",
+          title: "Alerta!",
+          toast: true,
+          text: "Faça login para acessar seu conteúdo favorito; se ainda não tem uma conta, entre em contato conosco.",
+          timer: 8000,
+          showConfirmButton: true,
+          position: "top-end",
+        });
+        return;
+      }
+
+      try {
+        const response = await axios.get("api/validate/subscription", {
+          headers: { token },
+        });
+
+        // Considerar status 200 como sucesso
+        if (response.status === 200 || response.status === 204) {
+          console.log("Token e subscrição válidos");
+          // Redirecionar para a página de detalhes da novela usando novelId
+          this.$router.push(`/detalhe-novela/${novelId}`);
+        } else {
+          Swal.fire({
+            icon: "info",
+            title: "Alerta!",
+            toast: true,
+            text: "Contacte o administrador para assinar um pacote.",
+            timer: 6000,
+            showConfirmButton: false,
+            position: "top-end",
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao verificar token:", error);
+        Swal.fire({
+          icon: "info",
+          title: "Alerta!",
+          toast: true,
+          text:
+            error.response?.data?.error ||
+            "Erro ao verificar token. Por favor, faça login novamente.",
+          timer: 6000,
+          showConfirmButton: false,
+          position: "top-end",
+        });
+      }
+    },
+    getImageUrl(imageUrl) {
+      return imageUrl ? imageUrl.replace(/\\/g, "/") : "";
+    },
+    getAvatarUrl(imageUrl) {
+      return imageUrl
+        ? `${axios.defaults.baseURL}/${this.getImageUrl(imageUrl)}`
+        : "";
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      return `${date.getFullYear()}`;
+    },
+    async logout() {
+      try {
+        const token = Cookies.get("token");
+
+        const response = await axios.get("/api/logout", {
+          headers: { token },
+        });
+
+        if (response.status === 200) {
+          this.clearUserData();
+          window.location.replace("/");
+        } else {
+          throw new Error("Falha ao efetuar logout");
+        }
+      } catch (error) {
+        this.clearUserData();
+        window.location.replace("/");
+        console.error("Erro ao fazer logout:", error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Erro!",
+          text: "Um erro ocorreu. Por favor, tente novamente mais tarde.",
+        });
+      }
+    },
+    clearUserData() {
+      Cookies.remove("token");
+      Cookies.remove("role");
+      sessionStorage.removeItem("visitedBefore");
+    },
+
+    async checkToken() {
+      const TOKEN_COOKIE = "token";
+
+      const token = Cookies.get(TOKEN_COOKIE);
+
+      if (token) {
+        try {
+          const response = await axios.get("/api/check/verify-token", {
+            headers: { token },
+          });
+
+          if (response.data.message !== "Token is valid") {
+            alert("Token invalido imprimido");
+            await axios.get("/api/logout");
+            Cookies.remove("token");
+            Cookies.remove("role"); // Mantive a remoção do cookie "role" se existir
+            window.location.reload();
+          }
+        } catch (error) {
+          console.error("Erro ao verificar o token:", error);
+        }
+      } else {
+        console.log("Token não existe");
+      }
     },
   },
-
+  created() {
+    this.fetchData();
+    this.checkToken();
+  },
   mounted() {
-    // this.fetchChatMessages()
-    this.$nextTick(() => {
-      this.getDashboardData(); // Move your chart initialization code here
+    $(".tr-movie-menu-active button").click(function () {
+      const filterValue = $(this).attr("data-filter");
+      $(".tr-movie-active .grid-item").hide();
+      $(".tr-movie-active").find(filterValue).show();
+      $(".tr-movie-menu-active button").removeClass("active");
+      $(this).addClass("active");
     });
-    // this.getDashboardData();
   },
 };
 </script>
 <style>
-.mycard-header {
-  margin-top: 0 !important; /* Use !important to ensure this style takes precedence */
+.banner-bg {
+  background-image: url("./../../../public/img/banner/banner_bg01.jpg");
+  background-size: cover;
+  background-position: center;
 }
-.spinner {
-  width: 2em;
-  height: 2em;
-  border-top: 1em solid #99a0ac;
-  border-right: 1em solid transparent;
-  border-radius: 100%;
-  margin: auto;
-  animation: spinner 0.9s linear infinite;
+.top-rated-movie {
+  background-image: url("./../../../public/img/bg/tr_movies_bg.jpg");
+  background-size: cover;
+  background-position: center;
 }
-@keyframes spinner {
-  100% {
-    transform: rotate(360deg);
-  }
+.services-area {
+  background-image: url("./../../../public/img/bg/services_bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.tv-series-area {
+  background-image: url("./../../../public/img/bg/tv_series_bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.ucm-area {
+  background-image: url("./../../../public/img/bg/ucm_bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.ucm-bg-shape {
+  background-image: url("./../../../public/img/bg/ucm_bg_shape.png");
+  background-size: cover;
+  background-position: center;
+}
+.movie-item-margin {
+  margin-right: 20px; /* Ajuste conforme necessário */
+}
+.movie-item {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.movie-poster {
+  width: 100%;
+  height: 400px; /* Defina a altura desejada para o contêiner do pôster */
+  overflow: hidden; /* Evita que imagens de diferentes proporções alterem o layout */
+}
+
+.movie-poster img {
+  width: 100%;
+  height: 100%; /* Ocupa toda a altura do contêiner, mantendo a proporção */
+  object-fit: cover; /* Corta a imagem para preencher o contêiner mantendo a proporção */
 }
 </style>

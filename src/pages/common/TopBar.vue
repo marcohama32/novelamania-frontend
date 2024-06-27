@@ -1,272 +1,366 @@
 <template>
   <div>
-    <!--*******************
-        Preloader start
-    ********************-->
-    <!-- <div id="preloader">
-      <div class="sk-three-bounce">
-        <div class="sk-child sk-bounce1"></div>
-        <div class="sk-child sk-bounce2"></div>
-        <div class="sk-child sk-bounce3"></div>
-      </div>
-    </div> -->
-    <!--*******************
-        Preloader end
-    ********************-->
-
-    <!--**********************************
-            Nav header start
-        ***********************************-->
-    <div class="nav-header">
-      <a href="/" class="brand-logo">
-        <img class="logo-abbr" src="/dist/images/logo.png" alt="" />
-        <img class="logo-compact" src="/dist/images/mentortext.png" alt="" />
-        <img class="brand-title" src="/dist/images/mentortext.png" alt="" />
-      </a>
-
-      <div class="nav-control">
-        <div class="hamburger">
-          <span class="line"></span><span class="line"></span
-          ><span class="line"></span>
-        </div>
-      </div>
-    </div>
-    <!--**********************************
-            Nav header end
-        ***********************************-->
-    <!--**********************************
-            Header start
-        ***********************************-->
-    <div class="header">
-      <div class="header-content">
-        <nav class="navbar navbar-expand">
-          <div class="collapse navbar-collapse justify-content-between">
-            <div class="header-left">
-              <div class="dashboard_bar"></div>
-            </div>
-            <ul class="navbar-nav header-right">
-              <li class="nav-item">
-                <div class="d-flex weather-detail">
-                  <!-- <span><i class="las la-cloud"></i>21</span> -->
-                  {{ getDateNow() }}
-                </div>
-              </li>
-              <li class="nav-item dropdown notification_dropdown">
-                <a
-                  class="nav-link bell dz-theme-mode"
-                  href="javascript:void(0);"
-                >
-                  <i id="icon-light" class="fas fa-sun"></i>
-                  <i id="icon-dark" class="fas fa-moon"></i>
-                </a>
-              </li>
-              <!-- <li class="nav-item dropdown notification_dropdown">
-                <a
-                  class="nav-link ai-icon"
-                  href="javascript:void(0)"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 28 28"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M12.6001 4.3008V1.4C12.6001 0.627199 13.2273 0 14.0001 0C14.7715 0 15.4001 0.627199 15.4001 1.4V4.3008C17.4805 4.6004 19.4251 5.56639 20.9287 7.06999C22.7669 8.90819 23.8001 11.4016 23.8001 14V19.2696L24.9327 21.5348C25.4745 22.6198 25.4171 23.9078 24.7787 24.9396C24.1417 25.9714 23.0147 26.6 21.8023 26.6H15.4001C15.4001 27.3728 14.7715 28 14.0001 28C13.2273 28 12.6001 27.3728 12.6001 26.6H6.19791C4.98411 26.6 3.85714 25.9714 3.22014 24.9396C2.58174 23.9078 2.52433 22.6198 3.06753 21.5348L4.20011 19.2696V14C4.20011 11.4016 5.23194 8.90819 7.07013 7.06999C8.57513 5.56639 10.5183 4.6004 12.6001 4.3008ZM14.0001 6.99998C12.1423 6.99998 10.3629 7.73779 9.04973 9.05099C7.73653 10.3628 7.00011 12.1436 7.00011 14V19.6C7.00011 19.817 6.94833 20.0312 6.85173 20.2258C6.85173 20.2258 6.22871 21.4718 5.57072 22.7864C5.46292 23.0034 5.47412 23.2624 5.60152 23.4682C5.72892 23.674 5.95431 23.8 6.19791 23.8H21.8023C22.0445 23.8 22.2699 23.674 22.3973 23.4682C22.5247 23.2624 22.5359 23.0034 22.4281 22.7864C21.7701 21.4718 21.1471 20.2258 21.1471 20.2258C21.0505 20.0312 21.0001 19.817 21.0001 19.6V14C21.0001 12.1436 20.2623 10.3628 18.9491 9.05099C17.6359 7.73779 15.8565 6.99998 14.0001 6.99998Z"
-                      fill="#3E4954"
-                    />
-                  </svg>
-                  <span class="badge light text-white bg-primary rounded-circle"
-                    >12</span
-                  >
-                </a>
-                <div class="dropdown-menu dropdown-menu-end">
-                  <div
-                    id="DZ_W_Notification1"
-                    class="widget-media dz-scroll p-3 height380"
-                  >
-                    <ul class="timeline">
-                      <li>
-                        <div class="timeline-panel">
-                          <div class="media me-2">
-                            <img
-                              alt="image"
-                              width="50"
-                              src="images/avatar/1.jpg"
-                            />
-                          </div>
-                          <div class="media-body">
-                            <h6 class="mb-1">Dr sultads Send you Photo</h6>
-                            <small class="d-block"
-                              >29 July 2023 - 02:26 PM</small
-                            >
-                          </div>
-                        </div>
+    <!-- header-area -->
+    <header>
+      <div id="sticky-header" class="menu-area transparent-header">
+        <div class="container custom-container">
+          <div class="row">
+            <div class="col-12">
+              <div class="mobile-nav-toggler" @click="toggleMobileMenu">
+                <i class="fas fa-bars"></i>
+              </div>
+              <div class="menu-wrap">
+                <nav class="menu-nav show">
+                  <div class="logo">
+                    <router-link to="/">
+                      <img src="/img/logo/logo.png" alt="Logo" />
+                    </router-link>
+                  </div>
+                  <div class="navbar-wrap main-menu d-none d-lg-flex">
+                    <ul class="navigation">
+                      <li :class="{ active: isActiveRoute('/') }">
+                        <router-link to="/">Home</router-link>
                       </li>
-                      <li>
-                        <div class="timeline-panel">
-                          <div class="media me-2 media-info">KG</div>
-                          <div class="media-body">
-                            <h6 class="mb-1">Resport created successfully</h6>
-                            <small class="d-block"
-                              >29 July 2023 - 02:26 PM</small
-                            >
-                          </div>
-                        </div>
+                      <!-- <li :class="{ active: isActiveRoute('/movie') }" class="menu-item-has-children">
+                        <router-link to="#">Movie</router-link>
+                        <ul class="submenu">
+                          <li :class="{ active: isActiveRoute('/movie.html') }">
+                            <router-link to="/movie.html">Movie</router-link>
+                          </li>
+                          <li :class="{ active: isActiveRoute('/movie-details.html') }">
+                            <router-link to="/movie-details.html">Movie Details</router-link>
+                          </li>
+                        </ul>
+                      </li> -->
+                      <li :class="{ active: isActiveRoute('/tv-show') }">
+                        <router-link to="/novelas">Novelas</router-link>
                       </li>
-                      <li>
-                        <div class="timeline-panel">
-                          <div class="media me-2 media-success">
-                            <i class="fa fa-home"></i>
-                          </div>
-                          <div class="media-body">
-                            <h6 class="mb-1">Reminder : Treatment Time!</h6>
-                            <small class="d-block"
-                              >29 July 2023 - 02:26 PM</small
-                            >
-                          </div>
-                        </div>
+                      <li :class="{ active: isActiveRoute('/tv-show') }">
+                        <router-link to="/doramas">Doramas</router-link>
                       </li>
-                      <li>
-                        <div class="timeline-panel">
-                          <div class="media me-2">
-                            <img
-                              alt="image"
-                              width="50"
-                              src="images/avatar/1.jpg"
-                            />
-                          </div>
-                          <div class="media-body">
-                            <h6 class="mb-1">Dr sultads Send you Photo</h6>
-                            <small class="d-block"
-                              >29 July 2023 - 02:26 PM</small
-                            >
-                          </div>
-                        </div>
+                      <!-- <li :class="{ active: isActiveRoute('/pricing') }">
+                        <router-link to="/livros">Livros</router-link>
+                      </li> -->
+                      <li :class="{ active: isActiveRoute('/pricing') }">
+                        <router-link to="/pacotes">Pacotes</router-link>
                       </li>
-                      <li>
-                        <div class="timeline-panel">
-                          <div class="media me-2 media-danger">KG</div>
-                          <div class="media-body">
-                            <h6 class="mb-1">Resport created successfully</h6>
-                            <small class="d-block"
-                              >29 July 2023 - 02:26 PM</small
+                      <!-- <li
+                        :class="{ active: isActiveRoute('/blog') }"
+                        class="menu-item-has-children"
+                      >
+                        <router-link to="#">Blog</router-link>
+                        <ul class="submenu">
+                          <li :class="{ active: isActiveRoute('/blog.html') }">
+                            <router-link to="/blog.html">Blog</router-link>
+                          </li>
+                          <li
+                            :class="{
+                              active: isActiveRoute('/blog-details.html'),
+                            }"
+                          >
+                            <router-link to="/blog-details.html"
+                              >Blog Details</router-link
                             >
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="timeline-panel">
-                          <div class="media me-2 media-primary">
-                            <i class="fa fa-home"></i>
-                          </div>
-                          <div class="media-body">
-                            <h6 class="mb-1">Reminder : Treatment Time!</h6>
-                            <small class="d-block"
-                              >29 July 2023 - 02:26 PM</small
-                            >
-                          </div>
-                        </div>
+                          </li>
+                        </ul>
+                      </li> -->
+                      <li :class="{ active: isActiveRoute('/contact') }">
+                        <router-link to="/contactos">Contactos</router-link>
                       </li>
                     </ul>
                   </div>
-                  <a class="all-notification" href="javascript:void(0)"
-                    >See all notifications <i class="ti-arrow-right"></i
-                  ></a>
-                </div>
-              </li> -->
 
-              <li class="nav-item dropdown header-profile">
-                <a
-                  class="nav-link"
-                  href="javascript:void(0)"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                >
-                  <div class="header-info">
-                    <span class="text-black"
-                      >Ola, <strong> {{ firstName }}</strong></span
-                    >
-                    <p class="fs-12 mb-0">{{ getRoleName(role) }}</p>
+                  <div class="header-action d-none d-md-block">
+                    <ul>
+                      <!-- <li class="header-search">
+                        <a
+                          href="#"
+                          data-toggle="modal"
+                          data-target="#search-modal"
+                        >
+                          <i class="fas fa-search"></i>
+                        </a>
+                      </li> -->
+                      <!-- Mostra o botão de login apenas se o usuário não estiver logado -->
+                      <div v-if="!isLoggedIn">
+                        <li
+                          class="header-btn popup-video"
+                          data-toggle="modal"
+                          data-target="#exampleModalCenter"
+                        >
+                          <router-link to="" class="btn">Entrar</router-link>
+                        </li>
+                      </div>
+
+                      <!-- Mostra informações do usuário se ele estiver logado -->
+                      <div class="ml-3 mr-2">
+                        <div v-if="isLoggedIn">
+                          <span>{{ firstName }} {{ lastName }}</span>
+                        </div>
+                        <div v-if="isLoggedIn">
+                          <span class="mr-2"
+                            >{{ daysRemaining }} dias restantes</span
+                          >
+                        </div>
+                      </div>
+
+                      <li class="header-btn" v-if="isLoggedIn">
+                        <a to="/login" class="btn" @click="logout">Sair</a>
+                      </li>
+                    </ul>
                   </div>
-                 <img src="/dist/images/logo.png" class="logo" />
+                </nav>
+              </div>
 
-                </a>
-                <div class="dropdown-menu dropdown-menu-end">
-                  <router-link to="/perfil" class="dropdown-item ai-icon">
-                    <svg
-                      id="icon-user1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="text-primary"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path
-                        d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
-                      ></path>
-                      <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    <span class="ms-2">Perfil </span>
-                  </router-link>
-
-                  <a href="#" @click="logout" class="dropdown-item ai-icon">
-                    <svg
-                      id="icon-logout"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="text-danger"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                      <polyline points="16 17 21 12 16 7"></polyline>
-                      <line x1="21" y1="12" x2="9" y2="12"></line>
-                    </svg>
-                    <span class="ms-2">Sair </span>
-                  </a>
+              <!-- Mobile Menu  -->
+              <div class="mobile-menu">
+                <div class="close-btn" @click="closeMobileMenu">
+                  <i class="fas fa-times"></i>
                 </div>
-              </li>
-            </ul>
+
+                <nav class="menu-box">
+                  <div class="nav-logo">
+                    <router-link to="/">
+                      <img src="img/logo/logo.png" alt="" title="" />
+                    </router-link>
+                  </div>
+                  <ul class="navigation">
+                    <!-- <li
+                      :class="{ active: isActiveRoute('/') }"
+                      class="menu-item-has-children"
+                    >
+                      <router-link to="#">Home</router-link>
+                      <ul class="submenu">
+                        <li :class="{ active: isActiveRoute('/index.html') }">
+                          <router-link to="/index.html">Home One</router-link>
+                        </li>
+                        <li :class="{ active: isActiveRoute('/index-2.html') }">
+                          <router-link to="/index-2.html">Home Two</router-link>
+                        </li>
+                      </ul>
+                      <div class="dropdown-btn open">
+                        <span class="fas fa-angle-down"></span>
+                      </div>
+                    </li> -->
+                    <!-- <li :class="{ active: isActiveRoute('/movie') }" class="menu-item-has-children">
+                      <router-link to="#">Movie</router-link>
+                      <ul class="submenu">
+                        <li :class="{ active: isActiveRoute('/movie.html') }">
+                          <router-link to="/movie.html">Movie</router-link>
+                        </li>
+                        <li :class="{ active: isActiveRoute('/movie-details.html') }">
+                          <router-link to="/movie-details.html">Movie Details</router-link>
+                        </li>
+                      </ul>
+                      <div class="dropdown-btn open">
+                        <span class="fas fa-angle-down"></span>
+                      </div>
+                    </li> -->
+                    <li :class="{ active: isActiveRoute('/tv-show.html') }">
+                      <router-link to="/">Home</router-link>
+                    </li>
+                    <li :class="{ active: isActiveRoute('/tv-show.html') }">
+                      <router-link to="/novelas">Novelas</router-link>
+                    </li>
+                    <li :class="{ active: isActiveRoute('/tv-show.html') }">
+                      <router-link to="/doramas">Doramas</router-link>
+                    </li>
+                    <li :class="{ active: isActiveRoute('/pricing.html') }">
+                      <router-link to="/pacotes">Pacotes</router-link>
+                    </li>
+                    <!-- <li
+                      :class="{ active: isActiveRoute('/blog') }"
+                      class="menu-item-has-children"
+                    >
+                      <router-link to="#">Blog</router-link>
+                      <ul class="submenu">
+                        <li :class="{ active: isActiveRoute('/blog.html') }">
+                          <router-link to="/blog.html">Our Blog</router-link>
+                        </li>
+                        <li
+                          :class="{
+                            active: isActiveRoute('/blog-details.html'),
+                          }"
+                        >
+                          <router-link to="/blog-details.html"
+                            >Blog Details</router-link
+                          >
+                        </li>
+                      </ul>
+                      <div class="dropdown-btn open">
+                        <span class="fas fa-angle-down"></span>
+                      </div>
+                    </li> -->
+                    <li :class="{ active: isActiveRoute('/contact.html') }">
+                      <router-link to="/contactos">Contactos</router-link>
+                    </li>
+                  </ul>
+
+                  <div class="social-links">
+                    <div v-if="!isLoggedIn">
+                      <li
+                        class="header-btn popup-video"
+                        data-toggle="modal"
+                        data-target="#exampleModalCenter"
+                      >
+                        <router-link to="" class="btn">Entrar</router-link>
+                      </li>
+                    </div>
+                    <div class="mb-3" v-if="isLoggedIn">
+                      {{ firstName }} {{ lastName }}
+                    </div>
+                    <span class="mr-2" v-if="isLoggedIn"
+                      >{{ daysRemaining }} dias restantes</span
+                    >
+
+                    <li class="header-btn mt-3" v-if="isLoggedIn">
+                      <a to="/login" class="btn" @click="logout">Sair</a>
+                    </li>
+                    <ul class="clearfix">
+                      <!-- <li>
+                        <a href="#"><span class="fab fa-twitter"></span></a>
+                      </li> -->
+                      <li>
+                        <a href="#"
+                          ><span class="fab fa-facebook-square"></span
+                        ></a>
+                      </li>
+                      <li>
+                        <a href="https://wa.me/+258863881425" target="_blank"
+                          ><span class="fab fa-whatsapp-square"></span
+                        ></a>
+                      </li>
+                      <li>
+                        <a href="#"><span class="fab fa-instagram"></span></a>
+                      </li>
+                      <!-- <li>
+                        <a href="#"><span class="fab fa-youtube"></span></a>
+                      </li> -->
+                    </ul>
+                  </div>
+                </nav>
+              </div>
+              <div class="menu-backdrop" @click="closeMobileMenu"></div>
+              <!-- End Mobile Menu -->
+
+              <!-- Modal Search -->
+              <div
+                class="modal fade"
+                id="search-modal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <form>
+                      <input
+                        type="text"
+                        v-model="searchTerm"
+                        @input="applyFilter"
+                        placeholder="Pesquisar..."
+                      />
+                      <button>
+                        <i class="fas fa-search" @click="applyFilterDate"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal Search-end -->
+            </div>
           </div>
-        </nav>
+        </div>
+      </div>
+    </header>
+    <!-- header-area-end -->
+    <div
+      class="modal fade"
+      id="exampleModalCenter"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+      ref="loginModal"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="video-container">
+              <form @submit.prevent="onLogin">
+                <div class="form-row mt-3">
+                  <div class="col-md-12 mb-3">
+                    <label for="validationDefault01">Contacto</label>
+                    <input
+                      v-model="contact1"
+                      type="text"
+                      class="form-control"
+                      id="validationDefault01"
+                      placeholder="Insira contacto"
+                    />
+                  </div>
+                </div>
+                <div class="form-row mt-2">
+                  <div class="col-md-12 mb-3">
+                    <label for="validationDefault03">Senha</label>
+                    <input
+                      v-model="password"
+                      type="password"
+                      class="form-control"
+                      id="validationDefault03"
+                      placeholder="senha"
+                    />
+                  </div>
+                </div>
+                <div class="float-left">
+                  <button
+                    class="btn btn-primary mt-2"
+                    type="submit"
+                    :disabled="loading"
+                  >
+                    Entrar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <!--**********************************
-            Header end ti-comment-alt
-        ***********************************-->
+    <!-- end of modal -->
   </div>
 </template>
+
 <script>
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import $ from "jquery";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/dist/sweetalert2.css";
 export default {
   data() {
     return {
-      avatar: null,
-      routeName: null,
+      showMobileMenu: false,
+      contact1: null,
+      password: null,
       firstName: "",
       lastName: "",
       role: "",
       ogv: null,
+
+      firstEntryIndex: 0,
+      lastEntryIndex: 0,
+      searchTerm: "",
+
+      loading: false,
+      btnLoading: false,
+      errors: {},
       userID: "",
       notifications: [], // Array to hold notifications
       showNotificationsDropdown: false, // Control the visibility of the dropdown
+      isLoggedIn: false, // Variável para controlar o estado de login
+      daysRemaining: "",
     };
   },
   computed: {
@@ -304,54 +398,196 @@ export default {
       }
     },
   },
+  watch: {
+    currentPage: "fetchData",
+    pageSize: "fetchData",
+    searchTerm: "fetchData",
+  },
   methods: {
-    getDateNow() {
-      // Get the current date
-      const currentDate = new Date();
-
-      // Get the current year, month, and day
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth() + 1; // Month is zero-based (0-11)
-      const day = currentDate.getDate();
-
-      // Display the current date
-      return `${year}-${month < 10 ? "0" + month : month}-${
-        day < 10 ? "0" + day : day
-      }`;
+    isActiveRoute(route) {
+      return this.$route.path === route;
     },
-    getRoleName(role) {
-      switch (role) {
-        case 1:
-          return "Admin";
-        case 2:
-          return "Gestor";
-        case 3:
-          return "Usuario";
-        default:
-          return "Unknown";
+    toggleMobileMenu() {
+      console.log("toggleMobileMenu called");
+      this.showMobileMenu = !this.showMobileMenu; // Alterna entre abrir e fechar o menu móvel
+    },
+    closeMobileMenu() {
+      console.log("closeMobileMenu called");
+      this.showMobileMenu = false; // Fecha o menu móvel
+    },
+    async onLogin() {
+      // Verificar se ambos os campos de contacto e senha estão vazios
+      if (!this.contact1 || !this.password) {
+        Swal.fire({
+          icon: "warning",
+          title: "Aviso!",
+          toast: true,
+          text: "Contacto e senha são obrigatórios.",
+          timer: 3000,
+          showConfirmButton: false,
+          position: "top-end",
+        });
+        return;
+      }
+
+      // Validar o campo de contacto
+      if (!/^258\d{9}$/.test(this.contact1)) {
+        Swal.fire({
+          icon: "warning",
+          title: "Aviso!",
+          toast: true,
+          text: "O contacto deve iniciar com 258 e ter 12 dígitos.",
+          timer: 3000,
+          showConfirmButton: false,
+          position: "top-end",
+        });
+        return;
+      }
+
+      try {
+        this.loading = true;
+        this.btnLoading = true;
+
+        const user = {
+          contact1: this.contact1,
+          password: this.password,
+        };
+
+        // Certifique-se de que axios está configurado corretamente
+        const res = await axios.post("/api/signin", user);
+
+        if (res.status === 200) {
+          Cookies.set("token", res.data.token, { expires: 7 });
+          Cookies.set("role", res.data.role, { expires: 7 });
+          this.isLoggedIn = true; // Atualizar o estado de login
+
+          this.$emit("loginSuccess");
+          // this.$router.push("/");
+          location.reload();
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error); // Log para depuração
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          this.errors = { username: [error.response.data.error] };
+          Swal.fire({
+            icon: "warning",
+            title: "Aviso!",
+            toast: true,
+            text: this.errors.username,
+            timer: 3000,
+            showConfirmButton: false,
+            position: "top-end",
+          });
+        } else {
+          // Exibir uma mensagem de erro genérica para erros inesperados
+          Swal.fire({
+            icon: "error",
+            title: "Erro!",
+            text: "Um erro ocorreu. Por favor, tente novamente mais tarde.",
+          });
+        }
+      } finally {
+        this.loading = false;
+        this.btnLoading = false;
       }
     },
+
+    // async onLogin() {
+    //   // Verificar se ambos os campos de contacto e senha estão vazios
+    //   if (!this.contact1 || !this.password) {
+    //     Swal.fire({
+    //       icon: "warning",
+    //       title: "Aviso!",
+    //       toast: true,
+    //       text: "Contacto e senha são obrigatórios.",
+    //       timer: 3000,
+    //       showConfirmButton: false,
+    //       position: "top-end",
+    //     });
+    //     return;
+    //   }
+
+    //   try {
+    //     this.loading = true;
+    //     this.btnLoading = true;
+
+    //     const user = {
+    //       contact1: this.contact1, // Supondo que 'contact1' é o campo de email ou username
+    //       password: this.password,
+    //     };
+
+    //     // Certifique-se de que axios está configurado corretamente
+    //     const res = await axios.post("/api/signin", user);
+
+    //     if (res.status === 200) {
+    //       Cookies.set("token", res.data.token, { expires: 7 });
+    //       Cookies.set("role", res.data.role, { expires: 7 });
+    //       this.isLoggedIn = true; // Atualizar o estado de login
+
+    //       this.$emit("loginSuccess");
+    //       // this.$router.push("/");
+    //       location.reload();
+    //     }
+    //   } catch (error) {
+    //     console.error("Erro na requisição:", error); // Log para depuração
+
+    //     if (
+    //       error.response &&
+    //       error.response.data &&
+    //       error.response.data.error
+    //     ) {
+    //       this.errors = { username: [error.response.data.error] };
+    //       Swal.fire({
+    //         icon: "warning",
+    //         title: "Aviso!",
+    //         toast: true,
+    //         text: this.errors.username,
+    //         timer: 3000,
+    //         showConfirmButton: false,
+    //         position: "top-end",
+    //       });
+    //     } else {
+    //       // Exibir uma mensagem de erro genérica para erros inesperados
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "Erro!",
+    //         text: "Um erro ocorreu. Por favor, tente novamente mais tarde.",
+    //       });
+    //     }
+    //   } finally {
+    //     this.loading = false;
+    //     this.btnLoading = false;
+    //   }
+    // },
     async profile() {
       try {
         this.loading = true;
 
         const token = Cookies.get("token");
-        const response = await axios.get("/api/me", {
+
+        const response = await axios.get("/api/user/userprofile", {
           headers: {
             token: token,
           },
         });
 
-        if (response) {
-          //  const totalTransactions = response.data.totalTransactions;
+        if (response && response.data && response.data.user) {
           const profile = response.data.user;
           this.firstName = profile.firstName;
+          this.lastName = profile.lastName;
+          this.daysRemaining = profile.subscription.daysRemaining; // Corrigido para 'subscription'
+
           this.role = profile.role;
         } else {
-          console.error("erro");
+          console.error("Erro ao obter perfil de usuário");
         }
       } catch (error) {
-        console.error(error);
+        console.error("Erro ao carregar perfil:", error);
       } finally {
         this.loading = false;
       }
@@ -375,14 +611,49 @@ export default {
     },
     async logout() {
       try {
-        // Remove cookies and session storage data
-        Cookies.remove("token");
-        Cookies.remove("role");
+        // Remove os dados da sessionStorage
         sessionStorage.removeItem("visitedBefore");
 
-        this.$router.go("/login");
+        const token = Cookies.get("token");
+
+        // Faz a requisição para o endpoint de logout
+        const response = await axios.get("/api/logout", {
+          headers: { token },
+        });
+
+        if (response.status !== 200) {
+          throw new Error("Falha ao efetuar logout");
+        }
       } catch (error) {
-        console.error("Logout error:", error);
+        console.error("Erro ao fazer logout:", error);
+
+        // Tratamento de erro específico para diferentes tipos de erro
+        if (error.response?.data?.error) {
+          // Exibe mensagem de aviso usando Swal (SweetAlert)
+          Swal.fire({
+            icon: "warning",
+            title: "Aviso!",
+            toast: true,
+            text: error.response.data.error,
+            timer: 3000,
+            showConfirmButton: false,
+            position: "top-end",
+          });
+        } else {
+          // Exibe mensagem de erro genérica
+          Swal.fire({
+            icon: "error",
+            title: "Erro!",
+            text: "Um erro ocorreu. Por favor, tente novamente mais tarde.",
+          });
+        }
+      } finally {
+        // Remove os cookies
+        Cookies.remove("token");
+        Cookies.remove("role");
+
+        // Redireciona o usuário para a página inicial usando window.location
+        window.location.replace("/");
       }
     },
     getAvatarUrl() {
@@ -399,32 +670,57 @@ export default {
       );
       return hasRoute;
     },
-    getRole(role) {
-      if (role === 1) {
-        return "Admin";
-      } else if (role === 2) {
-        return "Gestor";
-      } else if (role === 3) {
-        return "Agente";
-      } else if (role === 4) {
-        return "Cliente";
-      } else if (role === 5) {
-        return "Customer";
-      }
-      {
-        return ""; // Default class if no match
-      }
-    },
   },
   created() {
-    this.profile();
+    const token = Cookies.get("token");
+    if (token) {
+      this.profile();
+      this.isLoggedIn = true;
+    }
   },
-  mounted() {},
+  mounted() {
+    // Código JavaScript para o menu móvel
+    if ($(".mobile-menu").length) {
+      $(".mobile-menu .menu-box .menu-outer").append(
+        $(".menu-area .main-menu").html()
+      );
+
+      $(".mobile-menu li.menu-item-has-children .dropdown-btn").on(
+        "click",
+        function () {
+          $(this).toggleClass("open");
+          $(this).prev("ul").slideToggle(500);
+        }
+      );
+
+      $(".mobile-nav-toggler").on("click", function () {
+        $("body").addClass("mobile-menu-visible");
+      });
+
+      $(".menu-backdrop, .mobile-menu .close-btn").on("click", function () {
+        $("body").removeClass("mobile-menu-visible");
+      });
+    }
+  },
 };
 </script>
 <style>
-.logo {
-  width: 30px !important;
-  height: 30px !important;
+/* Estilo personalizado para a modal */
+.modal-content {
+  background-color: rgba(0, 0, 0, 0.8); /* Fundo preto transparente */
+  border: none;
+}
+
+.modal-header,
+.modal-footer {
+  border: none;
+}
+
+.modal-header .close {
+  color: white;
+}
+
+.modal-title {
+  color: white;
 }
 </style>

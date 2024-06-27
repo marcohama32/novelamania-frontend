@@ -1,146 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html class="no-js" lang="">
 
 <head>
-  <!-- All Meta -->
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="author" content="DexignZone" />
-  <meta name="robots" content="index, follow" />
-  <meta name="keywords" content="Sistema de Cobrancas" />
-  <meta name="description" content="sistema de gestão de receitas e cobrança de taxas" />
-  <meta property="og:title" content="Sistema de Cobrancas" />
-  <meta property="og:description" content="sistema de gestão de receitas e cobrança de taxas" />
-  <meta property="og:image" content="social-image.png" />
-  <meta name="format-detection" content="telephone=no" />
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>NovelaMania - Club de Novelas e Séries</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Mobile Specific -->
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Title -->
-  <title>Mentor - Sistema de gestão de receitas e cobrança de taxas</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
+  <!-- Place favicon.ico in the root directory -->
 
-  <!-- Favicon icon -->
-  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png" />
+  <!-- CSS here -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/animate.min.css">
+  <link rel="stylesheet" href="/css/magnific-popup.css">
+  <link rel="stylesheet" href="/css/fontawesome-all.min.css">
+  <link rel="stylesheet" href="/css/owl.carousel.min.css">
+  <link rel="stylesheet" href="/css/flaticon.css">
+  <link rel="stylesheet" href="/css/odometer.css">
+  <link rel="stylesheet" href="/css/aos.css">
+  <link rel="stylesheet" href="/css/slick.css">
+  <link rel="stylesheet" href="/css/default.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css"> 
+<!-- <link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css" /> -->
 
-  <link href="/dist/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" />
-
-  <link rel="stylesheet" href="/dist/vendor/chartist/css/chartist.min.css" />
-  <link href="/dist/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-  <!-- Vectormap -->
-  <link href="/dist/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" />
-  <link href="/dist/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
-  <link href="/dist/css/style.css" rel="stylesheet" />
-  <link href="/dist/css/style.css" rel="stylesheet" />
-
-  <link href="/dist/vendor/owl-carousel/owl.carousel.css" rel="stylesheet" />
 </head>
 
 <body>
+  <noscript>
+    <strong>Lamentamos, mas o vueapp não funciona corretamente sem o JavaScript habilitado. Ative-o para continuar.</strong>
+  </noscript>
+  <!-- preloader -->
+  <div id="preloader">
+    <div id="loading-center">
+      <div id="loading-center-absolute">
+        <img src="img/preloader.svg" alt="">
+      </div>
+    </div>
+  </div>
+  <!-- preloader-end -->
 
-  <div id="app"></div>
-
-  <script>
-    function loadScript(src) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.body.appendChild(script);
-      });
-    }
-
-    loadScript('./dist/app.js')
-      .then(() => {
-        // Code executed after app.js is loaded
-      })
-      .catch((error) => {
-        console.error('Failed to load app.js:', error);
-      });
-
-  </script>
-  <!-- Datatable -->
-  <script type="text/javascript" src="/dist/vendor/jqueryui/js/jquery-ui.min.js"></script>
-  <script>
-    var $j = jQuery.noConflict();
-  </script>
-  <script type="text/javascript" src="/dist/vendor/datatables/js/jquery.dataTables.min.js"></script>
-  <script type="text/javascript" src="/dist/vendor/global/global.min.js"></script>
-  <script type="text/javascript" src="/dist/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-
-  <script type="text/javascript" src="/dist/js/dashboard/cms.js"></script>
-  <!-- ck-editor -->
-  <script type="text/javascript" src="/dist/vendor/ckeditor/ckeditor.js"></script>
-
-  <script type="text/javascript" src="/dist/vendor/chart-js/chart.bundle.min.js"></script>
-  <script type="text/javascript" src="/dist/vendor/owl-carousel/owl.carousel.js"></script>
-
-  <!-- Chart piety plugin files -->
-  <script type="text/javascript" src="/dist/vendor/peity/jquery.peity.min.js"></script>
-
-  <!-- Apex Chart -->
-  <script type="text/javascript" src="/dist/vendor/apexchart/apexchart.js"></script>
-
-  <!-- Dashboard 1 -->
-  <!-- <script src="./dist/js/dashboard/dashboard-1.js"></script> -->
-
-  <script type="text/javascript" src="/dist/js/custom.min.js"></script>
-  <script type="text/javascript" src="/dist/js/deznav-init.js"></script>
-  <script type="text/javascript" src="/dist/js/demo.js"></script>
-  <script type="text/javascript" src="/dist/js/styleSwitcher.js"></script>
-
-  <!-- Chart Morris plugin files -->
-  <script src="/dist/vendor/morris/raphael-min.js"></script>
-  <!-- <script src="/dist/vendor/morris/morris.min.js"></script>
-  <script src="/dist/js/plugins-init/morris-init.js"></script> -->
+  <!-- Scroll-top -->
+  <button class="scroll-top scroll-to-target" data-target="html">
+    <i class="fas fa-angle-up"></i>
+  </button>
+  <!-- Scroll-top-end-->
 
 
-  <script>
-    function carouselReview() {
-      /*  testimonial one function by = owl.carousel.js */
-      /*  testimonial one function by = owl.carousel.js */
-      jQuery(".testimonial-one").owlCarousel({
-        loop: true,
-        margin: 10,
-        autoplay: true,
-        nav: false,
-        center: true,
-        dots: false,
-        navText: [
-          '<i class="fas fa-caret-left"></i>',
-          '<i class="fas fa-caret-right"></i>',
-        ],
-        responsive: {
-          0: {
-            items: 2,
-          },
-          400: {
-            items: 3,
-          },
-          700: {
-            items: 5,
-          },
-          991: {
-            items: 6,
-          },
 
-          1200: {
-            items: 4,
-          },
-          1600: {
-            items: 5,
-          },
-        },
-      });
-    }
+  <!-- main-area -->
+  <div>
 
-    jQuery(window).on("load", function () {
-      setTimeout(function () {
-        carouselReview();
-      }, 1000);
-    });
-  </script>
+    <div id="app"></div>
+   
+  </div>
+  <!-- main-area-end -->
+
+
+
+
+  <!-- <script src="/https://cdn.plyr.io/3.6.12/plyr.polyfilled.js"></script> -->
+  <!-- <script>
+      const player = new Plyr('#player');
+  </script> -->
+  <!-- JS here -->
+  <script src="/js/vendor/jquery-3.6.0.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/isotope.pkgd.min.js"></script>
+  <script src="/js/imagesloaded.pkgd.min.js"></script>
+  <script src="/js/jquery.magnific-popup.min.js"></script>
+  <script src="/js/owl.carousel.min.js"></script>
+  <script src="/js/jquery.odometer.min.js"></script>
+  <script src="/js/jquery.appear.js"></script>
+  <script src="/js/slick.min.js"></script>
+  <script src="/js/ajax-form.js"></script>
+  <script src="/js/wow.min.js"></script>
+  <script src="/js/aos.js"></script>
+  <script src="/js/plugins.js"></script>
+  <script src="/js/main.js"></script>
 </body>
+
+<!-- Mirrored from themebeyond.com/html/movflx/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 06 Jun 2024 21:18:26 GMT -->
 
 </html>

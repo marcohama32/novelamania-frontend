@@ -1,35 +1,12 @@
 <template>
   <div>
-    <!-- Authenticated Users -->
-    <div v-if="isAuthenticated && !isLoginRoute" id="main-wrapper">
-      <TopBar />
-      <SideBar />
-
-      <!-- Content Body -->
-      <div class="content-body">
-        <div class="container-fluid">
-          <!-- Home content -->
-          <router-view></router-view>
-        </div>
-      </div>
-
-      <FooterPage />
-    </div>
-
-    <!-- Non-authenticated Users -->
-    <div v-else>
-      <!-- Redirect to reset password route when not authenticated -->
-      <router-view v-if="isResetRoute || isForgetRoute"></router-view>
-
-      <!-- Show login route if not accessing reset route -->
-      <router-view v-else-if="isLoginRoute"></router-view>
-    </div>
+    <TopBar />
+    <main><router-view></router-view></main>
+    <FooterPage />
   </div>
 </template>
 
-
 <script>
-import SideBar from "./pages/common/SideBar.vue";
 import TopBar from "./pages/common/TopBar.vue";
 import FooterPage from "./pages/common/FooterPage.vue";
 import Cookies from "js-cookie";
@@ -38,7 +15,6 @@ export default {
   name: "App",
   components: {
     TopBar,
-    SideBar,
     FooterPage,
   },
   computed: {

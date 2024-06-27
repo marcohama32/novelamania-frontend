@@ -6,7 +6,7 @@ export default {
     namespaced: true,
     state(){
         return {
-            name: 'State Hama'
+            name: 'State'
         };
     },
     mutations,

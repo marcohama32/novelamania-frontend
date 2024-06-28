@@ -78,8 +78,8 @@ import store from "./store/store";
 import "flatpickr/dist/flatpickr.css";
 
 // Definir a base URL para o Axios
-axios.defaults.baseURL = "http://localhost:8000";
-// axios.defaults.baseURL = "https://novelamania-api.onrender.com";
+// axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "https://novelamania-api.onrender.com";
 
 // Definir as constantes
 const TOKEN_COOKIE = "token";

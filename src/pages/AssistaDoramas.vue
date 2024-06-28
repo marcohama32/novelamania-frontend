@@ -44,7 +44,7 @@
               <h2 class="title">Nossos Doramas</h2>
             </div>
           </div>
-          <div class="col-lg-6">
+          <div class="col-lg-4">
             <div class="movie-page-meta">
               <div class="tr-movie-menu-active text-center">
                 <form @submit.prevent="applyFilter">
@@ -284,20 +284,16 @@ export default {
 
       try {
         this.loading = true;
-
-        // Verifica se o token é válido para acessar o conteúdo
         const response = await axios.get("api/validate/subscription", {
           headers: { token },
         });
 
-        // Considerar status 200 ou 204 como sucesso na validação
+        // Considerar status 200 como sucesso
         if (response.status === 200 || response.status === 204) {
           console.log("Token e subscrição válidos");
-
-          // Redireciona para a página de detalhes da novela usando novelId
+          // Redirecionar para a página de detalhes da novela usando novelId
           this.$router.push(`/detalhe-novela/${novelId}`);
         } else {
-          // Caso o usuário não tenha uma subscrição válida
           Swal.fire({
             icon: "info",
             title: "Alerta!",
@@ -310,8 +306,6 @@ export default {
         }
       } catch (error) {
         console.error("Erro ao verificar token:", error);
-
-        // Tratamento de erro ao verificar o token
         Swal.fire({
           icon: "info",
           title: "Alerta!",
@@ -323,63 +317,13 @@ export default {
           showConfirmButton: false,
           position: "top-end",
         });
-      } finally {
-        this.loading = false; // Finaliza o indicador de carregamento
+        this.loading = false;
+      }
+      finally {
+        this.loading = false;
+        this.btnloading = false;
       }
     },
-    // async handleWatchClick(novelId) {
-    //   const token = Cookies.get("token");
-
-    //   if (!token) {
-    //     Swal.fire({
-    //       icon: "info",
-    //       title: "Alerta!",
-    //       toast: true,
-    //       text: "Faça login para acessar seu conteúdo favorito; se ainda não tem uma conta, entre em contato conosco.",
-    //       timer: 8000,
-    //       showConfirmButton: true,
-    //       position: "top-end",
-    //     });
-    //     return;
-    //   }
-
-    //   try {
-    //     this.loading = true;
-    //     const response = await axios.get("api/validate/subscription", {
-    //       headers: { token },
-    //     });
-
-    //     // Considerar status 200 como sucesso
-    //     if (response.status === 200 || response.status === 204) {
-    //       console.log("Token e subscrição válidos");
-    //       // Redirecionar para a página de detalhes da novela usando novelId
-    //       this.$router.push(`/detalhe-novela/${novelId}`);
-    //     } else {
-    //       Swal.fire({
-    //         icon: "info",
-    //         title: "Alerta!",
-    //         toast: true,
-    //         text: "Contacte o administrador para assinar um pacote.",
-    //         timer: 6000,
-    //         showConfirmButton: false,
-    //         position: "top-end",
-    //       });
-    //     }
-    //   } catch (error) {
-    //     console.error("Erro ao verificar token:", error);
-    //     Swal.fire({
-    //       icon: "info",
-    //       title: "Alerta!",
-    //       toast: true,
-    //       text:
-    //         error.response?.data?.error ||
-    //         "Erro ao verificar token. Por favor, faça login novamente.",
-    //       timer: 6000,
-    //       showConfirmButton: false,
-    //       position: "top-end",
-    //     });
-    //   }
-    // },
 
     isActivePage(page) {
       return page === this.currentPage;

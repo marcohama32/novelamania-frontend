@@ -489,9 +489,10 @@
               </div>
               <p class="text-justify">
                 Bem-vindo à NovelaMania, sua plataforma de streaming definitiva
-                para novelas, séries, e doramas. Desfrute de um vasto
-                catálogo com histórias emocionantes e dramas cativantes. Tudo isso com muita qualidade.
-                Assine agora e mergulhe em um mundo de entretenimento sem fim!
+                para novelas, séries, e doramas. Desfrute de um vasto catálogo
+                com histórias emocionantes e dramas cativantes. Tudo isso com
+                muita qualidade. Assine agora e mergulhe em um mundo de
+                entretenimento sem fim!
               </p>
               <div class="services-list">
                 <ul>
@@ -556,27 +557,27 @@
             class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
           > -->
           <div
-                  v-for="topViewedContent in topViewedContents"
-                  :key="topViewedContent._id"
-                  class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
-                >
-                  <div class="movie-item movie-item-three mb-50">
-                    <div class="movie-poster">
-                      <img
-                        :src="getAvatarUrl(topViewedContent.image_url)"
-                        :alt="topViewedContent.title"
-                      />
-                      <ul class="overlay-btn">
-                        <li class="rating">
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                        </li>
+            v-for="topViewedContent in topViewedContents"
+            :key="topViewedContent._id"
+            class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
+          >
+            <div class="movie-item movie-item-three mb-50">
+              <div class="movie-poster">
+                <img
+                  :src="getAvatarUrl(topViewedContent.image_url)"
+                  :alt="topViewedContent.title"
+                />
+                <ul class="overlay-btn">
+                  <li class="rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </li>
 
-                        <li>
-                          <router-link
+                  <li>
+                    <!-- <router-link
                             :to="`/detalhe-novela/${topViewedContent._id}`"
                           >
                             <a
@@ -588,38 +589,49 @@
                             >
                               Assistir
                             </a>
-                          </router-link>
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="movie-content">
-                      <div class="top">
-                        <h5 class="title">
-                          <a href="movie-details.html">{{
-                            topViewedContent.title
-                          }}</a>
-                        </h5>
-                        <span class="date">{{
-                          formatDate(topViewedContent.release_year)
-                        }}</span>
-                      </div>
-                      <div class="bottom">
-                        <ul>
-                          <li><span class="quality">hd</span></li>
-                          <li>
-                            <!-- <span class="duration"
+                          </router-link> -->
+                    <router-link :to="`/detalhe-novela/${topViewedContent._id}`">
+                      <a
+                        href=""
+                        class="btn"
+                        @click.prevent="handleWatchClick(topViewedContent._id)"
+                        :class="{ 'btn-loading': loading }"
+                      >
+                        <span v-if="!loading">Assistir</span>
+                        <span v-else>Processando...</span>
+                      </a>
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
+              <div class="movie-content">
+                <div class="top">
+                  <h5 class="title">
+                    <a href="movie-details.html">{{
+                      topViewedContent.title
+                    }}</a>
+                  </h5>
+                  <span class="date">{{
+                    formatDate(topViewedContent.release_year)
+                  }}</span>
+                </div>
+                <div class="bottom">
+                  <ul>
+                    <li><span class="quality">hd</span></li>
+                    <li>
+                      <!-- <span class="duration"
                         ><i class="far fa-clock"></i> 128 min</span
                       > -->
-                            <span class="rating"
-                              ><i class="fa fa-eye"></i>
-                              {{ topViewedContent.views }}K</span
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
+                      <span class="rating"
+                        ><i class="fa fa-eye"></i>
+                        {{ topViewedContent.views }}K</span
+                      >
+                    </li>
+                  </ul>
                 </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -875,7 +887,7 @@ export default {
         this.loading = false;
       }
     },
-   
+
     async handleWatchClick(novelId) {
       const token = Cookies.get("token");
 
@@ -893,6 +905,7 @@ export default {
       }
 
       try {
+        this.loading = true;
         const response = await axios.get("api/validate/subscription", {
           headers: { token },
         });
@@ -926,6 +939,7 @@ export default {
           showConfirmButton: false,
           position: "top-end",
         });
+        this.loading = false;
       }
     },
     getImageUrl(imageUrl) {

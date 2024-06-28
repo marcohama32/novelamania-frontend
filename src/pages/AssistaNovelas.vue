@@ -44,7 +44,7 @@
               <h2 class="title">Nossas Novelas</h2>
             </div>
           </div>
-          <div class="col-lg-6">
+          <div class="col-lg-4">
             <div class="movie-page-meta">
               <div class="tr-movie-menu-active text-center">
                 <form @submit.prevent="applyFilter">
@@ -94,10 +94,21 @@
                         href=""
                         class="btn"
                         @click.prevent="handleWatchClick(novel._id)"
+                        :class="{ 'btn-loading': loading }"
+                      >
+                        <span v-if="!loading">Assistir</span>
+                        <span v-else>Processando...</span>
+                      </a>
+                    </router-link>
+                    <!-- <router-link :to="`/detalhe-novela/${novel._id}`">
+                      <a
+                        href=""
+                        class="btn"
+                        @click.prevent="handleWatchClick(novel._id)"
                       >
                         Assistir
                       </a>
-                    </router-link>
+                    </router-link> -->
                   </li>
                 </ul>
               </div>
@@ -275,6 +286,7 @@ export default {
       }
 
       try {
+        this.loading = true;
         const response = await axios.get("api/validate/subscription", {
           headers: { token },
         });
@@ -308,6 +320,11 @@ export default {
           showConfirmButton: false,
           position: "top-end",
         });
+        this.loading = false;
+      }
+      finally {
+        this.loading = false;
+        this.btnloading = false;
       }
     },
     isActivePage(page) {

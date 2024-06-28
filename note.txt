@@ -48,5 +48,5 @@ git push -u origin main
 
 ///////////////////////////////////////para novas mudancas/////////////////////
 git add .
-git commit -m "Atualização de múltiplos arquivos"
+git commit -m "actualizacao do server"
 git push

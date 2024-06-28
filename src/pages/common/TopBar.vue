@@ -313,13 +313,35 @@
                   </div>
                 </div>
                 <div class="float-left">
+                  
                   <button
-                    class="btn btn-primary mt-2"
                     type="submit"
-                    :disabled="loading"
+                    class="btn btn-gradient-primary mr-2"
+                    v-if="!btnloading"
                   >
                     Entrar
                   </button>
+                  <button
+                    type="button"
+                    class="btn btn-gradient-primary mr-2"
+                    disabled
+                    v-if="btnloading"
+                  >
+                    <span
+                      class="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    Logando...
+                  </button>
+
+                  <!-- <button
+                    class="btn btn-primary mt-2"
+                    type="submit"
+                    :disabled="btnLoading"
+                  >
+                    Entrar
+                  </button> -->
                 </div>
               </form>
             </div>
@@ -354,7 +376,7 @@ export default {
       searchTerm: "",
 
       loading: false,
-      btnLoading: false,
+      btnloading: false,
       errors: {},
       userID: "",
       notifications: [], // Array to hold notifications
@@ -415,7 +437,9 @@ export default {
       console.log("closeMobileMenu called");
       this.showMobileMenu = false; // Fecha o menu móvel
     },
+
     async onLogin() {
+      this.btnLoading = true;
       // Verificar se ambos os campos de contacto e senha estão vazios
       if (!this.contact1 || !this.password) {
         Swal.fire({
@@ -446,7 +470,7 @@ export default {
 
       try {
         this.loading = true;
-        this.btnLoading = true;
+        this.btnloading = true;
 
         const user = {
           contact1: this.contact1,
@@ -461,7 +485,7 @@ export default {
           Cookies.set("role", res.data.role, { expires: 7 });
           this.isLoggedIn = true; // Atualizar o estado de login
 
-          this.$emit("loginSuccess");
+          // this.$emit("loginSuccess");
           // this.$router.push("/");
           location.reload();
         }
@@ -493,7 +517,7 @@ export default {
         }
       } finally {
         this.loading = false;
-        this.btnLoading = false;
+        this.btnloading = false;
       }
     },
 

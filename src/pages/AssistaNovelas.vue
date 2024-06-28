@@ -322,10 +322,7 @@ export default {
         });
         this.loading = false;
       }
-      finally {
-        this.loading = false;
-        this.btnloading = false;
-      }
+      
     },
     isActivePage(page) {
       return page === this.currentPage;

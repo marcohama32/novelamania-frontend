@@ -48,5 +48,5 @@ git push -u origin main
 
 ///////////////////////////////////////para novas mudancas/////////////////////
 git add .
-git commit -m "actualizacao doramas"
+git commit -m "actualizacao loading"
 git push

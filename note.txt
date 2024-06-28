@@ -1,0 +1,52 @@
+git remote set-url origin https://github.com/marcohama32/novelamania-backend.git
+
+Atualizar o URL do Repositório Remoto Existente
+Atualizar o URL do Repositório Remoto:
+Se você deseja atualizar o URL do repositório remoto existente, use o seguinte comando:
+
+sh
+Copiar código
+git remote set-url origin https://github.com/marcohama32/novelamania-api.git
+Verificar a Configuração Remota:
+Verifique se o URL remoto foi atualizado corretamente:
+
+sh
+Copiar código
+git remote -v
+Remover e Adicionar o Repositório Remoto
+Remover o Repositório Remoto Existente:
+Para remover o repositório remoto existente, use o comando:
+
+sh
+Copiar código
+git remote remove origin
+
+Verificar a Configuração Remota:
+Verifique se o repositório remoto foi adicionado corretamente:
+
+sh
+Copiar código
+git remote -v
+Depois de atualizar ou redefinir o repositório remoto, você pode prosseguir com os commits e o push para o repositório remoto:
+
+Adicionar e Confirmar as Alterações:
+Adicione todas as alterações e faça um commit:
+
+sh
+Copiar código
+git add .
+git commit -m "Initial commit in new directory 2"
+Enviar as Alterações para o Repositório Remoto:
+Envie as alterações para o repositório remoto:
+
+sh
+git branch
+
+git push -u origin main
+
+
+
+///////////////////////////////////////para novas mudancas/////////////////////
+git add .
+git commit -m "Atualização de múltiplos arquivos"
+git push

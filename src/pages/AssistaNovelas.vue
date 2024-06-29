@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- preloader -->
-    <div v-if="loading" id="preloader">
+    <!-- <div v-if="loading" id="preloader">
       <div id="loading-center">
         <div id="loading-center-absolute">
           <img src="img/preloader.svg" alt="" />
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- preloader-end -->
     <!-- breadcrumb-area -->
     <section
@@ -44,99 +44,88 @@
               <h2 class="title">Nossas Novelas</h2>
             </div>
           </div>
-          <div class="col-lg-4">
-            <div class="movie-page-meta">
-              <div class="tr-movie-menu-active text-center">
-                <form @submit.prevent="applyFilter">
-                  <input
-                    class="searchInput"
-                    type="text"
-                    v-model="searchTerm"
-                    placeholder="Pesquisar..."
-                  />
-                  <!-- <button type="button" @click="applyFilter">
-                    <i class="fas fa-search"></i>
-                  </button> -->
-                </form>
-                <!-- <button class="active" data-filter="*">Animation</button>
-                                    <button class="" data-filter=".cat-one">Movies</button>
-                                    <button class="" data-filter=".cat-two">Romantic</button> -->
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 col-md-8 col-sm-10 col-12">
+                <div class="movie-page-meta">
+                  <div class="tr-movie-menu-active text-center">
+                    <form @submit.prevent="applyFilter">
+                      <input
+                        class="form-control searchInput"
+                        type="text"
+                        v-model="searchTerm"
+                        placeholder="Pesquisar..."
+                      />
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="row tr-movie-active">
-          <div
-            v-for="novel in novels"
-            :key="novel._id"
-            class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
-          >
-            <div class="movie-item movie-item-three mb-50">
-              <div class="movie-poster">
-                <img :src="getAvatarUrl(novel.image_url)" :alt="novel.title" />
-                <ul class="overlay-btn">
-                  <li class="rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                  </li>
-
-                  <!-- <li>
-                    <router-link :to="`/detalhe-novela/${novel._id}`"
-                      ><a href="" class="btn">Assistir</a></router-link
-                    >
-                  </li> -->
-                  <li>
-                    <router-link :to="`/detalhe-novela/${novel._id}`">
-                      <a
-                        href=""
-                        class="btn"
-                        @click.prevent="handleWatchClick(novel._id)"
-                        :class="{ 'btn-loading': loading }"
-                      >
-                        <span v-if="!loading">Assistir</span>
-                        <span v-else>Processando...</span>
-                      </a>
-                    </router-link>
-                    <!-- <router-link :to="`/detalhe-novela/${novel._id}`">
-                      <a
-                        href=""
-                        class="btn"
-                        @click.prevent="handleWatchClick(novel._id)"
-                      >
-                        Assistir
-                      </a>
-                    </router-link> -->
-                  </li>
-                </ul>
-              </div>
-              <div class="movie-content">
-                <div class="top">
-                  <h5 class="title">
-                    <a href="movie-details.html">{{ novel.title }}</a>
-                  </h5>
-                  <span class="date">{{ formatDate(novel.release_year) }}</span>
-                </div>
-                <div class="bottom">
-                  <ul>
-                    <li><span class="quality">hd</span></li>
+        <div>
+          <div v-if="loading" class="spinner-container">
+            <div class="spinner"></div>
+          </div>
+          <div v-else class="row tr-movie-active">
+            <div
+              v-for="novel in novels"
+              :key="novel._id"
+              class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
+            >
+              <div class="movie-item movie-item-three mb-50">
+                <div class="movie-poster">
+                  <img
+                    :src="getAvatarUrl(novel.image_url)"
+                    :alt="novel.title"
+                  />
+                  <ul class="overlay-btn">
+                    <li class="rating">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </li>
                     <li>
-                      <!-- <span class="duration"
-                        ><i class="far fa-clock"></i> 128 min</span
-                      > -->
-                      <span class="rating"
-                        ><i class="fa fa-eye"></i> {{ novel.views }} K</span
-                      >
+                      <router-link :to="`/detalhe-novela/${novel._id}`">
+                        <a
+                          href=""
+                          class="btn"
+                          @click.prevent="handleWatchClick(novel._id)"
+                          :class="{ 'btn-loading': loading }"
+                        >
+                          <span v-if="!loading">Assistir</span>
+                          <span v-else>Processando...</span>
+                        </a>
+                      </router-link>
                     </li>
                   </ul>
                 </div>
+                <div class="movie-content">
+                  <div class="top">
+                    <h5 class="title">
+                      <a href="movie-details.html">{{ novel.title }}</a>
+                    </h5>
+                    <span class="date">{{
+                      formatDate(novel.release_year)
+                    }}</span>
+                  </div>
+                  <div class="bottom">
+                    <ul>
+                      <li><span class="quality">hd</span></li>
+                      <li>
+                        <span class="rating"
+                          ><i class="fa fa-eye"></i> {{ novel.views }} K</span
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
         <div class="row">
           <div class="col-12">
             <div class="pagination-wrap mt-30">
@@ -322,13 +311,12 @@ export default {
         });
         this.loading = false;
       }
-      
     },
     isActivePage(page) {
       return page === this.currentPage;
     },
     getImageUrl(imageUrl) {
-      return imageUrl.replace(/\\/g, "/"); 
+      return imageUrl.replace(/\\/g, "/");
     },
     getAvatarUrl(imageUrl) {
       return imageUrl
@@ -346,10 +334,8 @@ export default {
       sessionStorage.removeItem("visitedBefore");
     },
     applyFilter() {
-   
-        this.currentPage = 1;
-        this.search();
-      
+      this.currentPage = 1;
+      this.search();
     },
     refresh() {
       (this.startDate = null),
@@ -419,7 +405,7 @@ export default {
     currentPage: "search",
     pageSize: "search",
     searchTerm(val) {
-      if (val === '') {
+      if (val === "") {
         this.searchTerm = this.defaultSearchTerm; // Definir searchTerm para o defaultSearchTerm se estiver vazio
         this.search(); // Chamar fetchData para buscar dados com o defaultSearchTerm
       } else {
@@ -469,5 +455,65 @@ export default {
   background: 0 0;
   color: #fff;
   padding: 0 85px 12px 40px;
+}
+
+.responsive-div {
+  width: 100%;
+  padding: 0 15px; /* Adiciona padding para evitar que o conteúdo encoste nas bordas da tela */
+  box-sizing: border-box; /* Garante que o padding não aumente a largura total do elemento */
+}
+
+@media (min-width: 576px) {
+  .responsive-div {
+    width: 90%;
+  }
+}
+
+@media (min-width: 768px) {
+  .responsive-div {
+    width: 75%;
+  }
+}
+
+@media (min-width: 992px) {
+  .responsive-div {
+    width: 60%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .responsive-div {
+    width: 50%;
+  }
+}
+
+.searchInput {
+  width: 100%; /* Garante que o campo de entrada ocupe 100% da largura do seu contêiner */
+  max-width: 100%; /* Garante que o campo não ultrapasse o contêiner */
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Altura total da viewport */
+}
+
+.spinner {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #f5f854; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

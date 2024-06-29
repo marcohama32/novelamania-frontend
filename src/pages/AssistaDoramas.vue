@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- preloader -->
-    <div v-if="loading" id="preloader">
+    <!-- <div v-if="loading" id="preloader">
       <div id="loading-center">
         <div id="loading-center-absolute">
           <img src="img/preloader.svg" alt="" />
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- preloader-end -->
     <!-- breadcrumb-area -->
     <section
@@ -65,31 +65,38 @@
             </div>
           </div>
         </div>
-        <div class="row tr-movie-active">
-          <div
-            v-for="novel in novels"
-            :key="novel._id"
-            class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
-          >
-            <div class="movie-item movie-item-three mb-50">
-              <div class="movie-poster">
-                <img :src="getAvatarUrl(novel.image_url)" :alt="novel.title" />
-                <ul class="overlay-btn">
-                  <li class="rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                  </li>
+        <div>
+          <div v-if="loading" class="spinner-container">
+            <div class="spinner"></div>
+          </div>
+          <div class="row tr-movie-active">
+            <div
+              v-for="novel in novels"
+              :key="novel._id"
+              class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
+            >
+              <div class="movie-item movie-item-three mb-50">
+                <div class="movie-poster">
+                  <img
+                    :src="getAvatarUrl(novel.image_url)"
+                    :alt="novel.title"
+                  />
+                  <ul class="overlay-btn">
+                    <li class="rating">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </li>
 
-                  <!-- <li>
+                    <!-- <li>
                       <router-link :to="`/detalhe-novela/${novel._id}`"
                         ><a href="" class="btn">Assistir</a></router-link
                       >
                     </li> -->
-                  <li>
-                    <!-- <router-link :to="`/detalhe-novela/${novel._id}`">
+                    <li>
+                      <!-- <router-link :to="`/detalhe-novela/${novel._id}`">
                       <a
                         href=""
                         class="btn"
@@ -99,45 +106,47 @@
                       </a>
                     </router-link> -->
 
-                    <router-link :to="`/detalhe-novela/${novel._id}`">
-                      <a
-                        href=""
-                        class="btn"
-                        @click.prevent="handleWatchClick(novel._id)"
-                        :class="{ 'btn-loading': loading }"
-                      >
-                        <span v-if="!loading">Assistir</span>
-                        <span v-else>Processando...</span>
-                      </a>
-                    </router-link>
-                  </li>
-                </ul>
-              </div>
-              <div class="movie-content">
-                <div class="top">
-                  <h5 class="title">
-                    <a href="movie-details.html">{{ novel.title }}</a>
-                  </h5>
-                  <span class="date">{{ formatDate(novel.release_year) }}</span>
-                </div>
-                <div class="bottom">
-                  <ul>
-                    <li><span class="quality">hd</span></li>
-                    <li>
-                      <!-- <span class="duration"
-                          ><i class="far fa-clock"></i> 128 min</span
-                        > -->
-                      <span class="rating"
-                        ><i class="fa fa-eye"></i> {{ novel.views }} K</span
-                      >
+                      <router-link :to="`/detalhe-novela/${novel._id}`">
+                        <a
+                          href=""
+                          class="btn"
+                          @click.prevent="handleWatchClick(novel._id)"
+                          :class="{ 'btn-loading': loading }"
+                        >
+                          <span v-if="!loading">Assistir</span>
+                          <span v-else>Processando...</span>
+                        </a>
+                      </router-link>
                     </li>
                   </ul>
+                </div>
+                <div class="movie-content">
+                  <div class="top">
+                    <h5 class="title">
+                      <a href="movie-details.html">{{ novel.title }}</a>
+                    </h5>
+                    <span class="date">{{
+                      formatDate(novel.release_year)
+                    }}</span>
+                  </div>
+                  <div class="bottom">
+                    <ul>
+                      <li><span class="quality">hd</span></li>
+                      <li>
+                        <!-- <span class="duration"
+                          ><i class="far fa-clock"></i> 128 min</span
+                        > -->
+                        <span class="rating"
+                          ><i class="fa fa-eye"></i> {{ novel.views }} K</span
+                        >
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
         <div class="row">
           <div class="col-12">
             <div class="pagination-wrap mt-30">
@@ -319,7 +328,6 @@ export default {
         });
         this.loading = false;
       }
-      
     },
 
     isActivePage(page) {
@@ -465,5 +473,30 @@ export default {
   background: 0 0;
   color: #fff;
   padding: 0 85px 12px 40px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Altura total da viewport */
+}
+
+.spinner {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #f5f854; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

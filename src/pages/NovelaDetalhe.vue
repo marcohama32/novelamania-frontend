@@ -1,7 +1,7 @@
 <template>
   <div>
-     <!-- preloader -->
-     <div v-if="loading" id="preloader">
+    <!-- preloader -->
+    <div v-if="loading" id="preloader">
       <div id="loading-center">
         <div id="loading-center-absolute">
           <img src="img/preloader.svg" alt="" />
@@ -54,22 +54,7 @@
               <p class="text-justify">
                 {{ this.description }}
               </p>
-              <div class="movie-details-prime">
-                <ul>
-                  <li class="share">
-                    <a href="#"><i class="fas fa-share-alt"></i> Share</a>
-                  </li>
-                  <li class="streaming">
-                    <h6>Prime Video</h6>
-                    <span>Streaming Channels</span>
-                  </li>
-                  <li class="watch">
-                    <a href="#" class="btn popup-video"
-                      ><i class="fas fa-play"></i> Watch Now</a
-                    >
-                  </li>
-                </ul>
-              </div>
+              <!--  -->
             </div>
           </div>
         </div>

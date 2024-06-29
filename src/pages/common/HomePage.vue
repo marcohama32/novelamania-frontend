@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- preloader -->
-    <div v-if="loading" id="preloader">
+    <!-- <div v-if="loading" id="preloader">
       <div id="loading-center">
         <div id="loading-center-absolute">
           <img src="img/preloader.svg" alt="" />
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- preloader-end -->
 
     <section
@@ -129,76 +129,81 @@
             role="tabpanel"
             aria-labelledby="tvShow-tab"
           >
-            <div class="ucm-active owl-carousel">
-              <div class="row">
-                <div
-                  v-for="recentContent in recentContents"
-                  :key="recentContent._id"
-                  class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
-                >
-                  <div class="movie-item movie-item-three mb-50">
-                    <div class="movie-poster">
-                      <img
-                        :src="getAvatarUrl(recentContent.image_url)"
-                        :alt="recentContent.title"
-                      />
-                      <ul class="overlay-btn">
-                        <li class="rating">
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                        </li>
+            <div>
+              <div v-if="loading" class="spinner-container">
+                <div class="spinner"></div>
+              </div>
+              <div class="ucm-active owl-carousel">
+                <div class="row">
+                  <div
+                    v-for="recentContent in recentContents"
+                    :key="recentContent._id"
+                    class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
+                  >
+                    <div class="movie-item movie-item-three mb-50">
+                      <div class="movie-poster">
+                        <img
+                          :src="getAvatarUrl(recentContent.image_url)"
+                          :alt="recentContent.title"
+                        />
+                        <ul class="overlay-btn">
+                          <li class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                          </li>
 
-                        <li>
-                          <router-link
-                            :to="`/detalhe-novela/${recentContent._id}`"
-                          >
-                            <a
-                              href=""
-                              class="btn"
-                              @click.prevent="
-                                handleWatchClick(recentContent._id)
-                              "
-                            >
-                              Assistir
-                            </a>
-                          </router-link>
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="movie-content">
-                      <div class="top">
-                        <h5 class="title">
-                          <a href="movie-details.html">{{
-                            recentContent.title
-                          }}</a>
-                        </h5>
-                        <span class="date">{{
-                          formatDate(recentContent.release_year)
-                        }}</span>
-                      </div>
-                      <div class="bottom">
-                        <ul>
-                          <li><span class="quality">hd</span></li>
                           <li>
-                            <!-- <span class="duration"
-                        ><i class="far fa-clock"></i> 128 min</span
-                      > -->
-                            <span class="rating"
-                              ><i class="fa fa-eye"></i>
-                              {{ recentContent.views }}K</span
+                            <router-link
+                              :to="`/detalhe-novela/${recentContent._id}`"
                             >
+                              <a
+                                href=""
+                                class="btn"
+                                @click.prevent="
+                                  handleWatchClick(recentContent._id)
+                                "
+                              >
+                                Assistir
+                              </a>
+                            </router-link>
                           </li>
                         </ul>
                       </div>
+                      <div class="movie-content">
+                        <div class="top">
+                          <h5 class="title">
+                            <a href="movie-details.html">{{
+                              recentContent.title
+                            }}</a>
+                          </h5>
+                          <span class="date">{{
+                            formatDate(recentContent.release_year)
+                          }}</span>
+                        </div>
+                        <div class="bottom">
+                          <ul>
+                            <li><span class="quality">hd</span></li>
+                            <li>
+                              <!-- <span class="duration"
+                        ><i class="far fa-clock"></i> 128 min</span
+                      > -->
+                              <span class="rating"
+                                ><i class="fa fa-eye"></i>
+                                {{ recentContent.views }}K</span
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <!--  -->
+                  <!--  -->
 
-                <!-- Adicione mais colunas de filmes aqui conforme necessário -->
+                  <!-- Adicione mais colunas de filmes aqui conforme necessário -->
+                </div>
               </div>
             </div>
           </div>
@@ -550,34 +555,38 @@
             </div>
           </div>
         </div> -->
-        <div class="row tr-movie-active">
-          <!-- <div
+        <div>
+          <div v-if="loading" class="spinner-container">
+            <div class="spinner"></div>
+          </div>
+          <div class="row tr-movie-active">
+            <!-- <div
             v-for="topViewedContent in topViewedContents"
             :key="topViewedContent._id"
             class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
           > -->
-          <div
-            v-for="topViewedContent in topViewedContents"
-            :key="topViewedContent._id"
-            class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
-          >
-            <div class="movie-item movie-item-three mb-50">
-              <div class="movie-poster">
-                <img
-                  :src="getAvatarUrl(topViewedContent.image_url)"
-                  :alt="topViewedContent.title"
-                />
-                <ul class="overlay-btn">
-                  <li class="rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                  </li>
+            <div
+              v-for="topViewedContent in topViewedContents"
+              :key="topViewedContent._id"
+              class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer cat-two"
+            >
+              <div class="movie-item movie-item-three mb-50">
+                <div class="movie-poster">
+                  <img
+                    :src="getAvatarUrl(topViewedContent.image_url)"
+                    :alt="topViewedContent.title"
+                  />
+                  <ul class="overlay-btn">
+                    <li class="rating">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </li>
 
-                  <li>
-                    <!-- <router-link
+                    <li>
+                      <!-- <router-link
                             :to="`/detalhe-novela/${topViewedContent._id}`"
                           >
                             <a
@@ -590,44 +599,49 @@
                               Assistir
                             </a>
                           </router-link> -->
-                    <router-link :to="`/detalhe-novela/${topViewedContent._id}`">
-                      <a
-                        href=""
-                        class="btn"
-                        @click.prevent="handleWatchClick(topViewedContent._id)"
-                        :class="{ 'btn-loading': loading }"
+                      <router-link
+                        :to="`/detalhe-novela/${topViewedContent._id}`"
                       >
-                        <span v-if="!loading">Assistir</span>
-                        <span v-else>Processando...</span>
-                      </a>
-                    </router-link>
-                  </li>
-                </ul>
-              </div>
-              <div class="movie-content">
-                <div class="top">
-                  <h5 class="title">
-                    <a href="movie-details.html">{{
-                      topViewedContent.title
-                    }}</a>
-                  </h5>
-                  <span class="date">{{
-                    formatDate(topViewedContent.release_year)
-                  }}</span>
-                </div>
-                <div class="bottom">
-                  <ul>
-                    <li><span class="quality">hd</span></li>
-                    <li>
-                      <!-- <span class="duration"
-                        ><i class="far fa-clock"></i> 128 min</span
-                      > -->
-                      <span class="rating"
-                        ><i class="fa fa-eye"></i>
-                        {{ topViewedContent.views }}K</span
-                      >
+                        <a
+                          href=""
+                          class="btn"
+                          @click.prevent="
+                            handleWatchClick(topViewedContent._id)
+                          "
+                          :class="{ 'btn-loading': loading }"
+                        >
+                          <span v-if="!loading">Assistir</span>
+                          <span v-else>Processando...</span>
+                        </a>
+                      </router-link>
                     </li>
                   </ul>
+                </div>
+                <div class="movie-content">
+                  <div class="top">
+                    <h5 class="title">
+                      <a href="movie-details.html">{{
+                        topViewedContent.title
+                      }}</a>
+                    </h5>
+                    <span class="date">{{
+                      formatDate(topViewedContent.release_year)
+                    }}</span>
+                  </div>
+                  <div class="bottom">
+                    <ul>
+                      <li><span class="quality">hd</span></li>
+                      <li>
+                        <!-- <span class="duration"
+                        ><i class="far fa-clock"></i> 128 min</span
+                      > -->
+                        <span class="rating"
+                          ><i class="fa fa-eye"></i>
+                          {{ topViewedContent.views }}K</span
+                        >
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1076,5 +1090,55 @@ export default {
   width: 100%;
   height: 100%; /* Ocupa toda a altura do contêiner, mantendo a proporção */
   object-fit: cover; /* Corta a imagem para preencher o contêiner mantendo a proporção */
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Altura total da viewport */
+}
+
+.spinner {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #f5f854; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Altura total da viewport */
+}
+
+.spinner {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #f5f854; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

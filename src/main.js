@@ -1,74 +1,3 @@
-// import { createApp } from "vue";
-// import axios from "axios";
-// import App from "./App.vue";
-// import VueCookies from "vue-cookies";
-// // import Cookies from "js-cookie";
-// import router from "./router/router";
-// import store from "./store/store";
-// import "flatpickr/dist/flatpickr.css";
-
-// axios.defaults.baseURL = "http://localhost:8000";
-
-// // Adicionando o interceptor para tratamento de erros de autorização (401)
-// // axios.interceptors.response.use(
-// //   function (response) {
-// //     return response;
-// //   },
-// //   async function (error) {
-// //     if (error.response && error.response.status === 401) {
-// //       // Captura o motivo da desconexão
-// //       let msg = error.response.data.returnMessage;
-// //       VueCookies.set("logoutReason", msg);
-
-// //       // Realiza o logout na API
-// //     //   const token = VueCookies.get("token");
-// //       const token = Cookies.get("token");
-// //       try {
-// //         const response = await axios.get("/api/check/verify-token", {
-// //           headers: {
-// //             token: token,
-// //           },
-// //         });
-
-// //         // Se o token for inválido, realiza o logout
-// //         if (!response.data.valid) {
-// //           await axios.get("/api/logout", {
-// //             headers: {
-// //               token: token,
-// //             },
-// //           });
-// //           Cookies.remove("token");
-// //           Cookies.remove("role");
-// //           VueCookies.remove("token");
-// //           router.push("/");
-// //         }
-// //       } catch (verifyTokenError) {
-// //         console.error("Erro ao verificar token:", verifyTokenError);
-
-// //         // Em caso de erro na verificação do token, realiza o logout e limpa os cookies
-// //         await axios.get("/api/logout", {
-// //           headers: {
-// //             token: token,
-// //           },
-// //         });
-// //         Cookies.remove("token");
-// //         Cookies.remove("role");
-// //         VueCookies.remove("token");
-// //         router.push("/");
-// //       }
-// //     }
-// //     return Promise.reject(error);
-// //   }
-// // );
-
-// const app = createApp(App);
-
-// app.use(VueCookies);
-// app.use(router);
-// app.use(store);
-
-// app.mount("#app");
-
 import { createApp } from "vue";
 import axios from "axios";
 import App from "./App.vue";
@@ -76,6 +5,21 @@ import Cookies from "js-cookie";
 import router from "./router/router";
 import store from "./store/store";
 import "flatpickr/dist/flatpickr.css";
+
+
+
+// Registrar Service Worker para cache de imagens e arquivos estáticos
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(registration => {
+          console.log('Service Worker registrado com sucesso:', registration);
+        })
+        .catch(error => {
+          console.error('Erro ao registrar Service Worker:', error);
+        });
+    });
+  }
 
 // Definir a base URL para o Axios
 // axios.defaults.baseURL = "http://localhost:8000";

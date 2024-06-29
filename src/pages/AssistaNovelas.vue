@@ -1,17 +1,10 @@
 <template>
   <div>
-    <!-- preloader -->
-    <!-- <div v-if="loading" id="preloader">
-      <div id="loading-center">
-        <div id="loading-center-absolute">
-          <img src="img/preloader.svg" alt="" />
-        </div>
-      </div>
-    </div> -->
-    <!-- preloader-end -->
+
     <!-- breadcrumb-area -->
     <section
       class="breadcrumb-area breadcrumb-bg"
+      loading="lazy"
       data-background="img/bg/breadcrumb_bg.jpg"
     >
       <div class="container">
@@ -21,7 +14,7 @@
               <h2 class="title">Todas <span>Novelas</span></h2>
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">
                     Novelas
                   </li>
@@ -105,7 +98,7 @@
                 <div class="movie-content">
                   <div class="top">
                     <h5 class="title">
-                      <a href="movie-details.html">{{ novel.title }}</a>
+                      <a href="#">{{ novel.title }}</a>
                     </h5>
                     <span class="date">{{
                       formatDate(novel.release_year)
@@ -188,6 +181,21 @@ export default {
   methods: {
     async fetchData() {
       this.loading = true;
+
+      const cachedNovels = localStorage.getItem("novels");
+      const cacheExpiration = 60 * 60 * 1000; // 1 hora em milissegundos
+      const currentTime = new Date().getTime();
+
+      if (cachedNovels) {
+        const { content, timestamp } = JSON.parse(cachedNovels);
+
+        if (currentTime - timestamp < cacheExpiration) {
+          this.novels = content;
+          this.loading = false;
+          return;
+        }
+      }
+
       try {
         const token = Cookies.get("token");
 
@@ -208,6 +216,13 @@ export default {
         });
 
         this.novels = response.data.novels;
+
+        // Save data to localStorage with timestamp
+        const dataToCache = {
+          content: this.novels,
+          timestamp: currentTime,
+        };
+        localStorage.setItem("novels", JSON.stringify(dataToCache));
 
         this.count = response.data.total;
         this.totalPages = Math.ceil(this.count / this.pageSize);
@@ -389,7 +404,7 @@ export default {
           console.error("Erro ao verificar o token:", error);
         }
       } else {
-        console.log("Token não existe");
+        // console.log("Token não existe");
       }
     },
   },

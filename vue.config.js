@@ -12,6 +12,12 @@ module.exports = defineConfig({
         }
       }
     },
-    historyApiFallback: true, // Adiciona esta linha para tratar rotas history mode
+    historyApiFallback: true,
+  },
+  pwa: {
+    workboxPluginMode: "GenerateSW",
+    workboxOptions: {
+      // Configurações opcionais do Workbox aqui
+    }
   }
 });

@@ -7,6 +7,8 @@
   <title>NovelaMania - Club de Novelas e Séries</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="/manifest.json">
+
 
   <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -26,14 +28,15 @@
   <link rel="stylesheet" href="/css/slick.css">
   <link rel="stylesheet" href="/css/default.css">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/responsive.css"> 
-<!-- <link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css" /> -->
+  <link rel="stylesheet" href="/css/responsive.css">
+
 
 </head>
 
 <body>
   <noscript>
-    <strong>Lamentamos, mas o vueapp não funciona corretamente sem o JavaScript habilitado. Ative-o para continuar.</strong>
+    <strong>Lamentamos, mas o vueapp não funciona corretamente sem o JavaScript habilitado. Ative-o para
+      continuar.</strong>
   </noscript>
   <!-- preloader -->
   <div id="preloader">
@@ -57,22 +60,20 @@
   <div>
 
     <div id="app"></div>
-   
+
   </div>
   <!-- main-area-end -->
   <div id="app">
     <!-- newsletter-area -->
-    <section
-      class="newsletter-area newsletter-bg"
-      data-background="img/bg/newsletter_bg.jpg"
-    >
+    <section class="newsletter-area newsletter-bg" data-background="img/bg/newsletter_bg.jpg">
       <div class="container">
         <div class="newsletter-inner-wrap">
           <div class="row align-items-center">
             <div class="col-lg-6">
               <div class="newsletter-content">
                 <h4>Fique Por Dentro das Últimas Novidades!</h4>
-                <p>Não perca nenhuma novidade! Assine nossa newsletter e receba as últimas atualizações em primeira mão.</p>
+                <p>Não perca nenhuma novidade! Assine nossa newsletter e receba as últimas atualizações em primeira mão.
+                </p>
               </div>
             </div>
             <div class="col-lg-6">
@@ -106,12 +107,7 @@
                       <li><router-link to="/doramas">Doramas</router-link></li>
                       <li><router-link to="/pacotes">Pacotes</router-link></li>
                     </ul>
-                    <!-- <div class="footer-search">
-                      <form action="#">
-                        <input type="text" placeholder="Encontre as melhores" />
-                        <button><i class="fas fa-search"></i></button>
-                      </form>
-                    </div> -->
+                  
                   </nav>
                 </div>
               </div>
@@ -176,10 +172,20 @@
 
 
 
-  <!-- <script src="/https://cdn.plyr.io/3.6.12/plyr.polyfilled.js"></script> -->
-  <!-- <script>
-      const player = new Plyr('#player');
-  </script> -->
+  <!-- Registro do Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registrado com sucesso:', registration);
+          })
+          .catch(error => {
+            console.error('Erro ao registrar Service Worker:', error);
+          });
+      });
+    }
+  </script>
   <!-- JS here -->
   <script src="/js/vendor/jquery-3.6.0.min.js"></script>
   <script src="/js/popper.min.js"></script>

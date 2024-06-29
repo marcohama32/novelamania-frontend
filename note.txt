@@ -59,7 +59,7 @@ git pull origin master
 Faça suas mudanças e commite:
 
 git add .
-git commit -m "Descrição clara da mudança"
+git commit -m "actualizacao do spinner"
 
 Puxe novamente para garantir que você está atualizado:
 

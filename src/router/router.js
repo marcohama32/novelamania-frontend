@@ -124,12 +124,20 @@ import { createRouter, createWebHistory } from "vue-router";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-import Home from "@/pages/common/HomePage.vue";
-import AssistaNovelas from "@/pages/AssistaNovelas.vue";
-import AssistaDoramas from "@/pages/AssistaDoramas.vue";
-import NossosPacotes from "@/pages/NossosPacotes.vue";
-import NossosContactos from "@/pages/NossosContactos.vue";
-import NovelaDetalhe from "@/pages/NovelaDetalhe.vue";
+// import Home from "@/pages/common/HomePage.vue";
+// import AssistaNovelas from "@/pages/AssistaNovelas.vue";
+// import AssistaDoramas from "@/pages/AssistaDoramas.vue";
+// import NossosPacotes from "@/pages/NossosPacotes.vue";
+// import NossosContactos from "@/pages/NossosContactos.vue";
+// import NovelaDetalhe from "@/pages/NovelaDetalhe.vue";
+
+// Componentes importados de forma dinâmica (Lazy Loading)
+const Home = () => import("@/pages/common/HomePage.vue");
+const AssistaNovelas = () => import("@/pages/AssistaNovelas.vue");
+const AssistaDoramas = () => import("@/pages/AssistaDoramas.vue");
+const NossosPacotes = () => import("@/pages/NossosPacotes.vue");
+const NossosContactos = () => import("@/pages/NossosContactos.vue");
+const NovelaDetalhe = () => import("@/pages/NovelaDetalhe.vue");
 
 const routes = [
   { path: "/", component: Home, name: "Home" },

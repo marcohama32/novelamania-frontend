@@ -1,0 +1,23 @@
+{
+    "name": "NovelaMania",
+  "short_name": "NovelaMania",
+    "description": "Club de Novelas e Séries.",
+    "start_url": "/index.html",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "any",
+    "background_color": "#ffffff",
+    "theme_color": "#1a73e8",
+    "icons": [
+      {
+        "src": "../public/img/logo/logo Max Size.png",
+        "sizes": "72x72",
+        "type": "image/png"
+      }
+    ],
+    "splash_pages": null,
+    "prefer_related_applications": false,
+    "related_applications": [],
+    "permissions": []
+  }
+  

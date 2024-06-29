@@ -1,14 +1,5 @@
 <template>
   <div>
-    <!-- preloader -->
-    <div v-if="loading" id="preloader">
-      <div id="loading-center">
-        <div id="loading-center-absolute">
-          <img src="img/preloader.svg" alt="" />
-        </div>
-      </div>
-    </div>
-    <!-- preloader-end -->
     <section
       class="movie-details-area"
       data-background="img/bg/movie_details_bg.jpg"
@@ -23,7 +14,7 @@
                 class="img-resize"
               />
               <a
-                href="https://www.youtube.com/watch?v=R2gbPxeNk2E"
+                href="#"
                 class="popup-video"
                 ><img src="img/images/play_icon.png" alt=""
               /></a>
@@ -80,7 +71,10 @@
                   <!-- <p>2.7 million <i class="far fa-eye"></i></p> -->
                 </div>
               </div>
-              <div class="episode-watch-wrap">
+              <div v-if="loading" class="spinner-container">
+                <div class="spinner"></div>
+              </div>
+              <div  v-else class="episode-watch-wrap">
                 <div class="accordion" id="accordionExample">
                   <div
                     v-for="(season, index) in seasons"
@@ -142,7 +136,7 @@
 
           <div class="col-lg-4">
             <div class="episode-img">
-              <img src="img/images/episode_img.jpg" alt="" />
+              <img loading="lazy" src="img/images/episode_img.jpg" alt="" />
             </div>
           </div>
         </div>
@@ -228,9 +222,30 @@ export default {
   methods: {
     async fetchData() {
       this.loading = true;
+      const id = this.$route.params.id;
+      const cachedNovel = localStorage.getItem(`novel_${id}`);
+      const cacheExpiration = 60 * 60 * 1000; // 1 hora em milissegundos
+      const currentTime = new Date().getTime();
+
+      if (cachedNovel) {
+        const novelData = JSON.parse(cachedNovel);
+        const { content, timestamp } = novelData;
+
+        if (currentTime - timestamp < cacheExpiration) {
+          this.novels = content;
+          this.NovelTitle = this.novels.title;
+          this.description = this.novels.description;
+          this.release_year = this.novels.release_year;
+          this.genres = this.novels.genres;
+          this.image_url = this.novels.image_url;
+          this.seasons = content.seasons;
+          this.loading = false;
+          return;
+        }
+      }
+
       try {
         const token = Cookies.get("token");
-        const id = this.$route.params.id;
 
         const response = await axios.get(`/api/novel/getbyid/${id}`, {
           headers: { token },
@@ -242,8 +257,14 @@ export default {
         this.release_year = this.novels.release_year;
         this.genres = this.novels.genres;
         this.image_url = this.novels.image_url;
-
         this.seasons = response.data.content.seasons;
+
+        // Save data to localStorage with timestamp
+        const dataToCache = {
+          content: this.novels,
+          timestamp: currentTime,
+        };
+        localStorage.setItem(`novel_${id}`, JSON.stringify(dataToCache));
 
         console.log("Dados buscados com sucesso:", response.data.content.title);
       } catch (error) {
@@ -370,7 +391,7 @@ export default {
           console.error("Erro ao verificar o token:", error);
         }
       } else {
-        console.log("Token não existe");
+        // console.log("Token não existe");
       }
     },
   },
@@ -383,11 +404,25 @@ export default {
       return this.currentPage < this.totalPages;
     },
   },
+  // watch: {
+  //   currentPage: "fetchData",
+  //   pageSize: "fetchData",
+  //   searchTerm: "fetchData",
+  // },
   watch: {
-    currentPage: "fetchData",
-    pageSize: "fetchData",
-    searchTerm: "fetchData",
+  currentPage: {
+    handler: "fetchData",
+    immediate: true, // Executar imediatamente ao montar o componente, se necessário
   },
+  pageSize: {
+    handler: "fetchData",
+    immediate: true,
+  },
+  searchTerm: {
+    handler: "fetchData",
+    immediate: true,
+  },
+},
   created() {
     this.checkToken();
     this.fetchData();
@@ -454,5 +489,56 @@ export default {
   width: 100%; /* Largura desejada */
   height: 380px; /* Altura ajustável para manter a proporção */
   object-fit: cover;
+}
+
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Altura total da viewport */
+}
+
+.spinner {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #f5f854; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Altura total da viewport */
+}
+
+.spinner {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #f5f854; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

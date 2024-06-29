@@ -1,15 +1,5 @@
 <template>
   <div>
-    <!-- preloader -->
-    <!-- <div v-if="loading" id="preloader">
-      <div id="loading-center">
-        <div id="loading-center-absolute">
-          <img src="img/preloader.svg" alt="" />
-        </div>
-      </div>
-    </div> -->
-    <!-- preloader-end -->
-
     <section
       class="banner-area banner-bg"
       data-background="img/banner/banner_bg01.jpg"
@@ -48,10 +38,7 @@
                     <a href="#">Romance,</a>
                     <a href="#">Drama</a>
                   </li>
-                  <li class="release-time">
-                    <!-- <span><i class="far fa-calendar-alt"></i> 2021</span>
-                    <span><i class="far fa-clock"></i> 128 min</span> -->
-                  </li>
+                  <li class="release-time"></li>
                 </ul>
               </div>
               <router-link
@@ -79,48 +66,7 @@
               <h2 class="title">Novidades</h2>
             </div>
           </div>
-          <!-- <div class="col-lg-6">
-            <div class="ucm-nav-wrap">
-              <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                  <a
-                    class="nav-link active"
-                    id="tvShow-tab"
-                    data-toggle="tab"
-                    href="#tvShow"
-                    role="tab"
-                    aria-controls="tvShow"
-                    aria-selected="true"
-                    >Novelas</a
-                  >
-                </li>
-                <li class="nav-item" role="presentation">
-                  <a
-                    class="nav-link"
-                    id="movies-tab"
-                    data-toggle="tab"
-                    href="#movies"
-                    role="tab"
-                    aria-controls="movies"
-                    aria-selected="false"
-                    >Series</a
-                  >
-                </li>
-                <li class="nav-item" role="presentation">
-                  <a
-                    class="nav-link"
-                    id="anime-tab"
-                    data-toggle="tab"
-                    href="#anime"
-                    role="tab"
-                    aria-controls="anime"
-                    aria-selected="false"
-                    >Doramas</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </div> -->
+         
         </div>
         <div class="tab-content" id="myTabContent">
           <div
@@ -133,7 +79,7 @@
               <div v-if="loading" class="spinner-container">
                 <div class="spinner"></div>
               </div>
-              <div class="ucm-active owl-carousel">
+              <div v-else class="ucm-active owl-carousel">
                 <div class="row">
                   <div
                     v-for="recentContent in recentContents"
@@ -207,259 +153,6 @@
               </div>
             </div>
           </div>
-          <div
-            class="tab-pane fade"
-            id="movies"
-            role="tabpanel"
-            aria-labelledby="movies-tab"
-          >
-            <div class="ucm-active owl-carousel">
-              <div class="row">
-                <!-- <div class="col-md-3">
-                  <div class="movie-item mb-50">
-                    <div class="movie-poster">
-                      <a href="movie-details.html"
-                        ><img
-                          src="img/poster/ucm_poster01.jpg"
-                          alt="Women's Day"
-                      /></a>
-                    </div>
-                    <div class="movie-content">
-                      <div class="top">
-                        <h5 class="title">
-                          <a href="movie-details.html">Women's Day</a>
-                        </h5>
-                        <span class="date">2021</span>
-                      </div>
-                      <div class="bottom">
-                        <ul>
-                          <li><span class="quality">HD</span></li>
-                          <li>
-                            <span class="duration"
-                              ><i class="far fa-clock"></i> 128 min</span
-                            >
-                            <span class="rating"
-                              ><i class="fas fa-thumbs-up"></i> 3.5</span
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-
-                <!-- <div class="col-md-3">
-                  <div class="movie-item mb-50">
-                    <div class="movie-poster">
-                      <a href="movie-details.html"
-                        ><img
-                          src="img/poster/ucm_poster01.jpg"
-                          alt="Women's Day"
-                      /></a>
-                    </div>
-                    <div class="movie-content">
-                      <div class="top">
-                        <h5 class="title">
-                          <a href="movie-details.html">Women's Day</a>
-                        </h5>
-                        <span class="date">2021</span>
-                      </div>
-                      <div class="bottom">
-                        <ul>
-                          <li><span class="quality">HD</span></li>
-                          <li>
-                            <span class="duration"
-                              ><i class="far fa-clock"></i> 128 min</span
-                            >
-                            <span class="rating"
-                              ><i class="fas fa-thumbs-up"></i> 3.5</span
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-                <!--  -->
-                <!-- <div class="col-md-3">
-                  <div class="movie-item mb-50">
-                    <div class="movie-poster">
-                      <a href="movie-details.html"
-                        ><img
-                          src="img/poster/ucm_poster01.jpg"
-                          alt="Women's Day"
-                      /></a>
-                    </div>
-                    <div class="movie-content">
-                      <div class="top">
-                        <h5 class="title">
-                          <a href="movie-details.html">Women's Day</a>
-                        </h5>
-                        <span class="date">2021</span>
-                      </div>
-                      <div class="bottom">
-                        <ul>
-                          <li><span class="quality">HD</span></li>
-                          <li>
-                            <span class="duration"
-                              ><i class="far fa-clock"></i> 128 min</span
-                            >
-                            <span class="rating"
-                              ><i class="fas fa-thumbs-up"></i> 3.5</span
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-                <!--  -->
-                <!-- <div class="col-md-3">
-                  <div class="movie-item mb-50">
-                    <div class="movie-poster">
-                      <a href="movie-details.html"
-                        ><img
-                          src="img/poster/ucm_poster01.jpg"
-                          alt="Women's Day"
-                      /></a>
-                    </div>
-                    <div class="movie-content">
-                      <div class="top">
-                        <h5 class="title">
-                          <a href="movie-details.html">Women's Day</a>
-                        </h5>
-                        <span class="date">2021</span>
-                      </div>
-                      <div class="bottom">
-                        <ul>
-                          <li><span class="quality">HD</span></li>
-                          <li>
-                            <span class="duration"
-                              ><i class="far fa-clock"></i> 128 min</span
-                            >
-                            <span class="rating"
-                              ><i class="fas fa-thumbs-up"></i> 3.5</span
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-                <!-- Adicione mais colunas de filmes aqui conforme necessário -->
-              </div>
-            </div>
-          </div>
-          <div
-            class="tab-pane fade"
-            id="anime"
-            role="tabpanel"
-            aria-labelledby="anime-tab"
-          >
-            <!-- <div class="ucm-active owl-carousel">
-              <div class="row">
-                <div class="col-md-3">
-                  <div class="movie-item mb-50">
-                    <div class="movie-poster">
-                      <a href="movie-details.html"
-                        ><img
-                          src="img/poster/ucm_poster01.jpg"
-                          alt="Women's Day"
-                      /></a>
-                    </div>
-                    <div class="movie-content">
-                      <div class="top">
-                        <h5 class="title">
-                          <a href="movie-details.html">Women's Day</a>
-                        </h5>
-                        <span class="date">2021</span>
-                      </div>
-                      <div class="bottom">
-                        <ul>
-                          <li><span class="quality">HD</span></li>
-                          <li>
-                            <span class="duration"
-                              ><i class="far fa-clock"></i> 128 min</span
-                            >
-                            <span class="rating"
-                              ><i class="fas fa-thumbs-up"></i> 3.5</span
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-3">
-                  <div class="movie-item mb-50">
-                    <div class="movie-poster">
-                      <a href="movie-details.html"
-                        ><img
-                          src="img/poster/ucm_poster01.jpg"
-                          alt="Women's Day"
-                      /></a>
-                    </div>
-                    <div class="movie-content">
-                      <div class="top">
-                        <h5 class="title">
-                          <a href="movie-details.html">Women's Day</a>
-                        </h5>
-                        <span class="date">2021</span>
-                      </div>
-                      <div class="bottom">
-                        <ul>
-                          <li><span class="quality">HD</span></li>
-                          <li>
-                            <span class="duration"
-                              ><i class="far fa-clock"></i> 128 min</span
-                            >
-                            <span class="rating"
-                              ><i class="fas fa-thumbs-up"></i> 3.5</span
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            
-                <div class="col-md-3">
-                  <div class="movie-item mb-50">
-                    <div class="movie-poster">
-                      <a href="movie-details.html"
-                        ><img
-                          src="img/poster/ucm_poster01.jpg"
-                          alt="Women's Day"
-                      /></a>
-                    </div>
-                    <div class="movie-content">
-                      <div class="top">
-                        <h5 class="title">
-                          <a href="movie-details.html">Women's Day</a>
-                        </h5>
-                        <span class="date">2021</span>
-                      </div>
-                      <div class="bottom">
-                        <ul>
-                          <li><span class="quality">HD</span></li>
-                          <li>
-                            <span class="duration"
-                              ><i class="far fa-clock"></i> 128 min</span
-                            >
-                            <span class="rating"
-                              ><i class="fas fa-thumbs-up"></i> 3.5</span
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-               
-              </div>
-            </div> -->
-          </div>
         </div>
       </div>
     </section>
@@ -476,12 +169,7 @@
           <div class="col-lg-6">
             <div class="services-img-wrap">
               <img src="img/images/services_img.jpg" alt="" />
-              <!-- <a
-                href="img/images/services_img.jpg"
-                class="download-btn"
-                download
-                >Download <img src="fonts/download.svg" alt=""
-              /></a> -->
+              
             </div>
           </div>
           <div class="col-lg-6">
@@ -545,16 +233,7 @@
             </div>
           </div>
         </div>
-        <!-- <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <div class="tr-movie-menu-active text-center">
-              <button class="active" data-filter="*">Novelas</button>
-              <button class="" data-filter=".cat-one">Series</button>
-              <button class="" data-filter=".cat-two">Doramas</button>
-              <button class="" data-filter=".cat-three">Livros</button>
-            </div>
-          </div>
-        </div> -->
+       
         <div>
           <div v-if="loading" class="spinner-container">
             <div class="spinner"></div>
@@ -586,19 +265,7 @@
                     </li>
 
                     <li>
-                      <!-- <router-link
-                            :to="`/detalhe-novela/${topViewedContent._id}`"
-                          >
-                            <a
-                              href=""
-                              class="btn"
-                              @click.prevent="
-                                handleWatchClick(topViewedContent._id)
-                              "
-                            >
-                              Assistir
-                            </a>
-                          </router-link> -->
+                   
                       <router-link
                         :to="`/detalhe-novela/${topViewedContent._id}`"
                       >
@@ -620,7 +287,7 @@
                 <div class="movie-content">
                   <div class="top">
                     <h5 class="title">
-                      <a href="movie-details.html">{{
+                      <a>{{
                         topViewedContent.title
                       }}</a>
                     </h5>
@@ -679,7 +346,7 @@
                 </div>
               </div>
               <a
-                href="https://www.youtube.com/watch?v=R2gbPxeNk2E"
+                href="#"
                 class="btn popup-video"
                 ><i class="fas fa-play"></i> Assistir</a
               >
@@ -699,145 +366,6 @@
     </section>
     <!-- live-area-end -->
 
-    <!-- tv-series-area -->
-    <!-- <section
-      class="tv-series-area tv-series-bg"
-      data-background="img/bg/tv_series_bg.jpg"
-    >
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <div class="section-title text-center mb-50">
-              <span class="sub-title">Best TV Series</span>
-              <h2 class="title">World Best TV Series</h2>
-            </div>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-xl-3 col-lg-4 col-sm-6">
-            <div class="movie-item mb-50">
-              <div class="movie-poster">
-                <a href="movie-details.html"
-                  ><img src="img/poster/ucm_poster09.jpg" alt=""
-                /></a>
-              </div>
-              <div class="movie-content">
-                <div class="top">
-                  <h5 class="title">
-                    <a href="movie-details.html">Women's Day</a>
-                  </h5>
-                  <span class="date">2021</span>
-                </div>
-                <div class="bottom">
-                  <ul>
-                    <li><span class="quality">hd</span></li>
-                    <li>
-                      <span class="duration"
-                        ><i class="far fa-clock"></i> 128 min</span
-                      >
-                      <span class="rating"
-                        ><i class="fas fa-thumbs-up"></i> 3.5</span
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-4 col-sm-6">
-            <div class="movie-item mb-50">
-              <div class="movie-poster">
-                <a href="movie-details.html"
-                  ><img src="img/poster/ucm_poster10.jpg" alt=""
-                /></a>
-              </div>
-              <div class="movie-content">
-                <div class="top">
-                  <h5 class="title">
-                    <a href="movie-details.html">The Perfect Match</a>
-                  </h5>
-                  <span class="date">2021</span>
-                </div>
-                <div class="bottom">
-                  <ul>
-                    <li><span class="quality">4k</span></li>
-                    <li>
-                      <span class="duration"
-                        ><i class="far fa-clock"></i> 128 min</span
-                      >
-                      <span class="rating"
-                        ><i class="fas fa-thumbs-up"></i> 3.5</span
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-4 col-sm-6">
-            <div class="movie-item mb-50">
-              <div class="movie-poster">
-                <a href="movie-details.html"
-                  ><img src="img/poster/ucm_poster03.jpg" alt=""
-                /></a>
-              </div>
-              <div class="movie-content">
-                <div class="top">
-                  <h5 class="title">
-                    <a href="movie-details.html">The Dog Woof</a>
-                  </h5>
-                  <span class="date">2021</span>
-                </div>
-                <div class="bottom">
-                  <ul>
-                    <li><span class="quality">hd</span></li>
-                    <li>
-                      <span class="duration"
-                        ><i class="far fa-clock"></i> 128 min</span
-                      >
-                      <span class="rating"
-                        ><i class="fas fa-thumbs-up"></i> 3.5</span
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-4 col-sm-6">
-            <div class="movie-item mb-50">
-              <div class="movie-poster">
-                <a href="movie-details.html"
-                  ><img src="img/poster/ucm_poster04.jpg" alt=""
-                /></a>
-              </div>
-              <div class="movie-content">
-                <div class="top">
-                  <h5 class="title">
-                    <a href="movie-details.html">The Easy Reach</a>
-                  </h5>
-                  <span class="date">2021</span>
-                </div>
-                <div class="bottom">
-                  <ul>
-                    <li><span class="quality">hd</span></li>
-                    <li>
-                      <span class="duration"
-                        ><i class="far fa-clock"></i> 128 min</span
-                      >
-                      <span class="rating"
-                        ><i class="fas fa-thumbs-up"></i> 3.5</span
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section> -->
-    <!-- tv-series-area-end -->
   </div>
 </template>
 <script>
@@ -868,8 +396,26 @@ export default {
   methods: {
     async fetchData() {
       this.loading = true;
+
+      const cachedContents = localStorage.getItem("recentAndTopViewedContents");
+      const cacheExpiration = 60 * 60 * 1000; // 1 hora em milissegundos
+      const currentTime = new Date().getTime();
+
+      if (cachedContents) {
+        const { recentContents, topViewedContents, timestamp } =
+          JSON.parse(cachedContents);
+
+        if (currentTime - timestamp < cacheExpiration) {
+          this.recentContents = recentContents;
+          this.topViewedContents = topViewedContents;
+          this.loading = false;
+          return;
+        }
+      }
+
       try {
         const token = Cookies.get("token");
+
         const queryParams = {
           pageNumber: this.currentPage,
           pageSize: this.pageSize,
@@ -888,6 +434,17 @@ export default {
 
         this.recentContents = response.data.recentContents;
         this.topViewedContents = response.data.topViewedContents;
+
+        const dataToCache = {
+          recentContents: this.recentContents,
+          topViewedContents: this.topViewedContents,
+          timestamp: currentTime,
+        };
+        localStorage.setItem(
+          "recentAndTopViewedContents",
+          JSON.stringify(dataToCache)
+        );
+
         this.count = response.data.total;
         this.totalPages = Math.ceil(this.count / this.pageSize);
         this.firstEntryIndex = (this.currentPage - 1) * this.pageSize + 1;
@@ -901,7 +458,6 @@ export default {
         this.loading = false;
       }
     },
-
     async handleWatchClick(novelId) {
       const token = Cookies.get("token");
 
@@ -1022,7 +578,7 @@ export default {
           console.error("Erro ao verificar o token:", error);
         }
       } else {
-        console.log("Token não existe");
+        // console.log("Token não existe");
       }
     },
   },

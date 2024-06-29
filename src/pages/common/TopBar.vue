@@ -313,7 +313,7 @@
                   </div>
                 </div>
                 <div class="float-left">
-                  
+
                   <button
                     type="submit"
                     class="btn btn-gradient-primary mr-2"
@@ -420,11 +420,11 @@ export default {
       }
     },
   },
-  watch: {
-    currentPage: "fetchData",
-    pageSize: "fetchData",
-    searchTerm: "fetchData",
-  },
+  // watch: {
+  //   currentPage: "fetchData",
+  //   pageSize: "fetchData",
+  //   searchTerm: "fetchData",
+  // },
   methods: {
     isActiveRoute(route) {
       return this.$route.path === route;

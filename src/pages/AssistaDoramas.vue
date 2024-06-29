@@ -1,17 +1,10 @@
 <template>
   <div>
-    <!-- preloader -->
-    <!-- <div v-if="loading" id="preloader">
-      <div id="loading-center">
-        <div id="loading-center-absolute">
-          <img src="img/preloader.svg" alt="" />
-        </div>
-      </div>
-    </div> -->
-    <!-- preloader-end -->
+   
     <!-- breadcrumb-area -->
     <section
       class="breadcrumb-area breadcrumb-bg"
+      loading="lazy"
       data-background="img/bg/breadcrumb_bg.jpg"
     >
       <div class="container">
@@ -21,7 +14,7 @@
               <h2 class="title">Todos <span>Doramas</span></h2>
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">
                     Doramas
                   </li>
@@ -54,13 +47,9 @@
                     v-model="searchTerm"
                     placeholder="Pesquisar..."
                   />
-                  <!-- <button type="button" @click="applyFilter">
-                      <i class="fas fa-search"></i>
-                    </button> -->
+                
                 </form>
-                <!-- <button class="active" data-filter="*">Animation</button>
-                                      <button class="" data-filter=".cat-one">Movies</button>
-                                      <button class="" data-filter=".cat-two">Romantic</button> -->
+               
               </div>
             </div>
           </div>
@@ -69,7 +58,7 @@
           <div v-if="loading" class="spinner-container">
             <div class="spinner"></div>
           </div>
-          <div class="row tr-movie-active">
+          <div  v-else class="row tr-movie-active">
             <div
               v-for="novel in novels"
               :key="novel._id"
@@ -78,6 +67,7 @@
               <div class="movie-item movie-item-three mb-50">
                 <div class="movie-poster">
                   <img
+                 
                     :src="getAvatarUrl(novel.image_url)"
                     :alt="novel.title"
                   />
@@ -90,22 +80,8 @@
                       <i class="fas fa-star"></i>
                     </li>
 
-                    <!-- <li>
-                      <router-link :to="`/detalhe-novela/${novel._id}`"
-                        ><a href="" class="btn">Assistir</a></router-link
-                      >
-                    </li> -->
                     <li>
-                      <!-- <router-link :to="`/detalhe-novela/${novel._id}`">
-                      <a
-                        href=""
-                        class="btn"
-                        @click.prevent="handleWatchClick(novel._id)"
-                      >
-                        Assistir
-                      </a>
-                    </router-link> -->
-
+      
                       <router-link :to="`/detalhe-novela/${novel._id}`">
                         <a
                           href=""
@@ -123,7 +99,7 @@
                 <div class="movie-content">
                   <div class="top">
                     <h5 class="title">
-                      <a href="movie-details.html">{{ novel.title }}</a>
+                      <a href="#">{{ novel.title }}</a>
                     </h5>
                     <span class="date">{{
                       formatDate(novel.release_year)
@@ -133,9 +109,7 @@
                     <ul>
                       <li><span class="quality">hd</span></li>
                       <li>
-                        <!-- <span class="duration"
-                          ><i class="far fa-clock"></i> 128 min</span
-                        > -->
+                       
                         <span class="rating"
                           ><i class="fa fa-eye"></i> {{ novel.views }} K</span
                         >
@@ -209,6 +183,21 @@ export default {
   methods: {
     async fetchData() {
       this.loading = true;
+
+      const cachedDoramas = localStorage.getItem("doramas");
+      const cacheExpiration = 60 * 60 * 1000; // 1 hora em milissegundos
+      const currentTime = new Date().getTime();
+
+      if (cachedDoramas) {
+        const { content, timestamp } = JSON.parse(cachedDoramas);
+
+        if (currentTime - timestamp < cacheExpiration) {
+          this.novels = content;
+          this.loading = false;
+          return;
+        }
+      }
+
       try {
         const token = Cookies.get("token");
 
@@ -224,6 +213,12 @@ export default {
         });
 
         this.novels = response.data.doramas;
+
+        const dataToCache = {
+          content: this.novels,
+          timestamp: currentTime,
+        };
+        localStorage.setItem("doramas", JSON.stringify(dataToCache));
 
         this.count = response.data.total;
         this.totalPages = Math.ceil(this.count / this.pageSize);
@@ -407,7 +402,7 @@ export default {
           console.error("Erro ao verificar o token:", error);
         }
       } else {
-        console.log("Token não existe");
+        // console.log("Token não existe");
       }
     },
   },

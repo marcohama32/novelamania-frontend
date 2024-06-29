@@ -50,3 +50,21 @@ git push -u origin main
 git add .
 git commit -m "actualizacao loading"
 git push
+
+///////////////////////////////////////////2/////////////////////////////////
+Puxe as mudanças mais recentes do repositório remoto:
+
+git pull origin master
+
+Faça suas mudanças e commite:
+
+git add .
+git commit -m "Descrição clara da mudança"
+
+Puxe novamente para garantir que você está atualizado:
+
+git pull origin master
+
+Empurre suas mudanças para o repositório remoto:
+
+git push origin master

@@ -86,12 +86,13 @@ const TOKEN_COOKIE = "token";
 const ROLE_COOKIE = "role";
 const LOGOUT_REASON_COOKIE = "logoutReason";
 const VERIFY_TOKEN_ENDPOINT = "/api/check/verify-token";
-const LOGOUT_ENDPOINT = "/api/logout";
+// const LOGOUT_ENDPOINT = "/api/logout";
 
 // Adicionar o interceptor para tratamento de erros de autorização (401)
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.error("Erro na requisição Axios:", error); // Log para depuração
     if (error.response && error.response.status === 401) {
       const token = Cookies.get(TOKEN_COOKIE);
 
@@ -104,17 +105,20 @@ axios.interceptors.response.use(
 
           // Se o token for inválido, realizar logout
           if (!response.data.valid) {
-            await axios.get(LOGOUT_ENDPOINT, { headers: { token } });
+            //   await axios.get(LOGOUT_ENDPOINT, { headers: { token } });
             Cookies.remove(TOKEN_COOKIE);
             Cookies.remove(ROLE_COOKIE);
-            Cookies.set(LOGOUT_REASON_COOKIE, error.response.data.returnMessage);
+            Cookies.set(
+              LOGOUT_REASON_COOKIE,
+              error.response.data.returnMessage
+            );
             router.push("/");
           }
         } catch (verifyTokenError) {
           console.error("Erro ao verificar token:", verifyTokenError);
 
           // Em caso de erro na verificação do token, realizar logout e limpar os cookies
-          await axios.get(LOGOUT_ENDPOINT, { headers: { token } });
+          // await axios.get(LOGOUT_ENDPOINT, { headers: { token } });
           Cookies.remove(TOKEN_COOKIE);
           Cookies.remove(ROLE_COOKIE);
           Cookies.set(LOGOUT_REASON_COOKIE, "Erro na verificação do token");

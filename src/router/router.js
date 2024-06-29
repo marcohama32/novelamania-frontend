@@ -153,7 +153,7 @@ const router = createRouter({
 });
 
 const VERIFY_TOKEN_ENDPOINT = "/api/check/verify-token";
-const LOGOUT_ENDPOINT = "/api/logout";
+// const LOGOUT_ENDPOINT = "/api/logout";
 const TOKEN_COOKIE = "token";
 const ROLE_COOKIE = "role";
 
@@ -163,9 +163,12 @@ const handleLogout = async () => {
   try {
     const token = Cookies.get(TOKEN_COOKIE);
     if (token) {
-      await axios.get(LOGOUT_ENDPOINT, {
-        headers: { token },
-      });
+      // await axios.get(LOGOUT_ENDPOINT, {
+      //   headers: { token },
+      // });
+      Cookies.remove(TOKEN_COOKIE);
+      Cookies.remove(ROLE_COOKIE);
+      window.location.replace("/");
     }
   } catch (error) {
     console.error("Erro ao fazer logout:", error);

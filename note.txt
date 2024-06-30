@@ -35,7 +35,7 @@ Adicione todas as alterações e faça um commit:
 sh
 Copiar código
 git add .
-git commit -m "Initial commit in new directory 2"
+git commit -m "service worker"
 Enviar as Alterações para o Repositório Remoto:
 Envie as alterações para o repositório remoto:
 

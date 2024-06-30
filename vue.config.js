@@ -25,10 +25,6 @@ module.exports = defineConfig({
   configureWebpack: {
     optimization: {
       minimize: true,
-      splitChunks: {
-        chunks: 'all',
-        maxSize: 244000,
-      },
       minimizer: [
         new TerserPlugin({
           terserOptions: {
@@ -37,8 +33,11 @@ module.exports = defineConfig({
             },
           },
         }),
-        new CssMinimizerPlugin({})
+        new CssMinimizerPlugin()
       ],
     },
+  },
+  chainWebpack: config => {
+    config.entry('app').clear().add('./src/main.js');
   },
 });

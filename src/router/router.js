@@ -160,7 +160,7 @@ const router = createRouter({
   routes,
 });
 
-const VERIFY_TOKEN_ENDPOINT = "/api/check/verify-token";
+// const VERIFY_TOKEN_ENDPOINT = "/api/check/verify-token";
 // const LOGOUT_ENDPOINT = "/api/logout";
 const TOKEN_COOKIE = "token";
 const ROLE_COOKIE = "role";
@@ -206,9 +206,9 @@ router.beforeEach(async (to, from, next) => {
 
   try {
     if (to.meta.requiresAuth && token) {
-      await axios.get(VERIFY_TOKEN_ENDPOINT, {
-        headers: { token },
-      });
+      // await axios.get(VERIFY_TOKEN_ENDPOINT, {
+      //   headers: { token },
+      // });
 
       const userRole = Cookies.get(ROLE_COOKIE);
       if (!userRole || !to.meta.roles.includes(userRole)) {

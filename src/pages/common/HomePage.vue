@@ -66,7 +66,6 @@
               <h2 class="title">Novidades</h2>
             </div>
           </div>
-         
         </div>
         <div class="tab-content" id="myTabContent">
           <div
@@ -169,7 +168,6 @@
           <div class="col-lg-6">
             <div class="services-img-wrap">
               <img src="img/images/services_img.jpg" alt="" />
-              
             </div>
           </div>
           <div class="col-lg-6">
@@ -233,7 +231,7 @@
             </div>
           </div>
         </div>
-       
+
         <div>
           <div v-if="loading" class="spinner-container">
             <div class="spinner"></div>
@@ -265,7 +263,6 @@
                     </li>
 
                     <li>
-                   
                       <router-link
                         :to="`/detalhe-novela/${topViewedContent._id}`"
                       >
@@ -287,9 +284,7 @@
                 <div class="movie-content">
                   <div class="top">
                     <h5 class="title">
-                      <a>{{
-                        topViewedContent.title
-                      }}</a>
+                      <a>{{ topViewedContent.title }}</a>
                     </h5>
                     <span class="date">{{
                       formatDate(topViewedContent.release_year)
@@ -345,9 +340,7 @@
                   <p>Usuarios activos</p>
                 </div>
               </div>
-              <a
-                href="#"
-                class="btn popup-video"
+              <a href="#" class="btn popup-video"
                 ><i class="fas fa-play"></i> Assistir</a
               >
             </div>
@@ -365,7 +358,6 @@
       </div>
     </section>
     <!-- live-area-end -->
-
   </div>
 </template>
 <script>
@@ -374,6 +366,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
+import { checkToken } from "@/utils/authUtils.js"; // Caminho para o arquivo de utilitário
+
 
 export default {
   data() {
@@ -394,70 +388,144 @@ export default {
     };
   },
   methods: {
+    
     async fetchData() {
       this.loading = true;
 
-      const cachedContents = localStorage.getItem("recentAndTopViewedContents");
-      const cacheExpiration = 60 * 60 * 1000; // 1 hora em milissegundos
+      const cacheExpiration = 5 * 60 * 60 * 1000; // 5 horas em milissegundos
       const currentTime = new Date().getTime();
 
-      if (cachedContents) {
-        const { recentContents, topViewedContents, timestamp } =
-          JSON.parse(cachedContents);
+      const cachedDoramas = localStorage.getItem("doramas");
+      const cachedNovels = localStorage.getItem("novels");
+      const cachedRecentContents = localStorage.getItem("recentContents");
+      const cachedTopViewedContents = localStorage.getItem("topViewedContents");
 
-        if (currentTime - timestamp < cacheExpiration) {
-          this.recentContents = recentContents;
-          this.topViewedContents = topViewedContents;
-          this.loading = false;
-          return;
+      const isCacheValid = (cachedData) => {
+        if (cachedData) {
+          const { timestamp } = JSON.parse(cachedData);
+          return currentTime - timestamp < cacheExpiration;
         }
+        return false;
+      };
+
+      // Verifica se todos os caches são válidos
+      const allCacheValid =
+        isCacheValid(cachedDoramas) &&
+        isCacheValid(cachedNovels) &&
+        isCacheValid(cachedRecentContents) &&
+        isCacheValid(cachedTopViewedContents);
+
+      if (allCacheValid) {
+        console.log("Cache válido. Carregando dados do cache.");
+
+        this.novels = JSON.parse(cachedDoramas).content;
+        this.otherData = JSON.parse(cachedNovels).content;
+        this.recentContents = JSON.parse(cachedRecentContents).content;
+        this.topViewedContents = JSON.parse(cachedTopViewedContents).content;
+
+        this.loading = false;
+        return;
       }
 
       try {
         const token = Cookies.get("token");
 
         const queryParams = {
-          pageNumber: this.currentPage,
+          page: this.currentPage,
           pageSize: this.pageSize,
           searchTerm: this.searchTerm,
         };
 
-        if (this.startDate && this.endDate) {
-          queryParams.startDate = this.startDate;
-          queryParams.endDate = this.endDate;
+        // Faz múltiplas requisições simultâneas
+        const [doramasResponse, novelsResponse, recentAndTopViewedResponse] =
+          await Promise.all([
+            axios.get("/api/content/getonlydoramas", {
+              headers: { token },
+              params: queryParams,
+            }),
+            axios.get("/api/content/getonlynovels", {
+              headers: { token },
+              params: queryParams,
+            }),
+            axios.get("/api/content/getrecentandtopview", {
+              headers: { token },
+              params: queryParams,
+            }),
+          ]);
+
+        // Processa as respostas
+        const doramasData = doramasResponse.data.doramas;
+        const novelsData = novelsResponse.data.novels;
+        const recentContents = recentAndTopViewedResponse.data.recentContents;
+        const topViewedContents =
+          recentAndTopViewedResponse.data.topViewedContents;
+
+        // Obtém o cabeçalho de data da resposta
+        const dateHeader =
+          doramasResponse.headers.date ||
+          novelsResponse.headers.date ||
+          recentAndTopViewedResponse.headers.date;
+
+        let serverTime = currentTime; // Use currentTime as fallback
+
+        if (dateHeader) {
+          const serverDate = new Date(dateHeader);
+          if (!isNaN(serverDate.getTime())) {
+            serverTime = serverDate.getTime();
+          } else {
+            console.warn(
+              "Falha ao converter o cabeçalho de data em um timestamp válido. Usando currentTime como fallback."
+            );
+          }
+        } else {
+          console.warn(
+            "Nenhum cabeçalho de data encontrado nas respostas. Usando currentTime como timestamp."
+          );
         }
 
-        const response = await axios.get("/api/content/getrecentandtopview", {
-          headers: { token },
-          params: queryParams,
-        });
-
-        this.recentContents = response.data.recentContents;
-        this.topViewedContents = response.data.topViewedContents;
-
-        const dataToCache = {
-          recentContents: this.recentContents,
-          topViewedContents: this.topViewedContents,
-          timestamp: currentTime,
+        // Armazena os dados no localStorage
+        const cacheData = (key, content) => {
+          const dataToCache = { content, timestamp: serverTime };
+          console.log(`Armazenando cache para ${key}:`, dataToCache);
+          localStorage.setItem(key, JSON.stringify(dataToCache));
         };
-        localStorage.setItem(
-          "recentAndTopViewedContents",
-          JSON.stringify(dataToCache)
-        );
 
-        this.count = response.data.total;
+        cacheData("doramas", doramasData);
+        cacheData("novels", novelsData);
+        cacheData("recentContents", recentContents);
+        cacheData("topViewedContents", topViewedContents);
+
+        // Atualiza os estados com os dados recebidos
+        this.novels = doramasData;
+        this.otherData = novelsData;
+        this.recentContents = recentContents;
+        this.topViewedContents = topViewedContents;
+
+        this.count = doramasResponse.data.total;
         this.totalPages = Math.ceil(this.count / this.pageSize);
         this.firstEntryIndex = (this.currentPage - 1) * this.pageSize + 1;
         this.lastEntryIndex = Math.min(
           this.currentPage * this.pageSize,
           this.count
         );
+
+        // console.log("Dados carregados do servidor.");
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
+        Swal.fire({
+          icon: "warning",
+          title: "Aviso!",
+          toast: true,
+          text: "Erro ao buscar dados. Por favor, tente novamente.",
+          timer: 6000,
+          showConfirmButton: false,
+          position: "top-end",
+        });
       } finally {
         this.loading = false;
       }
     },
+
     async handleWatchClick(novelId) {
       const token = Cookies.get("token");
 
@@ -556,30 +624,10 @@ export default {
       sessionStorage.removeItem("visitedBefore");
     },
 
+   
     async checkToken() {
-      const TOKEN_COOKIE = "token";
-
-      const token = Cookies.get(TOKEN_COOKIE);
-
-      if (token) {
-        try {
-          const response = await axios.get("/api/check/verify-token", {
-            headers: { token },
-          });
-
-          if (response.data.message !== "Token is valid") {
-            alert("Token invalido imprimido");
-            await axios.get("/api/logout");
-            Cookies.remove("token");
-            Cookies.remove("role"); // Mantive a remoção do cookie "role" se existir
-            window.location.reload();
-          }
-        } catch (error) {
-          console.error("Erro ao verificar o token:", error);
-        }
-      } else {
-        // console.log("Token não existe");
-      }
+      // Exemplo de uso
+      await checkToken();
     },
   },
   created() {

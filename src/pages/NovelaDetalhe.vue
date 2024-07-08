@@ -10,12 +10,10 @@
             <div class="movie-details-img">
               <img
                 :src="getAvatarUrl(this.image_url)"
-                :alt="this.title"
+                :alt="this.NovelTitle"
                 class="img-resize"
               />
-              <a
-                href="#"
-                class="popup-video"
+              <a href="#" class="popup-video"
                 ><img src="img/images/play_icon.png" alt=""
               /></a>
             </div>
@@ -31,9 +29,7 @@
                     <span>Pg 18</span>
                     <span>hd</span>
                   </li>
-                  <li class="category">
-                    <!-- {{ this.genres }} -->
-                  </li>
+                  <li class="category"></li>
                   <li class="release-time">
                     <span
                       ><i class="far fa-calendar-alt"></i>
@@ -45,12 +41,12 @@
               <p class="text-justify">
                 {{ this.description }}
               </p>
-              <!--  -->
             </div>
           </div>
         </div>
       </div>
     </section>
+
     <!-- movie-details-area-end -->
 
     <!-- episode-area -->
@@ -67,14 +63,12 @@
                   <span class="sub-title">TRANSMISSÃO ON-LINE</span>
                   <h2 class="title">Assista todos episódios</h2>
                 </div>
-                <div class="total-views-count">
-                  <!-- <p>2.7 million <i class="far fa-eye"></i></p> -->
-                </div>
+                <div class="total-views-count"></div>
               </div>
               <div v-if="loading" class="spinner-container">
                 <div class="spinner"></div>
               </div>
-              <div  v-else class="episode-watch-wrap">
+              <div v-else class="episode-watch-wrap">
                 <div class="accordion" id="accordionExample">
                   <div
                     v-for="(season, index) in seasons"
@@ -109,7 +103,6 @@
                             v-for="(episode, eIndex) in season.episodes"
                             :key="eIndex"
                           >
-                            <!-- eslint-disable-next-line -->
                             <a
                               href="#"
                               class="popup-video"
@@ -142,6 +135,7 @@
         </div>
       </div>
     </section>
+
     <!-- episode-area-end -->
 
     <!-- tv-series-area -->
@@ -191,6 +185,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import "sweetalert2/dist/sweetalert2.css";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { checkToken } from "../utils/authUtils.js"; // Caminho para o arquivo de utilitário
 
 export default {
   data() {
@@ -223,55 +218,50 @@ export default {
     async fetchData() {
       this.loading = true;
       const id = this.$route.params.id;
-      const cachedNovel = localStorage.getItem(`novel_${id}`);
-      const cacheExpiration = 60 * 60 * 1000; // 1 hora em milissegundos
+      const cacheKey = `novel_${id}`;
+      const cacheExpiration = 5 * 60 * 60 * 1000; // 5 horas em milissegundos
       const currentTime = new Date().getTime();
 
-      if (cachedNovel) {
-        const novelData = JSON.parse(cachedNovel);
-        const { content, timestamp } = novelData;
-
-        if (currentTime - timestamp < cacheExpiration) {
-          this.novels = content;
-          this.NovelTitle = this.novels.title;
-          this.description = this.novels.description;
-          this.release_year = this.novels.release_year;
-          this.genres = this.novels.genres;
-          this.image_url = this.novels.image_url;
-          this.seasons = content.seasons;
-          this.loading = false;
-          return;
-        }
-      }
-
       try {
-        const token = Cookies.get("token");
+        // Verifica se há dados no cache e se ainda são válidos
+        const cachedNovel = localStorage.getItem(cacheKey);
+        if (cachedNovel) {
+          const { content, timestamp } = JSON.parse(cachedNovel);
+          const isCacheValid = currentTime - timestamp < cacheExpiration;
+          if (isCacheValid) {
+            // Cache válido: atualiza os dados e finaliza a operação
+            this.updateNovelData(content);
+            this.loading = false;
+            console.log("Dados carregados do cache.");
+            return;
+          }
+          // Cache expirado: continua para buscar do servidor
+        }
 
+        // Requisição ao servidor para obter os dados da novela
+        const token = Cookies.get("token");
         const response = await axios.get(`/api/novel/getbyid/${id}`, {
           headers: { token },
         });
 
-        this.novels = response.data.content;
-        this.NovelTitle = this.novels.title;
-        this.description = this.novels.description;
-        this.release_year = this.novels.release_year;
-        this.genres = this.novels.genres;
-        this.image_url = this.novels.image_url;
-        this.seasons = response.data.content.seasons;
+        const novelData = response.data.content;
 
-        // Save data to localStorage with timestamp
+        // Atualiza a UI com os dados obtidos do servidor
+        this.updateNovelData(novelData);
+
+        // Armazena os dados no localStorage com o timestamp atual
         const dataToCache = {
-          content: this.novels,
+          content: novelData,
           timestamp: currentTime,
         };
-        localStorage.setItem(`novel_${id}`, JSON.stringify(dataToCache));
+        localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
 
-        console.log("Dados buscados com sucesso:", response.data.content.title);
+        console.log("Dados buscados com sucesso:", novelData.title);
       } catch (error) {
+        // Tratamento de erros
         console.error("Erro ao buscar dados:", error);
         let errorMessage = "Erro ao buscar dados. Por favor, tente novamente.";
 
-        // Verifica se a resposta de erro contém error definido
         if (
           error.response &&
           error.response.data &&
@@ -280,6 +270,7 @@ export default {
           errorMessage = error.response.data.error;
         }
 
+        // Exibe um alerta visual para o usuário
         Swal.fire({
           icon: "warning",
           title: "Aviso!",
@@ -290,8 +281,19 @@ export default {
           position: "top-end",
         });
       } finally {
+        // Finaliza o loading, independentemente do resultado da operação
         this.loading = false;
       }
+    },
+
+    updateNovelData(novel) {
+      this.novels = novel;
+      this.NovelTitle = novel.title;
+      this.description = novel.description;
+      this.release_year = novel.release_year;
+      this.genres = novel.genres;
+      this.image_url = novel.image_url;
+      this.seasons = novel.seasons;
     },
     hideModal() {
       this.currentVideoUrl = "";
@@ -369,30 +371,34 @@ export default {
       this.itemsPerPage = this.pageSize;
       await this.fetchData();
     },
+    // async checkToken() {
+    //   const TOKEN_COOKIE = "token";
+
+    //   const token = Cookies.get(TOKEN_COOKIE);
+
+    //   if (token) {
+    //     try {
+    //       const response = await axios.get("/api/check/verify-token", {
+    //         headers: { token },
+    //       });
+
+    //       if (response.data.message !== "Token is valid") {
+    //         // alert("Token invalido imprimido");
+    //         await axios.get("/api/logout");
+    //         Cookies.remove(TOKEN_COOKIE);
+    //         Cookies.remove("role"); // Mantive a remoção do cookie "role" se existir
+    //         window.location.reload();
+    //       }
+    //     } catch (error) {
+    //       console.error("Erro ao verificar o token:", error);
+    //     }
+    //   } else {
+    //     // console.log("Token não existe");
+    //   }
+    // },
     async checkToken() {
-      const TOKEN_COOKIE = "token";
-
-      const token = Cookies.get(TOKEN_COOKIE);
-
-      if (token) {
-        try {
-          const response = await axios.get("/api/check/verify-token", {
-            headers: { token },
-          });
-
-          if (response.data.message !== "Token is valid") {
-            alert("Token invalido imprimido");
-            await axios.get("/api/logout");
-            Cookies.remove(TOKEN_COOKIE);
-            Cookies.remove("role"); // Mantive a remoção do cookie "role" se existir
-            window.location.reload();
-          }
-        } catch (error) {
-          console.error("Erro ao verificar o token:", error);
-        }
-      } else {
-        // console.log("Token não existe");
-      }
+      // Exemplo de uso
+      await checkToken();
     },
   },
 
@@ -410,19 +416,19 @@ export default {
   //   searchTerm: "fetchData",
   // },
   watch: {
-  currentPage: {
-    handler: "fetchData",
-    immediate: true, // Executar imediatamente ao montar o componente, se necessário
+    currentPage: {
+      handler: "fetchData",
+      immediate: true, // Executar imediatamente ao montar o componente, se necessário
+    },
+    pageSize: {
+      handler: "fetchData",
+      immediate: true,
+    },
+    searchTerm: {
+      handler: "fetchData",
+      immediate: true,
+    },
   },
-  pageSize: {
-    handler: "fetchData",
-    immediate: true,
-  },
-  searchTerm: {
-    handler: "fetchData",
-    immediate: true,
-  },
-},
   created() {
     this.checkToken();
     this.fetchData();
@@ -490,7 +496,6 @@ export default {
   height: 380px; /* Altura ajustável para manter a proporção */
   object-fit: cover;
 }
-
 
 .spinner-container {
   display: flex;

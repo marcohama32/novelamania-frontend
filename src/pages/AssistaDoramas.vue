@@ -1,6 +1,5 @@
 <template>
   <div>
-   
     <!-- breadcrumb-area -->
     <section
       class="breadcrumb-area breadcrumb-bg"
@@ -47,9 +46,7 @@
                     v-model="searchTerm"
                     placeholder="Pesquisar..."
                   />
-                
                 </form>
-               
               </div>
             </div>
           </div>
@@ -58,7 +55,7 @@
           <div v-if="loading" class="spinner-container">
             <div class="spinner"></div>
           </div>
-          <div  v-else class="row tr-movie-active">
+          <div v-else class="row tr-movie-active">
             <div
               v-for="novel in novels"
               :key="novel._id"
@@ -67,7 +64,6 @@
               <div class="movie-item movie-item-three mb-50">
                 <div class="movie-poster">
                   <img
-                 
                     :src="getAvatarUrl(novel.image_url)"
                     :alt="novel.title"
                   />
@@ -81,7 +77,6 @@
                     </li>
 
                     <li>
-      
                       <router-link :to="`/detalhe-novela/${novel._id}`">
                         <a
                           href=""
@@ -109,7 +104,6 @@
                     <ul>
                       <li><span class="quality">hd</span></li>
                       <li>
-                       
                         <span class="rating"
                           ><i class="fa fa-eye"></i> {{ novel.views }} K</span
                         >
@@ -161,6 +155,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/dist/sweetalert2.css";
+import { checkToken } from "../utils/authUtils.js"; // Caminho para o arquivo de utilitário
+
 
 export default {
   data() {
@@ -184,18 +180,39 @@ export default {
     async fetchData() {
       this.loading = true;
 
-      const cachedDoramas = localStorage.getItem("doramas");
-      const cacheExpiration = 60 * 60 * 1000; // 1 hora em milissegundos
+      const cacheExpiration = 5 * 60 * 60 * 1000; // 5 horas em milissegundos
       const currentTime = new Date().getTime();
 
-      if (cachedDoramas) {
-        const { content, timestamp } = JSON.parse(cachedDoramas);
+      const cachedDoramas = localStorage.getItem("doramas");
+      const cachedNovels = localStorage.getItem("novels");
+      const cachedRecentContents = localStorage.getItem("recentContents");
+      const cachedTopViewedContents = localStorage.getItem("topViewedContents");
 
-        if (currentTime - timestamp < cacheExpiration) {
-          this.novels = content;
-          this.loading = false;
-          return;
+      const isCacheValid = (cachedData) => {
+        if (cachedData) {
+          const { timestamp } = JSON.parse(cachedData);
+          return currentTime - timestamp < cacheExpiration;
         }
+        return false;
+      };
+
+      // Verifica se todos os caches são válidos
+      const allCacheValid =
+        isCacheValid(cachedDoramas) &&
+        isCacheValid(cachedNovels) &&
+        isCacheValid(cachedRecentContents) &&
+        isCacheValid(cachedTopViewedContents);
+
+      if (allCacheValid) {
+        // console.log("Cache válido. Carregando dados do cache.");
+
+        this.novels = JSON.parse(cachedDoramas).content;
+        this.otherData = JSON.parse(cachedNovels).content;
+        this.recentContents = JSON.parse(cachedRecentContents).content;
+        this.topViewedContents = JSON.parse(cachedTopViewedContents).content;
+
+        this.loading = false;
+        return;
       }
 
       try {
@@ -207,32 +224,95 @@ export default {
           searchTerm: this.searchTerm,
         };
 
-        const response = await axios.get("/api/content/getonlydoramas", {
-          headers: { token },
-          params: queryParams,
-        });
+        // Faz múltiplas requisições simultâneas
+        const [doramasResponse, novelsResponse, recentAndTopViewedResponse] =
+          await Promise.all([
+            axios.get("/api/content/getonlydoramas", {
+              headers: { token },
+              params: queryParams,
+            }),
+            axios.get("/api/content/getonlynovels", {
+              headers: { token },
+              params: queryParams,
+            }),
+            axios.get("/api/content/getrecentandtopview", {
+              headers: { token },
+              params: queryParams,
+            }),
+          ]);
 
-        this.novels = response.data.doramas;
+        // Processa as respostas
+        const doramasData = doramasResponse.data.doramas;
+        const novelsData = novelsResponse.data.novels;
+        const recentContents = recentAndTopViewedResponse.data.recentContents;
+        const topViewedContents =
+          recentAndTopViewedResponse.data.topViewedContents;
 
-        const dataToCache = {
-          content: this.novels,
-          timestamp: currentTime,
+        // Obtém o cabeçalho de data da resposta
+        const dateHeader =
+          doramasResponse.headers.date ||
+          novelsResponse.headers.date ||
+          recentAndTopViewedResponse.headers.date;
+
+        let serverTime = currentTime; // Use currentTime as fallback
+
+        if (dateHeader) {
+          serverTime = new Date(dateHeader).getTime();
+          if (isNaN(serverTime)) {
+            console.warn(
+              "Falha ao converter o cabeçalho de data em um timestamp válido. Usando currentTime como fallback."
+            );
+            serverTime = currentTime;
+          }
+        } else {
+          console.warn(
+            "Nenhum cabeçalho de data encontrado nas respostas. Usando currentTime como timestamp."
+          );
+        }
+
+        // Armazena os dados no localStorage
+        const cacheData = (key, content) => {
+          const dataToCache = { content, timestamp: serverTime };
+          console.log(`Armazenando cache para ${key}:`, dataToCache);
+          localStorage.setItem(key, JSON.stringify(dataToCache));
         };
-        localStorage.setItem("doramas", JSON.stringify(dataToCache));
 
-        this.count = response.data.total;
+        cacheData("doramas", doramasData);
+        cacheData("novels", novelsData);
+        cacheData("recentContents", recentContents);
+        cacheData("topViewedContents", topViewedContents);
+
+        // Atualiza os estados com os dados recebidos
+        this.novels = doramasData;
+        this.otherData = novelsData;
+        this.recentContents = recentContents;
+        this.topViewedContents = topViewedContents;
+
+        this.count = doramasResponse.data.total;
         this.totalPages = Math.ceil(this.count / this.pageSize);
         this.firstEntryIndex = (this.currentPage - 1) * this.pageSize + 1;
         this.lastEntryIndex = Math.min(
           this.currentPage * this.pageSize,
           this.count
         );
+
+        // console.log("Dados carregados do servidor.");
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
+        Swal.fire({
+          icon: "warning",
+          title: "Aviso!",
+          toast: true,
+          text: "Erro ao buscar dados. Por favor, tente novamente.",
+          timer: 6000,
+          showConfirmButton: false,
+          position: "top-end",
+        });
       } finally {
         this.loading = false;
       }
     },
+
     async search() {
       this.loading = false;
       try {
@@ -380,30 +460,48 @@ export default {
       this.itemsPerPage = this.pageSize;
       await this.fetchData();
     },
+    // async checkToken() {
+    //   const TOKEN_COOKIE = "token";
+    //   const ROLE_COOKIE = "role";
+
+    //   const token = Cookies.get(TOKEN_COOKIE);
+
+    //   if (token) {
+    //     try {
+    //       const response = await axios.get("/api/check/verify-token", {
+    //         headers: { token },
+    //       });
+
+    //       if (response.data.message !== "Token is valid") {
+    //         console.error("Token inválido:", response.data.message);
+
+    //         // Limpa o cache do perfil do usuário
+    //         localStorage.removeItem("userProfile");
+
+    //         // Faz a requisição para o endpoint de logout
+    //         await axios.get("/api/logout", {
+    //           headers: { token },
+    //         });
+
+    //         // Remove os cookies
+    //         Cookies.remove(TOKEN_COOKIE);
+    //         Cookies.remove(ROLE_COOKIE);
+
+    //         // Recarrega a página para aplicar as mudanças
+    //         window.location.reload();
+    //       }
+    //     } catch (error) {
+    //       console.error("Erro ao verificar o token:", error);
+    //     }
+    //   } else {
+    //     // Token não existe
+    //     // console.log("Token não existe");
+    //   }
+    // },
+
     async checkToken() {
-      const TOKEN_COOKIE = "token";
-
-      const token = Cookies.get(TOKEN_COOKIE);
-
-      if (token) {
-        try {
-          const response = await axios.get("/api/check/verify-token", {
-            headers: { token },
-          });
-
-          if (response.data.message !== "Token is valid") {
-            alert("Token invalido imprimido");
-            await axios.get("/api/logout");
-            Cookies.remove(TOKEN_COOKIE);
-            Cookies.remove("role"); // Mantive a remoção do cookie "role" se existir
-            window.location.reload();
-          }
-        } catch (error) {
-          console.error("Erro ao verificar o token:", error);
-        }
-      } else {
-        // console.log("Token não existe");
-      }
+      // Exemplo de uso
+      await checkToken();
     },
   },
   computed: {

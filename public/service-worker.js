@@ -48,6 +48,9 @@ const urlsToCache = [
   '/img/bg/movie_bg.jpg?v=1.0',
 ];
 
+// Tempo de expiração do cache em milissegundos (5 horas)
+const CACHE_EXPIRATION = 5 * 60 * 60 * 1000; 
+
 // Função para limpar caches antigos
 const cleanUpOldCaches = () => {
   return caches.keys().then(cacheNames => {
@@ -60,6 +63,16 @@ const cleanUpOldCaches = () => {
       })
     );
   });
+};
+
+// Função para verificar a idade do cache
+const isCacheExpired = (response) => {
+  const dateHeader = response.headers.get('date');
+  if (!dateHeader) return true; // Se não houver cabeçalho de data, considerar expirado
+
+  const date = new Date(dateHeader);
+  const age = Date.now() - date.getTime();
+  return age > CACHE_EXPIRATION;
 };
 
 // Instalação do Service Worker
@@ -83,12 +96,12 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Cache hit - return response
-        if (response) {
+        if (response && !isCacheExpired(response)) {
+          // Cache hit - retorna a resposta se o cache não estiver expirado
           return response;
         }
 
-        // Não encontrou no cache - fetch da rede
+        // Não encontrou no cache ou cache expirado - fetch da rede
         return fetch(event.request)
           .then(response => {
             // Verifica se a requisição é para uma imagem ou recurso estático com versão

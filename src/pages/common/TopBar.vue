@@ -313,7 +313,6 @@
                   </div>
                 </div>
                 <div class="float-left">
-
                   <button
                     type="submit"
                     class="btn btn-gradient-primary mr-2"
@@ -521,77 +520,24 @@ export default {
       }
     },
 
-    // async onLogin() {
-    //   // Verificar se ambos os campos de contacto e senha estão vazios
-    //   if (!this.contact1 || !this.password) {
-    //     Swal.fire({
-    //       icon: "warning",
-    //       title: "Aviso!",
-    //       toast: true,
-    //       text: "Contacto e senha são obrigatórios.",
-    //       timer: 3000,
-    //       showConfirmButton: false,
-    //       position: "top-end",
-    //     });
-    //     return;
-    //   }
-
-    //   try {
-    //     this.loading = true;
-    //     this.btnLoading = true;
-
-    //     const user = {
-    //       contact1: this.contact1, // Supondo que 'contact1' é o campo de email ou username
-    //       password: this.password,
-    //     };
-
-    //     // Certifique-se de que axios está configurado corretamente
-    //     const res = await axios.post("/api/signin", user);
-
-    //     if (res.status === 200) {
-    //       Cookies.set("token", res.data.token, { expires: 7 });
-    //       Cookies.set("role", res.data.role, { expires: 7 });
-    //       this.isLoggedIn = true; // Atualizar o estado de login
-
-    //       this.$emit("loginSuccess");
-    //       // this.$router.push("/");
-    //       location.reload();
-    //     }
-    //   } catch (error) {
-    //     console.error("Erro na requisição:", error); // Log para depuração
-
-    //     if (
-    //       error.response &&
-    //       error.response.data &&
-    //       error.response.data.error
-    //     ) {
-    //       this.errors = { username: [error.response.data.error] };
-    //       Swal.fire({
-    //         icon: "warning",
-    //         title: "Aviso!",
-    //         toast: true,
-    //         text: this.errors.username,
-    //         timer: 3000,
-    //         showConfirmButton: false,
-    //         position: "top-end",
-    //       });
-    //     } else {
-    //       // Exibir uma mensagem de erro genérica para erros inesperados
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "Erro!",
-    //         text: "Um erro ocorreu. Por favor, tente novamente mais tarde.",
-    //       });
-    //     }
-    //   } finally {
-    //     this.loading = false;
-    //     this.btnLoading = false;
-    //   }
-    // },
     async profile() {
-      try {
-        this.loading = true;
+      this.loading = true;
 
+      const cacheKey = "userProfile";
+      const cacheExpiration = 60 * 60 * 1000; // 1 hora em milissegundos
+      const currentTime = new Date().getTime();
+      const cachedProfile = localStorage.getItem(cacheKey);
+
+      if (cachedProfile) {
+        const { content, timestamp } = JSON.parse(cachedProfile);
+        if (currentTime - timestamp < cacheExpiration) {
+          this.setProfileData(content);
+          this.loading = false;
+          return;
+        }
+      }
+
+      try {
         const token = Cookies.get("token");
 
         const response = await axios.get("/api/user/userprofile", {
@@ -602,11 +548,14 @@ export default {
 
         if (response && response.data && response.data.user) {
           const profile = response.data.user;
-          this.firstName = profile.firstName;
-          this.lastName = profile.lastName;
-          this.daysRemaining = profile.subscription.daysRemaining; // Corrigido para 'subscription'
+          this.setProfileData(profile);
 
-          this.role = profile.role;
+          // Save data to localStorage with timestamp
+          const dataToCache = {
+            content: profile,
+            timestamp: currentTime,
+          };
+          localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
         } else {
           console.error("Erro ao obter perfil de usuário");
         }
@@ -615,6 +564,13 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+
+    setProfileData(profile) {
+      this.firstName = profile.firstName;
+      this.lastName = profile.lastName;
+      this.daysRemaining = profile.subscription.daysRemaining; // Corrigido para 'subscription'
+      this.role = profile.role;
     },
 
     formatDate(dateString) {
@@ -640,13 +596,15 @@ export default {
 
         const token = Cookies.get("token");
 
-        // Faz a requisição para o endpoint de logout
-        const response = await axios.get("/api/logout", {
-          headers: { token },
-        });
+        if (token) {
+          // Faz a requisição para o endpoint de logout
+          const response = await axios.get("/api/logout", {
+            headers: { token },
+          });
 
-        if (response.status !== 200) {
-          throw new Error("Falha ao efetuar logout");
+          if (response.status !== 200) {
+            throw new Error("Falha ao efetuar logout");
+          }
         }
       } catch (error) {
         console.error("Erro ao fazer logout:", error);
@@ -675,6 +633,17 @@ export default {
         // Remove os cookies
         Cookies.remove("token");
         Cookies.remove("role");
+
+        // Limpa o cache do perfil do usuário
+        localStorage.removeItem("userProfile");
+        console.log("userProfile removido do localStorage.");
+
+        // Verifica se o item foi realmente removido
+        if (!localStorage.getItem("userProfile")) {
+          // console.log("Confirmação: userProfile foi removido com sucesso.");
+        } else {
+          // console.error("Falha ao remover userProfile do localStorage.");
+        }
 
         // Redireciona o usuário para a página inicial usando window.location
         window.location.replace("/");

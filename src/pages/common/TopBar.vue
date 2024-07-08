@@ -21,49 +21,18 @@
                       <li :class="{ active: isActiveRoute('/') }">
                         <router-link to="/">Home</router-link>
                       </li>
-                      <!-- <li :class="{ active: isActiveRoute('/movie') }" class="menu-item-has-children">
-                        <router-link to="#">Movie</router-link>
-                        <ul class="submenu">
-                          <li :class="{ active: isActiveRoute('/movie.html') }">
-                            <router-link to="/movie.html">Movie</router-link>
-                          </li>
-                          <li :class="{ active: isActiveRoute('/movie-details.html') }">
-                            <router-link to="/movie-details.html">Movie Details</router-link>
-                          </li>
-                        </ul>
-                      </li> -->
+
                       <li :class="{ active: isActiveRoute('/tv-show') }">
                         <router-link to="/novelas">Novelas</router-link>
                       </li>
                       <li :class="{ active: isActiveRoute('/tv-show') }">
                         <router-link to="/doramas">Doramas</router-link>
                       </li>
-                      <!-- <li :class="{ active: isActiveRoute('/pricing') }">
-                        <router-link to="/livros">Livros</router-link>
-                      </li> -->
+
                       <li :class="{ active: isActiveRoute('/pricing') }">
                         <router-link to="/pacotes">Pacotes</router-link>
                       </li>
-                      <!-- <li
-                        :class="{ active: isActiveRoute('/blog') }"
-                        class="menu-item-has-children"
-                      >
-                        <router-link to="#">Blog</router-link>
-                        <ul class="submenu">
-                          <li :class="{ active: isActiveRoute('/blog.html') }">
-                            <router-link to="/blog.html">Blog</router-link>
-                          </li>
-                          <li
-                            :class="{
-                              active: isActiveRoute('/blog-details.html'),
-                            }"
-                          >
-                            <router-link to="/blog-details.html"
-                              >Blog Details</router-link
-                            >
-                          </li>
-                        </ul>
-                      </li> -->
+
                       <li :class="{ active: isActiveRoute('/contact') }">
                         <router-link to="/contactos">Contactos</router-link>
                       </li>
@@ -72,16 +41,6 @@
 
                   <div class="header-action d-none d-md-block">
                     <ul>
-                      <!-- <li class="header-search">
-                        <a
-                          href="#"
-                          data-toggle="modal"
-                          data-target="#search-modal"
-                        >
-                          <i class="fas fa-search"></i>
-                        </a>
-                      </li> -->
-                      <!-- Mostra o botão de login apenas se o usuário não estiver logado -->
                       <div v-if="!isLoggedIn">
                         <li
                           class="header-btn popup-video"
@@ -104,8 +63,17 @@
                         </div>
                       </div>
 
-                      <li class="header-btn" v-if="isLoggedIn">
+                      <!-- <li class="header-btn" v-if="isLoggedIn">
                         <a to="/login" class="btn" @click="logout">Sair</a>
+                      </li> -->
+
+                      <li class="header-btn mt-3" v-if="isLoggedIn">
+                        <a
+                          to="/login"
+                          class="btn"
+                          @click.prevent="confirmLogout"
+                          >Sair</a
+                        >
                       </li>
                     </ul>
                   </div>
@@ -125,37 +93,6 @@
                     </router-link>
                   </div>
                   <ul class="navigation">
-                    <!-- <li
-                      :class="{ active: isActiveRoute('/') }"
-                      class="menu-item-has-children"
-                    >
-                      <router-link to="#">Home</router-link>
-                      <ul class="submenu">
-                        <li :class="{ active: isActiveRoute('/index.html') }">
-                          <router-link to="/index.html">Home One</router-link>
-                        </li>
-                        <li :class="{ active: isActiveRoute('/index-2.html') }">
-                          <router-link to="/index-2.html">Home Two</router-link>
-                        </li>
-                      </ul>
-                      <div class="dropdown-btn open">
-                        <span class="fas fa-angle-down"></span>
-                      </div>
-                    </li> -->
-                    <!-- <li :class="{ active: isActiveRoute('/movie') }" class="menu-item-has-children">
-                      <router-link to="#">Movie</router-link>
-                      <ul class="submenu">
-                        <li :class="{ active: isActiveRoute('/movie.html') }">
-                          <router-link to="/movie.html">Movie</router-link>
-                        </li>
-                        <li :class="{ active: isActiveRoute('/movie-details.html') }">
-                          <router-link to="/movie-details.html">Movie Details</router-link>
-                        </li>
-                      </ul>
-                      <div class="dropdown-btn open">
-                        <span class="fas fa-angle-down"></span>
-                      </div>
-                    </li> -->
                     <li :class="{ active: isActiveRoute('/tv-show.html') }">
                       <router-link to="/">Home</router-link>
                     </li>
@@ -168,29 +105,7 @@
                     <li :class="{ active: isActiveRoute('/pricing.html') }">
                       <router-link to="/pacotes">Pacotes</router-link>
                     </li>
-                    <!-- <li
-                      :class="{ active: isActiveRoute('/blog') }"
-                      class="menu-item-has-children"
-                    >
-                      <router-link to="#">Blog</router-link>
-                      <ul class="submenu">
-                        <li :class="{ active: isActiveRoute('/blog.html') }">
-                          <router-link to="/blog.html">Our Blog</router-link>
-                        </li>
-                        <li
-                          :class="{
-                            active: isActiveRoute('/blog-details.html'),
-                          }"
-                        >
-                          <router-link to="/blog-details.html"
-                            >Blog Details</router-link
-                          >
-                        </li>
-                      </ul>
-                      <div class="dropdown-btn open">
-                        <span class="fas fa-angle-down"></span>
-                      </div>
-                    </li> -->
+
                     <li :class="{ active: isActiveRoute('/contact.html') }">
                       <router-link to="/contactos">Contactos</router-link>
                     </li>
@@ -213,9 +128,16 @@
                       >{{ daysRemaining }} dias restantes</span
                     >
 
-                    <li class="header-btn mt-3" v-if="isLoggedIn">
+                    <!-- <li class="header-btn mt-3" v-if="isLoggedIn">
                       <a to="/login" class="btn" @click="logout">Sair</a>
+                    </li> -->
+
+                    <li class="header-btn mt-3" v-if="isLoggedIn">
+                      <a to="/login" class="btn" @click.prevent="confirmLogout"
+                        >Sair</a
+                      >
                     </li>
+
                     <ul class="clearfix">
                       <!-- <li>
                         <a href="#"><span class="fab fa-twitter"></span></a>
@@ -589,6 +511,67 @@ export default {
         return ""; // Default class if no match
       }
     },
+    // async logout() {
+    //   try {
+    //     // Remove os dados da sessionStorage
+    //     sessionStorage.removeItem("visitedBefore");
+
+    //     const token = Cookies.get("token");
+
+    //     if (token) {
+    //       // Faz a requisição para o endpoint de logout
+    //       const response = await axios.get("/api/logout", {
+    //         headers: { token },
+    //       });
+
+    //       if (response.status !== 200) {
+    //         throw new Error("Falha ao efetuar logout");
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.error("Erro ao fazer logout:", error);
+
+    //     // Tratamento de erro específico para diferentes tipos de erro
+    //     if (error.response?.data?.error) {
+    //       // Exibe mensagem de aviso usando Swal (SweetAlert)
+    //       Swal.fire({
+    //         icon: "warning",
+    //         title: "Aviso!",
+    //         toast: true,
+    //         text: error.response.data.error,
+    //         timer: 3000,
+    //         showConfirmButton: false,
+    //         position: "top-end",
+    //       });
+    //     } else {
+    //       // Exibe mensagem de erro genérica
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "Erro!",
+    //         text: "Um erro ocorreu. Por favor, tente novamente mais tarde.",
+    //       });
+    //     }
+    //   } finally {
+    //     // Remove os cookies
+    //     Cookies.remove("token");
+    //     Cookies.remove("role");
+
+    //     // Limpa o cache do perfil do usuário
+    //     localStorage.removeItem("userProfile");
+    //     console.log("userProfile removido do localStorage.");
+
+    //     // Verifica se o item foi realmente removido
+    //     if (!localStorage.getItem("userProfile")) {
+    //       // console.log("Confirmação: userProfile foi removido com sucesso.");
+    //     } else {
+    //       // console.error("Falha ao remover userProfile do localStorage.");
+    //     }
+
+    //     // Redireciona o usuário para a página inicial usando window.location
+    //     window.location.replace("/");
+    //   }
+    // },
+
     async logout() {
       try {
         // Remove os dados da sessionStorage
@@ -596,16 +579,24 @@ export default {
 
         const token = Cookies.get("token");
 
-        if (token) {
-          // Faz a requisição para o endpoint de logout
-          const response = await axios.get("/api/logout", {
-            headers: { token },
-          });
+        // Faz a requisição para o endpoint de logout
+        const response = await axios.get("/api/logout", {
+          headers: { token },
+        });
 
-          if (response.status !== 200) {
-            throw new Error("Falha ao efetuar logout");
-          }
+        if (response.status !== 200) {
+          throw new Error("Falha ao efetuar logout");
         }
+
+        // Remove os cookies
+        Cookies.remove("token");
+        Cookies.remove("role");
+
+        // Limpa o cache do perfil do usuário
+        localStorage.removeItem("userProfile");
+
+        // Redireciona o usuário para a página inicial usando window.location
+        window.location.replace("/");
       } catch (error) {
         console.error("Erro ao fazer logout:", error);
 
@@ -629,26 +620,23 @@ export default {
             text: "Um erro ocorreu. Por favor, tente novamente mais tarde.",
           });
         }
-      } finally {
-        // Remove os cookies
-        Cookies.remove("token");
-        Cookies.remove("role");
-
-        // Limpa o cache do perfil do usuário
-        localStorage.removeItem("userProfile");
-        console.log("userProfile removido do localStorage.");
-
-        // Verifica se o item foi realmente removido
-        if (!localStorage.getItem("userProfile")) {
-          // console.log("Confirmação: userProfile foi removido com sucesso.");
-        } else {
-          // console.error("Falha ao remover userProfile do localStorage.");
-        }
-
-        // Redireciona o usuário para a página inicial usando window.location
-        window.location.replace("/");
       }
     },
+
+    confirmLogout() {
+      Swal.fire({
+        title: "Tem certeza que deseja sair?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sim, sair",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.logout();
+        }
+      });
+    },
+
     getAvatarUrl() {
       if (this.avatar) {
         // Use the configured base URL and ensure forward slashes in the avatar path

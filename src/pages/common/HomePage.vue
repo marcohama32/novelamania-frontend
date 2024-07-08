@@ -416,8 +416,7 @@ export default {
         isCacheValid(cachedTopViewedContents);
 
       if (allCacheValid) {
-        console.log("Cache válido. Carregando dados do cache.");
-
+        // console.log("Cache válido. Carregando dados do cache.");
         this.novels = JSON.parse(cachedDoramas).content;
         this.otherData = JSON.parse(cachedNovels).content;
         this.recentContents = JSON.parse(cachedRecentContents).content;

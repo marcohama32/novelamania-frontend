@@ -92,33 +92,37 @@ self.addEventListener('activate', event => {
 });
 
 // Interceptação de requisições e cache
-// self.addEventListener('fetch', event => {
-//   event.respondWith(
-//     caches.match(event.request)
-//       .then(response => {
-//         if (response && !isCacheExpired(response)) {
-//           // Cache hit - retorna a resposta se o cache não estiver expirado
-//           return response;
-//         }
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        // Verifica se a resposta é válida
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          return response;
+        }
 
-//         // Não encontrou no cache ou cache expirado - fetch da rede
-//         return fetch(event.request)
-//           .then(response => {
-//             // Verifica se a requisição é para uma imagem ou recurso estático com versão
-//             if (
-//               event.request.url.includes('/img/') ||  // Verifica se é uma imagem
-//               event.request.url.includes('.css?v=') || // Verifica se é um CSS com versão
-//               event.request.url.includes('.js?v=')    // Verifica se é um JS com versão
-//             ) {
-//               // Clona a resposta para colocar no cache
-//               const responseToCache = response.clone();
-//               caches.open(CACHE_NAME)
-//                 .then(cache => {
-//                   cache.put(event.request, responseToCache);
-//                 });
-//             }
-//             return response;
-//           });
-//       })
-//   );
-// });
+        // Clona a resposta para colocar no cache
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME)
+          .then(cache => {
+            cache.put(event.request, responseToCache);
+          });
+
+        return response;
+      })
+      .catch(() => {
+        // Em caso de falha na rede, tenta buscar no cache
+        return caches.match(event.request)
+          .then(cachedResponse => {
+            if (cachedResponse) {
+              return cachedResponse;
+            }
+
+            // Se não encontrar no cache, retorna uma resposta padrão
+            return new Response('<h1>Offline</h1>', {
+              headers: { 'Content-Type': 'text/html' }
+            });
+          });
+      })
+  );
+});
